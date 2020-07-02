@@ -4,12 +4,18 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 
-@Entity('estabelecimento')
+import Pedido from './Pedido';
+
+@Entity('consumidor')
 class Consumidor {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @OneToMany(() => Pedido, pedido => pedido.consumidor)
+  pedidos: Pedido;
 
   @Column()
   nome: string;

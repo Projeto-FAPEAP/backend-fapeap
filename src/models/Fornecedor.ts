@@ -36,6 +36,9 @@ class Fornecedor {
   taxa_delivery: number;
 
   @Column()
+  video_caminho: string;
+
+  @Column()
   logradouro: string;
 
   @Column()
