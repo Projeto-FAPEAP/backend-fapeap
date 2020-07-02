@@ -18,6 +18,11 @@ export default class CreateProduto1593634104752 implements MigrationInterface {
             type: 'varchar',
           },
           {
+            name: 'imagem_caminho',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
             name: 'preco',
             type: 'numeric',
             precision: 2,
