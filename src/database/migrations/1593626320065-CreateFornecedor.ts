@@ -52,11 +52,6 @@ export default class Createfornecedor1593626320065
             isNullable: true,
           },
           {
-            name: 'video_caminho',
-            type: 'varchar',
-            isNullable: true,
-          },
-          {
             name: 'logradouro',
             type: 'varchar',
           },

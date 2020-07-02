@@ -14,13 +14,12 @@ export default class CreateProduto1593634104752 implements MigrationInterface {
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'nome',
-            type: 'varchar',
+            name: 'fornecedor_id',
+            type: 'uuid',
           },
           {
-            name: 'imagem_caminho',
+            name: 'nome',
             type: 'varchar',
-            isNullable: true,
           },
           {
             name: 'preco',
