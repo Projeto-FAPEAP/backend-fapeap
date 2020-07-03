@@ -18,7 +18,7 @@ export default class CreatePedido1593634934747 implements MigrationInterface {
             type: 'uuid',
           },
           {
-            name: 'produto_id',
+            name: 'fornecedor_id',
             type: 'uuid',
           },
           {

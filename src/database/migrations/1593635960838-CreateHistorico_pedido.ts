@@ -15,22 +15,12 @@ export default class CreateHistoricoPedido1593635960838
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'consumidor_id',
+            name: 'pedido_id',
             type: 'uuid',
           },
           {
-            name: 'preco_unidade',
-            type: 'numeric',
-            precision: 2,
-          },
-          {
-            name: 'quantidade',
-            type: 'integer',
-          },
-          {
-            name: 'total',
-            type: 'numeric',
-            precision: 2,
+            name: 'status',
+            type: 'boolean',
           },
           {
             name: 'created_at',

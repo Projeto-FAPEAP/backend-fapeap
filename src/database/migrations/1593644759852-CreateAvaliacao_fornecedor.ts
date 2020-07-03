@@ -19,6 +19,10 @@ export default class CreateAvaliacaoFornecedor1593644759852
             type: 'uuid',
           },
           {
+            name: 'fornecedor_id',
+            type: 'uuid',
+          },
+          {
             name: 'estrelas',
             type: 'integer',
           },
