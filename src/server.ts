@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import express from 'express';
-import routes from './routes';
+import routes from './controllers/index.routes';
 
 import './database';
 
@@ -11,5 +11,5 @@ app.use(express.json());
 app.use(routes);
 
 app.listen(PORT, () => {
-  console.log('Server rodando! ⚡');
+  console.log(`Server rodando na porta: ${PORT}! ⚡`);
 });
