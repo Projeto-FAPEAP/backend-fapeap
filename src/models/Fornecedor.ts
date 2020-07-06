@@ -4,12 +4,28 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import Produto from './Produto';
+import ArquivoFornecedor from './ArquivoFornecedor';
+import Pedido from './Pedido';
 
 @Entity('fornecedor')
 class Fornecedor {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @OneToMany(() => Produto, produtos => produtos.fornecedor)
+  produtos: Produto;
+
+  @OneToMany(
+    () => ArquivoFornecedor,
+    arquivos_fornecedor => arquivos_fornecedor.fornecedor,
+  )
+  arquivos_fornecedor: ArquivoFornecedor;
+
+  @OneToMany(() => Pedido, pedidos => pedidos.fornecedor)
+  pedidos: Pedido;
 
   @Column()
   nome_fornecedor: string;
@@ -34,9 +50,6 @@ class Fornecedor {
 
   @Column()
   taxa_delivery: number;
-
-  @Column()
-  video_caminho: string;
 
   @Column()
   logradouro: string;

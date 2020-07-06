@@ -30,7 +30,7 @@ class Consumidor {
   senha: string;
 
   @Column()
-  telfone_whatsapp: string;
+  telefone_whatsapp: string;
 
   @Column()
   logradouro: string;

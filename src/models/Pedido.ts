@@ -4,13 +4,15 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
   ManyToOne,
   JoinColumn,
-  OneToMany,
 } from 'typeorm';
-
+import ItensPedido from './ItensPedido';
 import Consumidor from './Consumidor';
-import Produto from './Produto';
+import Fornecedor from './Fornecedor';
+import HistoricoPedido from './HistoricoPedido';
+
 /**
  * Um para um (OneToOne) x
  * Um para Muitos (OneToMany) -> Um consumidor tem muitos pedidos.
@@ -22,21 +24,29 @@ class Pedido {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @OneToMany(() => ItensPedido, intens_pedidos => intens_pedidos.pedido)
+  itensPedidos: ItensPedido;
+
+  @OneToMany(() => HistoricoPedido, historicosPedido => historicosPedido.pedido)
+  historicosPedido: ItensPedido;
+
+  @ManyToOne(() => Consumidor, consumidor => consumidor.pedidos, {
+    eager: true,
+  })
+  @JoinColumn({ name: 'consumidor_id' })
+  consumidor: Consumidor;
+
+  @ManyToOne(() => Fornecedor, fornecedor => fornecedor.pedidos, {
+    eager: true,
+  })
+  @JoinColumn({ name: 'fornecedor_id' })
+  fornecedor: Fornecedor;
+
   @Column()
   consumidor_id: string;
 
   @Column()
-  produto_id: string;
-
-  @JoinColumn({ name: 'produto_id' })
-  @OneToMany(() => Produto, produtos => produtos.pedido, { eager: true })
-  produtos: Produto;
-
-  @JoinColumn({ name: 'consumidor_id' })
-  @ManyToOne(() => Consumidor, consumidor => consumidor.pedidos, {
-    eager: true,
-  })
-  consumidor: Consumidor;
+  fornecedor_id: string;
 
   @Column()
   total: number;

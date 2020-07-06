@@ -5,20 +5,33 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  OneToMany,
+  JoinColumn,
 } from 'typeorm';
-
-import Pedido from './Pedido';
+import Fornecedor from './Fornecedor';
+import ItensPedido from './ItensPedido';
+import ArquivoProduto from './ArquivoProduto';
 
 @Entity('produto')
 class Produto {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @OneToMany(() => ArquivoProduto, arquivosProdutos => arquivosProdutos.produto)
+  arquivosProduto: ArquivoProduto;
+
+  @JoinColumn({ name: 'fornecedor_id' })
+  @ManyToOne(() => Fornecedor, fornecedor => fornecedor.produtos, {
+    eager: true,
+  })
+  fornecedor: Fornecedor;
+
+  @JoinColumn({ name: 'fornecedor_id' })
+  @OneToMany(() => ItensPedido, itens_pedidos => itens_pedidos.produto)
+  itensPedidos: ItensPedido;
+
   @Column()
   fornecedor_id: string;
-
-  @ManyToOne(() => Pedido, pedido => pedido.produtos)
-  pedido: Pedido;
 
   @Column()
   nome: string;
@@ -28,6 +41,9 @@ class Produto {
 
   @Column()
   status_pedido: boolean;
+
+  @Column()
+  estoque_produto: number;
 
   @Column()
   unidade_medida: number;
