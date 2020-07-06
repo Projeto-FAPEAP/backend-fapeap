@@ -15,7 +15,7 @@ A aplicação necessita dos seguintes recursos:
 
 
 ## Instalação
-Com o projeto aberto, utilize o gerenciador de pacotes: [yarn](https://classic.yarnpkg.com/en/docs/getting-started) para instalar as dependências do projeto ou o [npm](https://www.npmjs.com/get-npm).
+Com o terminal aberto dentro do projeto, utilize o gerenciador de pacotes: [yarn](https://classic.yarnpkg.com/en/docs/getting-started) para instalar as dependências do projeto ou o [npm](https://www.npmjs.com/get-npm).
 
 ```bash
 yarn
