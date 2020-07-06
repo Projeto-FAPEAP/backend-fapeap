@@ -43,6 +43,6 @@ $ docker start fapeap_postgres
 Após ter seguido todos os passos acima, rode as migrations a partir do projeto no terminal:
 
 ```bash
-typeorm migration:run
+yarn typeorm migration:run
 ```
  
