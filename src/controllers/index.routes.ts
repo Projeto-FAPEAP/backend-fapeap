@@ -3,10 +3,7 @@ import {
   listarTodosFornecedores,
   cadastrarFornecedor,
 } from './fornecedorController';
-import {
-  listarTodosConsumidores,
-  cadastrarConsumidor,
-} from './consumidorController';
+import { cadastrarConsumidor } from './consumidorController';
 
 import { autenticaConsumidor, autenticaFornecedor } from './sessaoController';
 
@@ -16,7 +13,6 @@ routes.post('/fornecedor', cadastrarFornecedor);
 routes.get('/fornecedor', listarTodosFornecedores);
 // Consumidor
 routes.post('/consumidor', cadastrarConsumidor);
-routes.get('/consumidor', listarTodosConsumidores);
 // Sessao
 routes.post('/sessao/consumidor', autenticaConsumidor);
 routes.post('/sessao/fornecedor', autenticaFornecedor);
