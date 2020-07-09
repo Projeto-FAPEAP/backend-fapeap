@@ -23,7 +23,7 @@ class ArquivoFornecedor {
   fornecedor: Fornecedor;
 
   @JoinColumn({ name: 'arquivo_id' })
-  @OneToOne(() => Arquivo, arquivo => arquivo.arquivo_fornecedor, {
+  @ManyToOne(() => Arquivo, arquivo => arquivo.arquivo_fornecedor, {
     eager: true,
   })
   arquivo: Arquivo;
