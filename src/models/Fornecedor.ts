@@ -43,10 +43,10 @@ class Fornecedor {
   senha: string;
 
   @Column()
-  telfone: string;
+  telefone: string;
 
   @Column()
-  telfone_whatsapp: string;
+  telefone_whatsapp: string;
 
   @Column()
   taxa_delivery: number;
