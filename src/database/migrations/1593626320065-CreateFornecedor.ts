@@ -47,8 +47,7 @@ export default class Createfornecedor1593626320065
           },
           {
             name: 'taxa_delivery',
-            type: 'decimal',
-            precision: 2,
+            type: 'money',
             isNullable: true,
           },
           {

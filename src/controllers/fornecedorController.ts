@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable no-param-reassign */
 import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
 import { hash } from 'bcryptjs';
@@ -10,8 +10,9 @@ export const listarTodosFornecedores = async (
   next: NextFunction,
 ): Promise<void> => {
   const fornecedorRepository = getRepository(Fornecedor);
-  const fornecedores = await fornecedorRepository.find();
-  response.status(200).json(fornecedores);
+  const collectionsFornecedores = await fornecedorRepository.find();
+  collectionsFornecedores.forEach(fornecedor => delete fornecedor.senha);
+  response.status(200).json(collectionsFornecedores);
   next();
 };
 
