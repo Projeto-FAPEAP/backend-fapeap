@@ -1,8 +1,10 @@
 import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
 import { compare } from 'bcryptjs';
+import { sign } from 'jsonwebtoken';
 import Consumidor from '../models/Consumidor';
 import Fornecedor from '../models/Fornecedor';
+import jwtConfig from '../config/auth';
 
 export const autenticaConsumidor = async (
   request: Request,
@@ -10,23 +12,34 @@ export const autenticaConsumidor = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const { email, senha } = request.body;
+    const { cpf, senha } = request.body;
     const consumidorRepository = getRepository(Consumidor);
     const consumidor = await consumidorRepository.findOne({
-      where: { email },
+      where: { cpf },
     });
 
     if (!consumidor) {
-      throw new Error('Email ou senha incorretos!');
+      throw new Error('CPF ou senha incorretos!');
     }
 
     const senhaEncontrada = await compare(senha, consumidor.senha);
 
     if (!senhaEncontrada) {
-      throw new Error('Email ou senha incorretos!');
+      throw new Error('CPF ou senha incorretos!');
     }
+
+    const { jwt_consumidor } = jwtConfig;
+
+    const tokenConsumidor = sign({}, jwt_consumidor.secret, {
+      subject: consumidor.id,
+      expiresIn: jwt_consumidor.expiresIn,
+    });
+
     delete consumidor.senha;
-    response.json(consumidor);
+
+    const consumidorDTO = { consumidor, tokenConsumidor };
+
+    response.json(consumidorDTO);
   } catch (error) {
     response.status(400).json({ error: error.message });
   }
@@ -39,23 +52,30 @@ export const autenticaFornecedor = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const { email, senha } = request.body;
+    const { cpf_cnpj, senha } = request.body;
     const fornecedorRepository = getRepository(Fornecedor);
     const fornecedor = await fornecedorRepository.findOne({
-      where: { email },
+      where: { cpf_cnpj },
     });
-
     if (!fornecedor) {
-      throw new Error('Email ou senha incorretos!');
+      throw new Error('Cpf ou senha incorretos! 1');
     }
 
     const senhaEncontrada = await compare(senha, fornecedor.senha);
 
     if (!senhaEncontrada) {
-      throw new Error('Email ou senha incorretos!');
+      throw new Error('Cpf ou senha incorretos! 2');
     }
+    const { jwt_fornecedor } = jwtConfig;
+
+    const tokenFornecedor = sign({}, jwt_fornecedor.secret, {
+      subject: fornecedor.id,
+      expiresIn: jwt_fornecedor.expiresIn,
+    });
+
     delete fornecedor.senha;
-    response.json(fornecedor);
+    const fornecedorDTO = { fornecedor, tokenFornecedor };
+    response.json(fornecedorDTO);
   } catch (error) {
     response.status(400).json({ error: error.message });
   }
