@@ -17,8 +17,8 @@ class Produto {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToMany(() => ArquivoProduto, arquivosProdutos => arquivosProdutos.produto)
-  arquivosProduto: ArquivoProduto;
+  @OneToMany(() => ArquivoProduto, arquivos => arquivos.produto)
+  arquivos: ArquivoProduto;
 
   @JoinColumn({ name: 'fornecedor_id' })
   @ManyToOne(() => Fornecedor, fornecedor => fornecedor.produtos, {
@@ -26,9 +26,11 @@ class Produto {
   })
   fornecedor: Fornecedor;
 
-  @JoinColumn({ name: 'fornecedor_id' })
-  @OneToMany(() => ItensPedido, itens_pedidos => itens_pedidos.produto)
-  itensPedidos: ItensPedido;
+  @JoinColumn({ name: 'itens_id' })
+  @ManyToOne(() => ItensPedido, itensPedido => itensPedido.produtos, {
+    eager: true,
+  })
+  itensPedido: ItensPedido;
 
   @Column()
   fornecedor_id: string;

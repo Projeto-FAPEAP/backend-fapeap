@@ -14,7 +14,7 @@ class Consumidor {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToMany(() => Pedido, pedido => pedido.consumidor)
+  @OneToMany(() => Pedido, pedidos => pedidos.consumidor)
   pedidos: Pedido;
 
   @Column()

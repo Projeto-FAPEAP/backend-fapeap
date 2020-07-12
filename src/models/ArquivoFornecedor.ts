@@ -1,38 +1,33 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
-  OneToOne,
   JoinColumn,
+  PrimaryColumn,
 } from 'typeorm';
 import Fornecedor from './Fornecedor';
-import Arquivo from './Arquivo';
 
 @Entity('arquivo_fornecedor')
-class ArquivoFornecedor {
-  @PrimaryGeneratedColumn('uuid')
+class Arquivo {
+  @PrimaryColumn('varchar')
   id: string;
 
   @JoinColumn({ name: 'fornecedor_id' })
-  @ManyToOne(() => Fornecedor, fornecedor => fornecedor.arquivos_fornecedor, {
+  @ManyToOne(() => Fornecedor, fornecedor => fornecedor.arquivos, {
     eager: true,
   })
   fornecedor: Fornecedor;
 
-  @JoinColumn({ name: 'arquivo_id' })
-  @ManyToOne(() => Arquivo, arquivo => arquivo.arquivo_fornecedor, {
-    eager: true,
-  })
-  arquivo: Arquivo;
+  @Column()
+  nome_original: string;
 
   @Column()
-  fornecedor_id: string;
+  size: number;
 
   @Column()
-  arquivo_id: string;
+  url: string;
 
   @CreateDateColumn()
   created_at: Date;
@@ -41,4 +36,4 @@ class ArquivoFornecedor {
   updated_at: Date;
 }
 
-export default ArquivoFornecedor;
+export default Arquivo;

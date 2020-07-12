@@ -1,38 +1,33 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
-  OneToOne,
   JoinColumn,
+  PrimaryColumn,
 } from 'typeorm';
 import Produto from './Produto';
-import Arquivo from './Arquivo';
 
 @Entity('arquivo_produto')
 class ArquivoProduto {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn('varchar')
   id: string;
 
   @JoinColumn({ name: 'produto_id' })
-  @ManyToOne(() => Produto, produto => produto.arquivosProduto, {
+  @ManyToOne(() => Produto, produto => produto.arquivos, {
     eager: true,
   })
   produto: Produto;
 
-  @JoinColumn({ name: 'arquivo_id' })
-  @OneToOne(() => Arquivo, arquivo => arquivo.arquivoProduto, {
-    eager: true,
-  })
-  arquivo: Arquivo;
+  @Column()
+  nome_original: string;
 
   @Column()
-  fornecedor_id: string;
+  size: number;
 
   @Column()
-  arquivo_id: string;
+  url: string;
 
   @CreateDateColumn()
   created_at: Date;

@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  OneToMany,
   JoinColumn,
 } from 'typeorm';
 import Produto from './Produto';
@@ -15,9 +16,8 @@ class ItensPedido {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Produto, produto => produto.itensPedidos, { eager: true })
-  @JoinColumn({ name: 'produto_id' })
-  produto: Produto;
+  @OneToMany(() => Produto, produtos => produtos.itensPedido)
+  produtos: Produto;
 
   @ManyToOne(() => Pedido, pedido => pedido.itensPedidos, { eager: true })
   @JoinColumn({ name: 'pedido_id' })
