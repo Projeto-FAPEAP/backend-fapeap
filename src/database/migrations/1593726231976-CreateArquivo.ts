@@ -1,24 +1,31 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export default class CreateArquivo1593726231976 implements MigrationInterface {
+export default class CreateArquivoFornecedor1593726231976
+  implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'arquivo',
+        name: 'arquivo_fornecedor',
         columns: [
           {
             name: 'id',
-            type: 'uuid',
+            type: 'varchar',
             isPrimary: true,
-            generationStrategy: 'uuid',
-            default: 'uuid_generate_v4()',
           },
           {
-            name: 'arquivo_referencia',
+            name: 'fornecedor_id',
+            type: 'uuid',
+          },
+          {
+            name: 'nome_original',
             type: 'varchar',
           },
           {
-            name: 'mimetype',
+            name: 'size',
+            type: 'varchar',
+          },
+          {
+            name: 'url',
             type: 'varchar',
           },
           {
@@ -37,6 +44,6 @@ export default class CreateArquivo1593726231976 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('arquivo');
+    await queryRunner.dropTable('arquivo_fornecedor');
   }
 }
