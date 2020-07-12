@@ -46,6 +46,8 @@ Recomendo utilizar o [DBeaver](https://dbeaver.com/) para visualizar os dados no
 
 Após instalar o software, crie um database chamado: **projeto_fapeap**
 
+![testee](https://user-images.githubusercontent.com/38565099/87255383-ac9b8800-c460-11ea-8cc7-7482e5720815.png)
+
 ## Migrations
 
 Após ter seguido todos os passos acima, rode as migrations a partir do projeto no terminal:
