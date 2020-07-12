@@ -15,6 +15,7 @@
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "date-fns": "^2.12.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
     "jsonwebtoken": "^8.5.1",
@@ -29,6 +30,7 @@
     "commit": "git-cz",
     "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
     "build": "tsc",
+    "start": "node dist/server.js",
     "dev:server": "ts-node-dev --inspect --transpileOnly --ignore-watch node_modules src/server.ts "
   },
   "devDependencies": {
