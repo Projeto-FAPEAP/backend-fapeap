@@ -99,7 +99,7 @@ export const cadastrarFornecedor = async (
       await arquivoRepository.save(imagem);
     });
 
-    request.files.videos.forEach(async (elementoVideo: arquivoMulter) => {
+    request.files.video.forEach(async (elementoVideo: arquivoMulter) => {
       const { filename: id, originalname: nome_original, size } = elementoVideo;
 
       const video = arquivoRepository.create({
