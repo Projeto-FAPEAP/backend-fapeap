@@ -3,6 +3,7 @@ import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
 import { hash } from 'bcryptjs';
 import Fornecedor from '../models/Fornecedor';
+import ArquivoFornecedor from '../models/ArquivoFornecedor';
 
 export const listarTodosFornecedores = async (
   _: Request,
@@ -70,7 +71,48 @@ export const cadastrarFornecedor = async (
       bairro,
       cep,
     });
+
     const fornecedor = await fornecedorRepository.save(fornecedorDTO);
+
+    const arquivoRepository = getRepository(ArquivoFornecedor);
+    type arquivoMulter = {
+      filename: string;
+      originalname: string;
+      size: number;
+    };
+
+    request.files.imagens.forEach(async (elementoImagem: arquivoMulter) => {
+      const {
+        filename: id,
+        originalname: nome_original,
+        size,
+      } = elementoImagem;
+
+      const imagem = arquivoRepository.create({
+        id,
+        nome_original,
+        size,
+        url: '',
+        fornecedor,
+      });
+
+      await arquivoRepository.save(imagem);
+    });
+
+    request.files.videos.forEach(async (elementoVideo: arquivoMulter) => {
+      const { filename: id, originalname: nome_original, size } = elementoVideo;
+
+      const video = arquivoRepository.create({
+        id,
+        nome_original,
+        size,
+        url: '',
+        fornecedor,
+      });
+
+      await arquivoRepository.save(video);
+    });
+
     delete fornecedor.senha;
     response.status(201).json(fornecedor);
   } catch (error) {
