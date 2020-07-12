@@ -55,3 +55,11 @@ Após ter seguido todos os passos acima, rode as migrations a partir do projeto 
 ```bash
 yarn typeorm migration:run
 ```
+
+## Servidor
+
+Utilize o seguinte comando para subir a API em ambiente de desenvolvimento:
+
+```bash
+yarn dev:server
+```
