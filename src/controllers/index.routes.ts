@@ -15,7 +15,7 @@ routes.post(
   '/fornecedor',
   multer(multerConfig).fields([
     { name: 'imagens', maxCount: 4 },
-    { name: 'videos', maxCount: 1 },
+    { name: 'video', maxCount: 1 },
   ]),
   cadastrarFornecedor,
 );
