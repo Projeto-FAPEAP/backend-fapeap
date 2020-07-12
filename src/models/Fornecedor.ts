@@ -7,8 +7,8 @@ import {
   OneToMany,
 } from 'typeorm';
 import Produto from './Produto';
-import ArquivoFornecedor from './ArquivoFornecedor';
 import Pedido from './Pedido';
+import Arquivo from './Arquivo';
 
 @Entity('fornecedor')
 class Fornecedor {
@@ -18,14 +18,11 @@ class Fornecedor {
   @OneToMany(() => Produto, produtos => produtos.fornecedor)
   produtos: Produto;
 
-  @OneToMany(
-    () => ArquivoFornecedor,
-    arquivos_fornecedor => arquivos_fornecedor.fornecedor,
-  )
-  arquivos_fornecedor: ArquivoFornecedor;
-
   @OneToMany(() => Pedido, pedidos => pedidos.fornecedor)
   pedidos: Pedido;
+
+  @OneToMany(() => Arquivo, arquivos => arquivos.fornecedor)
+  arquivos: Arquivo;
 
   @Column()
   nome_fornecedor: string;
