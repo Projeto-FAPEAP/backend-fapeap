@@ -14,16 +14,16 @@ const routes = Router();
 routes.post(
   '/fornecedor',
   multer(multerConfig).fields([
-    { name: 'imagem', maxCount: 4 },
-    { name: 'video', maxCount: 1 },
+    { name: 'imagens', maxCount: 4 },
+    { name: 'videos', maxCount: 1 },
   ]),
   cadastrarFornecedor,
 );
-
+// routes.post('/produto', authMiddlewareFornecedor, cadastrarProduto);
 routes.get('/fornecedor', authMiddlewareConsumidor, listarTodosFornecedores);
 // Consumidor
 routes.post('/consumidor', cadastrarConsumidor);
-// Sessao
+// Sessao - Login
 routes.post('/sessao/consumidor', autenticaConsumidor);
 routes.post('/sessao/fornecedor', autenticaFornecedor);
 
