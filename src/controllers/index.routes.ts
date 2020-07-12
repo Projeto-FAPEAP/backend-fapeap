@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import multer from 'multer';
+import multerConfig from '../config/multerConfig';
 import {
   listarTodosFornecedores,
   cadastrarFornecedor,
@@ -9,7 +11,15 @@ import { authMiddlewareConsumidor } from '../middlewares/authMiddleware';
 
 const routes = Router();
 // Fornecedor
-routes.post('/fornecedor', cadastrarFornecedor);
+routes.post(
+  '/fornecedor',
+  multer(multerConfig).fields([
+    { name: 'imagem', maxCount: 4 },
+    { name: 'video', maxCount: 1 },
+  ]),
+  cadastrarFornecedor,
+);
+
 routes.get('/fornecedor', authMiddlewareConsumidor, listarTodosFornecedores);
 // Consumidor
 routes.post('/consumidor', cadastrarConsumidor);
