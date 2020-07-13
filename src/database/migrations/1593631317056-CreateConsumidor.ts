@@ -41,7 +41,7 @@ export default class CreateConsumidor1593631317056
             type: 'varchar',
           },
           {
-            name: 'numero_casa',
+            name: 'numero_local',
             type: 'varchar',
           },
           {

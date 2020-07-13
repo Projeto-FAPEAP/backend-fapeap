@@ -15,7 +15,7 @@ export default class Createfornecedor1593626320065
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'nome_fornecedor',
+            name: 'nome',
             type: 'varchar',
           },
           {
@@ -39,11 +39,11 @@ export default class Createfornecedor1593626320065
           {
             name: 'telefone',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'telefone_whatsapp',
             type: 'varchar',
-            isNullable: true,
           },
           {
             name: 'taxa_delivery',
@@ -55,7 +55,7 @@ export default class Createfornecedor1593626320065
             type: 'varchar',
           },
           {
-            name: 'numero_fornecedor',
+            name: 'numero_local',
             type: 'varchar',
           },
           {
