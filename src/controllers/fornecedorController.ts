@@ -25,7 +25,7 @@ export const cadastrarFornecedor = async (
   try {
     const fornecedorRepository = getRepository(Fornecedor);
     const {
-      nome_fornecedor,
+      nome,
       nome_fantasia,
       cpf_cnpj,
       email,
@@ -34,7 +34,7 @@ export const cadastrarFornecedor = async (
       telefone_whatsapp,
       taxa_delivery,
       logradouro,
-      numero_fornecedor,
+      numero_local,
       bairro,
       cep,
     } = request.body;
@@ -58,7 +58,7 @@ export const cadastrarFornecedor = async (
     const hashedSenha = await hash(senha, 8);
 
     const fornecedorDTO = fornecedorRepository.create({
-      nome_fornecedor,
+      nome,
       nome_fantasia,
       cpf_cnpj,
       email,
@@ -67,7 +67,7 @@ export const cadastrarFornecedor = async (
       telefone_whatsapp,
       taxa_delivery,
       logradouro,
-      numero_fornecedor,
+      numero_local,
       bairro,
       cep,
     });
