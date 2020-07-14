@@ -71,7 +71,6 @@ export const cadastrarFornecedor = async (
       bairro,
       cep,
     });
-
     const fornecedor = await fornecedorRepository.save(fornecedorDTO);
 
     const arquivoRepository = getRepository(ArquivoFornecedor);
@@ -93,7 +92,7 @@ export const cadastrarFornecedor = async (
         nome_original,
         size,
         url: '',
-        fornecedor,
+        fornecedor_id: fornecedor.id,
       });
 
       await arquivoRepository.save(imagem);
@@ -107,7 +106,7 @@ export const cadastrarFornecedor = async (
         nome_original,
         size,
         url: '',
-        fornecedor,
+        fornecedor_id: fornecedor.id,
       });
 
       await arquivoRepository.save(video);
