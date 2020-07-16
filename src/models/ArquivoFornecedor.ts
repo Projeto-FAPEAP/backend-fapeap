@@ -1,39 +1,17 @@
-import {
-  Entity,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
-  PrimaryColumn,
-} from 'typeorm';
+import { Entity, ManyToOne, JoinColumn, Column } from 'typeorm';
 import Fornecedor from './Fornecedor';
+import Arquivo from './Arquivo';
 
 @Entity('arquivo_fornecedor')
-class Arquivo {
-  @PrimaryColumn('varchar')
-  id: string;
-
+class ArquivoFornecedor extends Arquivo {
   @JoinColumn({ name: 'fornecedor_id' })
   @ManyToOne(() => Fornecedor, fornecedor => fornecedor.arquivos, {
     eager: true,
   })
   fornecedor: Fornecedor;
 
-  @Column()
-  nome_original: string;
-
-  @Column()
-  size: number;
-
-  @Column()
-  url: string;
-
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
+  @Column('uuid')
+  fornecedor_id: string;
 }
 
-export default Arquivo;
+export default ArquivoFornecedor;

@@ -17,7 +17,7 @@ export const cadastrarConsumidor = async (
       senha,
       telefone_whatsapp,
       logradouro,
-      numero_casa,
+      numero_local,
       bairro,
       cep,
     } = request.body;
@@ -47,7 +47,7 @@ export const cadastrarConsumidor = async (
       senha: hashedSenha,
       telefone_whatsapp,
       logradouro,
-      numero_casa,
+      numero_local,
       bairro,
       cep,
     });
