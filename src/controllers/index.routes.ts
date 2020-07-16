@@ -13,10 +13,7 @@ const routes = Router();
 // Fornecedor
 routes.post(
   '/fornecedor',
-  multer(multerConfig).fields([
-    { name: 'imagens', maxCount: 4 },
-    { name: 'video', maxCount: 1 },
-  ]),
+  multer(multerConfig).single('arquivo'),
   cadastrarFornecedor,
 );
 // routes.post('/produto', authMiddlewareFornecedor, cadastrarProduto);

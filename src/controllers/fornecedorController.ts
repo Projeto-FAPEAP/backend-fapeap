@@ -39,6 +39,8 @@ export const cadastrarFornecedor = async (
       cep,
     } = request.body;
 
+    console.log(request.body, 'hh');
+
     const checkEmailExists = await fornecedorRepository.findOne({
       where: { email },
     });
@@ -80,7 +82,7 @@ export const cadastrarFornecedor = async (
       size: number;
     };
 
-    request.files.imagens.forEach(async (elementoImagem: arquivoMulter) => {
+    /* request.files.imagens.forEach(async (elementoImagem: arquivoMulter) => {
       const {
         filename: id,
         originalname: nome_original,
@@ -110,7 +112,19 @@ export const cadastrarFornecedor = async (
       });
 
       await arquivoRepository.save(video);
+    }); */
+
+    const { filename: id, originalname: nome_original, size } = request.file;
+
+    const arquivoFile = arquivoRepository.create({
+      id,
+      nome_original,
+      size,
+      url: '',
+      fornecedor_id: fornecedor.id,
     });
+
+    await arquivoRepository.save(arquivoFile);
 
     delete fornecedor.senha;
     response.status(201).json(fornecedor);
