@@ -2,11 +2,11 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 
 abstract class Arquivo {
-  @PrimaryColumn('varchar')
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
