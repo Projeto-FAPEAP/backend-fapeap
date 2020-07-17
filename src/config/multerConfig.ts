@@ -13,4 +13,5 @@ export default {
       return callback(null, fileName);
     },
   }),
+  limits: { fieldSize: 25 * 1024 * 1024 }
 };

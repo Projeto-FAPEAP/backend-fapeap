@@ -5,6 +5,8 @@ import { hash } from 'bcryptjs';
 import Fornecedor from '../models/Fornecedor';
 import ArquivoFornecedor from '../models/ArquivoFornecedor';
 
+import { uuid } from 'uuidv4';
+
 export const listarTodosFornecedores = async (
   _: Request,
   response: Response,
@@ -80,17 +82,13 @@ export const cadastrarFornecedor = async (
       size: number;
     };
 
-    request.files.imagens.forEach(async (elementoImagem: arquivoMulter) => {
-      const {
-        filename: id,
-        originalname: nome_original,
-        size,
-      } = elementoImagem;
+    request.body.imagens.forEach(async (elementoImagem: arquivoMulter) => {
+      const {originalname,size} = elementoImagem;
 
       const imagem = arquivoRepository.create({
-        id,
-        nome_original,
-        size,
+        id: uuid(),
+        nome_original: "originalname.jpg",
+        size: 10000,
         url: '',
         fornecedor_id: fornecedor.id,
       });
@@ -98,13 +96,13 @@ export const cadastrarFornecedor = async (
       await arquivoRepository.save(imagem);
     });
 
-    request.files.video.forEach(async (elementoVideo: arquivoMulter) => {
-      const { filename: id, originalname: nome_original, size } = elementoVideo;
+    request.body.video.forEach(async (elementoVideo: arquivoMulter) => {
+      const { originalname, size } = elementoVideo;
 
       const video = arquivoRepository.create({
-        id,
-        nome_original,
-        size,
+        id: uuid(),
+        nome_original: "originalname.mp4",
+        size: 10000,
         url: '',
         fornecedor_id: fornecedor.id,
       });
