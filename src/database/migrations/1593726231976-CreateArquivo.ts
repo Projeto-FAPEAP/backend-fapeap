@@ -9,10 +9,8 @@ export default class CreateArquivoFornecedor1593726231976
         columns: [
           {
             name: 'id',
-            type: 'uuid',
+            type: 'varchar',
             isPrimary: true,
-            generationStrategy: 'uuid',
-            default: 'uuid_generate_v4()',
           },
           {
             name: 'fornecedor_id',
