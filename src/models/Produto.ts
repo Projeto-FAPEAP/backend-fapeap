@@ -42,7 +42,7 @@ class Produto {
   estoque_produto: number;
 
   @Column()
-  unidade_medida: number;
+  unidade_medida: string;
 
   @CreateDateColumn()
   created_at: Date;
