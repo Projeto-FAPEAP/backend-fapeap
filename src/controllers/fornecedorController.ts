@@ -2,6 +2,7 @@
 import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
 import { hash } from 'bcryptjs';
+import { uuid } from 'uuidv4';
 import Fornecedor from '../models/Fornecedor';
 import ArquivoFornecedor from '../models/ArquivoFornecedor';
 
@@ -10,10 +11,14 @@ export const listarTodosFornecedores = async (
   response: Response,
   next: NextFunction,
 ): Promise<void> => {
-  const fornecedorRepository = getRepository(Fornecedor);
-  const collectionsFornecedores = await fornecedorRepository.find();
-  collectionsFornecedores.forEach(fornecedor => delete fornecedor.senha);
-  response.status(200).json(collectionsFornecedores);
+  try {
+    const fornecedorRepository = getRepository(Fornecedor);
+    const collectionsFornecedores = await fornecedorRepository.find();
+    collectionsFornecedores.forEach(fornecedor => delete fornecedor.senha);
+    response.status(200).json(collectionsFornecedores);
+  } catch (error) {
+    response.status(400).json({ error: error.message });
+  }
   next();
 };
 
@@ -82,17 +87,13 @@ export const cadastrarFornecedor = async (
       size: number;
     };
 
-    /* request.files.imagens.forEach(async (elementoImagem: arquivoMulter) => {
-      const {
-        filename: id,
-        originalname: nome_original,
-        size,
-      } = elementoImagem;
+    request.body.imagens.forEach(async (elementoImagem: arquivoMulter) => {
+      // const { originalname, size } = elementoImagem;
 
       const imagem = arquivoRepository.create({
-        id,
-        nome_original,
-        size,
+        id: uuid(),
+        nome_original: 'originalname.jpg',
+        size: 10000,
         url: '',
         fornecedor_id: fornecedor.id,
       });
@@ -100,19 +101,19 @@ export const cadastrarFornecedor = async (
       await arquivoRepository.save(imagem);
     });
 
-    request.files.video.forEach(async (elementoVideo: arquivoMulter) => {
-      const { filename: id, originalname: nome_original, size } = elementoVideo;
+    request.body.video.forEach(async (elementoVideo: arquivoMulter) => {
+      // const { originalname, size } = elementoVideo;
 
       const video = arquivoRepository.create({
-        id,
-        nome_original,
-        size,
+        id: uuid(),
+        nome_original: 'originalname.mp4',
+        size: 10000,
         url: '',
         fornecedor_id: fornecedor.id,
       });
 
       await arquivoRepository.save(video);
-    }); */
+    });
 
     const { filename: id, originalname: nome_original, size } = request.file;
 
@@ -128,6 +129,53 @@ export const cadastrarFornecedor = async (
 
     delete fornecedor.senha;
     response.status(201).json(fornecedor);
+  } catch (error) {
+    response.status(400).json({ error: error.message });
+  }
+  next();
+};
+
+export const listarFornecedor = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { id } = request.params;
+    const fornecedorRepository = getRepository(Fornecedor);
+
+    const fornecedor = await fornecedorRepository.find({
+      where: { id },
+    });
+
+    if (!fornecedor) {
+      throw new Error('Fornecedor não encontrado!');
+    }
+
+    response.status(200).json(fornecedor);
+  } catch (error) {
+    response.status(400).json({ error: error.message });
+  }
+  next();
+};
+
+export const deletarFornecedor = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { id } = request.user;
+
+    if (!id) {
+      throw new Error('Usuário não autenticado!');
+    }
+
+    const fornecedorRepository = getRepository(Fornecedor);
+
+    await fornecedorRepository.delete(id);
+
+    response.status(200).json({ deleted: 'sucess' });
   } catch (error) {
     response.status(400).json({ error: error.message });
   }
