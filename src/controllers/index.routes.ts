@@ -20,7 +20,10 @@ import {
   deletarProduto,
 } from './produtoController';
 import { autenticarConsumidor, autenticarFornecedor } from './sessaoController';
-import { authMiddlewareFornecedor } from '../middlewares/authMiddleware';
+import {
+  authMiddlewareFornecedor,
+  authMiddlewareConsumidor,
+} from '../middlewares/authMiddleware';
 
 const routes = Router();
 
@@ -34,20 +37,20 @@ routes.post(
   cadastrarFornecedor,
 );
 routes.get('/fornecedor', listarTodosFornecedores);
-routes.get('/fornecedor', listarFornecedor);
-routes.delete('/fornecedor', autenticarFornecedor, deletarFornecedor);
+routes.get('/fornecedor/:id', listarFornecedor);
+routes.delete('/fornecedor', authMiddlewareFornecedor, deletarFornecedor);
 
 // Produto
 routes.post('/produto', authMiddlewareFornecedor, cadastrarProduto);
 routes.get('/produto', authMiddlewareFornecedor, listarProdutos);
-routes.get('/produto', authMiddlewareFornecedor, listarProduto);
+routes.get('/produto:/id', authMiddlewareFornecedor, listarProduto);
 routes.delete('/produto', authMiddlewareFornecedor, deletarProduto);
 
 // Consumidor
 routes.post('/consumidor', cadastrarConsumidor);
 routes.get('/consumidor', listarTodosConsumidores);
-routes.get('/consumidor', listarConsumidor);
-routes.delete('/consumidor', autenticarConsumidor, deletarConsumidor);
+routes.get('/consumidor/:id', listarConsumidor);
+routes.delete('/consumidor', authMiddlewareConsumidor, deletarConsumidor);
 
 // Sessao - Login
 routes.post('/sessao/consumidor', autenticarConsumidor);
