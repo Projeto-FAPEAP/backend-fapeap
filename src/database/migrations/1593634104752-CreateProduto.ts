@@ -36,8 +36,7 @@ export default class CreateProduto1593634104752 implements MigrationInterface {
           },
           {
             name: 'unidade_medida',
-            type: 'numeric',
-            precision: 2,
+            type: 'varchar',
           },
           {
             name: 'created_at',
