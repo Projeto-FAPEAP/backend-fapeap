@@ -2,14 +2,28 @@ import { Router } from 'express';
 import multer from 'multer';
 import multerConfig from '../config/multerConfig';
 import {
-  listarTodosFornecedores,
   cadastrarFornecedor,
+  listarTodosFornecedores,
+  listarFornecedor,
+  deletarFornecedor,
 } from './fornecedorController';
-import { cadastrarConsumidor } from './consumidorController';
-import { autenticaConsumidor, autenticaFornecedor } from './sessaoController';
-import { authMiddlewareConsumidor } from '../middlewares/authMiddleware';
+import {
+  cadastrarConsumidor,
+  listarTodosConsumidores,
+  listarConsumidor,
+  deletarConsumidor,
+} from './consumidorController';
+import {
+  cadastrarProduto,
+  listarProdutos,
+  listarProduto,
+  deletarProduto,
+} from './produtoController';
+import { autenticarConsumidor, autenticarFornecedor } from './sessaoController';
+import { authMiddlewareFornecedor } from '../middlewares/authMiddleware';
 
 const routes = Router();
+
 // Fornecedor
 routes.post(
   '/fornecedor',
@@ -19,12 +33,24 @@ routes.post(
   ]),
   cadastrarFornecedor,
 );
-// routes.post('/produto', authMiddlewareFornecedor, cadastrarProduto);
-routes.get('/fornecedor', authMiddlewareConsumidor, listarTodosFornecedores);
+routes.get('/fornecedor', listarTodosFornecedores);
+routes.get('/fornecedor', listarFornecedor);
+routes.delete('/fornecedor', autenticarFornecedor, deletarFornecedor);
+
+// Produto
+routes.post('/produto', authMiddlewareFornecedor, cadastrarProduto);
+routes.get('/produto', authMiddlewareFornecedor, listarProdutos);
+routes.get('/produto', authMiddlewareFornecedor, listarProduto);
+routes.delete('/produto', authMiddlewareFornecedor, deletarProduto);
+
 // Consumidor
 routes.post('/consumidor', cadastrarConsumidor);
+routes.get('/consumidor', listarTodosConsumidores);
+routes.get('/consumidor', listarConsumidor);
+routes.delete('/consumidor', autenticarConsumidor, deletarConsumidor);
+
 // Sessao - Login
-routes.post('/sessao/consumidor', autenticaConsumidor);
-routes.post('/sessao/fornecedor', autenticaFornecedor);
+routes.post('/sessao/consumidor', autenticarConsumidor);
+routes.post('/sessao/fornecedor', autenticarFornecedor);
 
 export default routes;
