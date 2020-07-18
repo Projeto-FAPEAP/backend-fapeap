@@ -26,12 +26,6 @@ class Produto {
   })
   fornecedor: Fornecedor;
 
-  @JoinColumn({ name: 'itens_id' })
-  @ManyToOne(() => ItensPedido, itensPedido => itensPedido.produtos, {
-    eager: true,
-  })
-  itensPedido: ItensPedido;
-
   @Column()
   fornecedor_id: string;
 
@@ -42,7 +36,7 @@ class Produto {
   preco: number;
 
   @Column()
-  status_pedido: boolean;
+  status_produto: boolean;
 
   @Column()
   estoque_produto: number;
