@@ -6,7 +6,7 @@ import Consumidor from '../models/Consumidor';
 import Fornecedor from '../models/Fornecedor';
 import jwtConfig from '../config/auth';
 
-export const autenticaConsumidor = async (
+export const autenticarConsumidor = async (
   request: Request,
   response: Response,
   next: NextFunction,
@@ -46,7 +46,7 @@ export const autenticaConsumidor = async (
   next();
 };
 
-export const autenticaFornecedor = async (
+export const autenticarFornecedor = async (
   request: Request,
   response: Response,
   next: NextFunction,
