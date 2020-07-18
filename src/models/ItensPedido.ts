@@ -5,19 +5,14 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
-  OneToMany,
   JoinColumn,
 } from 'typeorm';
-import Produto from './Produto';
 import Pedido from './Pedido';
 
 @Entity('itens_pedido')
 class ItensPedido {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  @OneToMany(() => Produto, produtos => produtos.itensPedido)
-  produtos: Produto;
 
   @ManyToOne(() => Pedido, pedido => pedido.itensPedidos, { eager: true })
   @JoinColumn({ name: 'pedido_id' })
