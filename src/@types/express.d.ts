@@ -1,6 +1,6 @@
 declare namespace Express {
   export interface Request {
-    body: {
+    files: {
       imagens: any;
       video: any;
     };

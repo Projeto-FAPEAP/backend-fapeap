@@ -81,19 +81,24 @@ export const cadastrarFornecedor = async (
     const fornecedor = await fornecedorRepository.save(fornecedorDTO);
 
     const arquivoRepository = getRepository(ArquivoFornecedor);
+
     type arquivoMulter = {
       filename: string;
       originalname: string;
       size: number;
     };
 
-    request.body.imagens.forEach(async (elementoImagem: arquivoMulter) => {
-      // const { originalname, size } = elementoImagem;
+    request.files.imagens.forEach(async (elementoImagem: arquivoMulter) => {
+      const {
+        filename: id,
+        originalname: nome_original,
+        size,
+      } = elementoImagem;
 
       const imagem = arquivoRepository.create({
-        id: uuid(),
-        nome_original: 'originalname.jpg',
-        size: 10000,
+        id,
+        nome_original,
+        size,
         url: '',
         fornecedor_id: fornecedor.id,
       });
@@ -101,13 +106,13 @@ export const cadastrarFornecedor = async (
       await arquivoRepository.save(imagem);
     });
 
-    request.body.video.forEach(async (elementoVideo: arquivoMulter) => {
-      // const { originalname, size } = elementoVideo;
+    request.files.video.forEach(async (elementoVideo: arquivoMulter) => {
+      const { filename: id, originalname: nome_original, size } = elementoVideo;
 
       const video = arquivoRepository.create({
-        id: uuid(),
-        nome_original: 'originalname.mp4',
-        size: 10000,
+        id,
+        nome_original,
+        size,
         url: '',
         fornecedor_id: fornecedor.id,
       });
