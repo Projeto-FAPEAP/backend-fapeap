@@ -20,6 +20,7 @@ import {
   deletarProduto,
 } from './produtoController';
 import { autenticarConsumidor, autenticarFornecedor } from './sessaoController';
+import { listaArquivosFornecedor } from './arquivoController';
 import {
   authMiddlewareFornecedor,
   authMiddlewareConsumidor,
@@ -55,5 +56,12 @@ routes.delete('/consumidor', authMiddlewareConsumidor, deletarConsumidor);
 // Sessao - Login
 routes.post('/sessao/consumidor', autenticarConsumidor);
 routes.post('/sessao/fornecedor', autenticarFornecedor);
+
+// Arquivos
+routes.get(
+  '/arquivofornecedor',
+  authMiddlewareFornecedor,
+  listaArquivosFornecedor,
+);
 
 export default routes;
