@@ -79,13 +79,8 @@ export const cadastrarFornecedor = async (
     const fornecedor = await fornecedorRepository.save(fornecedorDTO);
 
     const arquivoRepository = getRepository(ArquivoFornecedor);
-    type arquivoMulter = {
-      filename: string;
-      originalname: string;
-      size: number;
-    };
 
-    request.files.imagens.forEach(async (elementoImagem: arquivoMulter) => {
+    request.files.imagens.forEach(async elementoImagem => {
       const {
         filename: id,
         originalname: nome_original,
@@ -103,7 +98,7 @@ export const cadastrarFornecedor = async (
       await arquivoRepository.save(imagem);
     });
 
-    request.files.video.forEach(async (elementoVideo: arquivoMulter) => {
+    request.files.video.forEach(async elementoVideo => {
       const { filename: id, originalname: nome_original, size } = elementoVideo;
 
       const video = arquivoRepository.create({
@@ -116,6 +111,12 @@ export const cadastrarFornecedor = async (
 
       await arquivoRepository.save(video);
     });
+
+    if (!((await arquivoRepository.find()).length > 0)) {
+      const { id } = fornecedor;
+      fornecedorRepository.delete({ id });
+      throw new Error('Você não preencheu os campos de arquivos corretamente!');
+    }
 
     delete fornecedor.senha;
     response.status(201).json(fornecedor);
