@@ -30,7 +30,7 @@ const routes = Router();
 // Fornecedor
 routes.post(
   '/fornecedor',
-  multer(multerConfig).single('arquivo'),
+  multer(multerConfig).array('file'),
   cadastrarFornecedor,
 );
 routes.get('/fornecedor', listarTodosFornecedores);
