@@ -79,8 +79,8 @@ export const cadastrarFornecedor = async (
     const fornecedor = await fornecedorRepository.save(fornecedorDTO);
 
     const arquivoRepository = getRepository(ArquivoFornecedor);
-
-    request.files.file.forEach(async elementoFile => {
+    console.log(request.files);
+    request.files.forEach(async elementoFile => {
       const { filename: id, originalname: nome_original, size } = elementoFile;
 
       const fileElement = arquivoRepository.create({

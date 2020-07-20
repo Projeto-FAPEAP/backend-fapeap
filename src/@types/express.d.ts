@@ -10,9 +10,8 @@ interface Field {
 }
 declare namespace Express {
   export interface Request {
-    files: {
-      file: Field[];
-    };
+    files: Field[];
+
     user: {
       id: string;
     };
