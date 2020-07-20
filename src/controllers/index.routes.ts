@@ -31,10 +31,7 @@ const routes = Router();
 // Fornecedor
 routes.post(
   '/fornecedor',
-  multer(multerConfig).fields([
-    { name: 'imagens', maxCount: 4 },
-    { name: 'video', maxCount: 1 },
-  ]),
+  multer(multerConfig).array('file', 5)),
   cadastrarFornecedor,
 );
 routes.get('/fornecedor', listarTodosFornecedores);

@@ -80,14 +80,10 @@ export const cadastrarFornecedor = async (
 
     const arquivoRepository = getRepository(ArquivoFornecedor);
 
-    request.files.imagens.forEach(async elementoImagem => {
-      const {
-        filename: id,
-        originalname: nome_original,
-        size,
-      } = elementoImagem;
+    request.files.forEach(async elementoFile => {
+      const { filename: id, originalname: nome_original, size } = elementoFile;
 
-      const imagem = arquivoRepository.create({
+      const fileElement = arquivoRepository.create({
         id,
         nome_original,
         size,
@@ -95,10 +91,10 @@ export const cadastrarFornecedor = async (
         fornecedor_id: fornecedor.id,
       });
 
-      await arquivoRepository.save(imagem);
+      await arquivoRepository.save(fileElement);
     });
 
-    request.files.video.forEach(async elementoVideo => {
+    /* request.files.video.forEach(async elementoVideo => {
       const { filename: id, originalname: nome_original, size } = elementoVideo;
 
       const video = arquivoRepository.create({
@@ -110,7 +106,7 @@ export const cadastrarFornecedor = async (
       });
 
       await arquivoRepository.save(video);
-    });
+    }); */
 
     if (!((await arquivoRepository.find()).length > 0)) {
       const { id } = fornecedor;
