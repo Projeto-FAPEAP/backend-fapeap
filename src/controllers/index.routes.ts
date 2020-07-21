@@ -42,8 +42,8 @@ routes.delete('/fornecedor', authMiddlewareFornecedor, deletarFornecedor);
 // Produto
 routes.post('/produto', authMiddlewareFornecedor, cadastrarProduto);
 routes.get('/produto', authMiddlewareFornecedor, listarProdutos);
-routes.get('/produto:/id', authMiddlewareFornecedor, listarProduto);
-routes.put('/produto:/id', authMiddlewareFornecedor, atualizarProduto);
+routes.get('/produto/:id', authMiddlewareFornecedor, listarProduto);
+routes.put('/produto/:id', authMiddlewareFornecedor, atualizarProduto);
 routes.delete('/produto', authMiddlewareFornecedor, deletarProduto);
 
 // Consumidor
