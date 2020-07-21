@@ -17,9 +17,11 @@ import {
   cadastrarProduto,
   listarProdutos,
   listarProduto,
+  atualizarProduto,
   deletarProduto,
 } from './produtoController';
 import { autenticarConsumidor, autenticarFornecedor } from './sessaoController';
+import { listaArquivosFornecedor } from './arquivoController';
 import {
   authMiddlewareFornecedor,
   authMiddlewareConsumidor,
@@ -40,8 +42,9 @@ routes.delete('/fornecedor', authMiddlewareFornecedor, deletarFornecedor);
 // Produto
 routes.post('/produto', authMiddlewareFornecedor, cadastrarProduto);
 routes.get('/produto', authMiddlewareFornecedor, listarProdutos);
-routes.get('/produto:/id', authMiddlewareFornecedor, listarProduto);
-routes.delete('/produto', authMiddlewareFornecedor, deletarProduto);
+routes.get('/produto/:id', authMiddlewareFornecedor, listarProduto);
+routes.put('/produto/:id', authMiddlewareFornecedor, atualizarProduto);
+routes.delete('/produto/:id', authMiddlewareFornecedor, deletarProduto);
 
 // Consumidor
 routes.post('/consumidor', cadastrarConsumidor);
@@ -52,5 +55,12 @@ routes.delete('/consumidor', authMiddlewareConsumidor, deletarConsumidor);
 // Sessao - Login
 routes.post('/sessao/consumidor', autenticarConsumidor);
 routes.post('/sessao/fornecedor', autenticarFornecedor);
+
+// Arquivos
+routes.get(
+  '/arquivofornecedor',
+  authMiddlewareFornecedor,
+  listaArquivosFornecedor,
+);
 
 export default routes;
