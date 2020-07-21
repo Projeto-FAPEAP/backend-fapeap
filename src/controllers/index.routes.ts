@@ -17,6 +17,7 @@ import {
   cadastrarProduto,
   listarProdutos,
   listarProduto,
+  atualizarProduto,
   deletarProduto,
 } from './produtoController';
 import { autenticarConsumidor, autenticarFornecedor } from './sessaoController';
@@ -42,6 +43,7 @@ routes.delete('/fornecedor', authMiddlewareFornecedor, deletarFornecedor);
 routes.post('/produto', authMiddlewareFornecedor, cadastrarProduto);
 routes.get('/produto', authMiddlewareFornecedor, listarProdutos);
 routes.get('/produto:/id', authMiddlewareFornecedor, listarProduto);
+routes.put('/produto:/id', authMiddlewareFornecedor, atualizarProduto);
 routes.delete('/produto', authMiddlewareFornecedor, deletarProduto);
 
 // Consumidor
