@@ -113,9 +113,7 @@ export const deletarProduto = async (
 
     const produtoRepository = getRepository(Produto);
 
-    const produto = (
-      await produtoRepository.find({ where: fornecedor_id })
-    ).find(produtoInstancia => produtoInstancia.id === id);
+    const produto = await produtoRepository.findOne(id);
 
     if (!produto) {
       throw new Error('Produto não encontrado!');
@@ -147,9 +145,7 @@ export const atualizarProduto = async (
 
     const produtoRepository = getRepository(Produto);
 
-    const produto = (
-      await produtoRepository.find({ where: fornecedor_id })
-    ).find(produtoInstancia => produtoInstancia.id === id);
+    const produto = await produtoRepository.findOne(id);
 
     if (!produto) {
       throw new Error('Produto não encontrado!');
