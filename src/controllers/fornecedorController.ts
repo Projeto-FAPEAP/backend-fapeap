@@ -2,7 +2,6 @@
 import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
 import { hash } from 'bcryptjs';
-import { uuid } from 'uuidv4';
 import Fornecedor from '../models/Fornecedor';
 import ArquivoFornecedor from '../models/ArquivoFornecedor';
 
@@ -108,7 +107,15 @@ export const cadastrarFornecedor = async (
       await arquivoRepository.save(video);
     }); */
 
-    if (!((await arquivoRepository.find()).length > 0)) {
+    if (
+      !(
+        (
+          await arquivoRepository.find({
+            where: { fornecedor_id: fornecedor.id },
+          })
+        ).length > 0
+      )
+    ) {
       const { id } = fornecedor;
       fornecedorRepository.delete({ id });
       throw new Error('Você não preencheu os campos de arquivos corretamente!');
