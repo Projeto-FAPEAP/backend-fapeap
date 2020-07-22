@@ -23,8 +23,7 @@ export default class CreateProduto1593634104752 implements MigrationInterface {
           },
           {
             name: 'preco',
-            type: 'decimal',
-            precision: 2,
+            type: 'money',
           },
           {
             name: 'status_produto',
