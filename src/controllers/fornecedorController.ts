@@ -108,11 +108,7 @@ export const cadastrarFornecedor = async (
       await arquivoRepository.save(video);
     }); */
 
-    if (
-      !(await arquivoRepository.find({
-        where: { fornecedor_id: fornecedor.id },
-      }))
-    ) {
+    if (request.files.length === 0) {
       const { id } = fornecedor;
       await fornecedorRepository.delete({ id });
       throw new Error('Você não preencheu os campos de arquivos corretamente!');
