@@ -47,7 +47,7 @@ export default class Createfornecedor1593626320065
           },
           {
             name: 'taxa_delivery',
-            type: 'money',
+            type: 'numeric',
             isNullable: true,
           },
           {
@@ -69,6 +69,7 @@ export default class Createfornecedor1593626320065
           {
             name: 'verificado',
             type: 'boolean',
+            default: false,
           },
           {
             name: 'created_at',
