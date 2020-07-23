@@ -18,10 +18,10 @@ class HistoricoPedido {
   @JoinColumn({ name: 'pedido_id' })
   pedido: Pedido;
 
-  @Column()
+  @Column('uuid')
   pedido_id: string;
 
-  @Column()
+  @Column('boolean')
   status: boolean;
 
   @CreateDateColumn()

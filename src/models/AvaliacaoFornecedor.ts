@@ -11,7 +11,7 @@ class AvaliacaoFornecedor {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column('integer')
   estrelas: number;
 
   @CreateDateColumn()

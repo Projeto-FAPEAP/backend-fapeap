@@ -1,27 +1,26 @@
 import { Entity, Column, OneToMany } from 'typeorm';
 import Produto from './Produto';
-import Pedido from './Pedido';
 import ArquivoFornecedor from './ArquivoFornecedor';
 import Usuario from './Usuario';
 
 @Entity('fornecedor')
 class Fornecedor extends Usuario {
   @OneToMany(() => Produto, produtos => produtos.fornecedor)
-  produtos: Produto;
+  produtos: Produto[];
 
   @OneToMany(() => ArquivoFornecedor, arquivos => arquivos.fornecedor)
-  arquivos: ArquivoFornecedor;
+  arquivos: ArquivoFornecedor[];
 
-  @Column()
+  @Column('varchar')
   nome_fantasia: string;
 
-  @Column()
+  @Column('varchar')
   cpf_cnpj: string;
 
-  @Column()
+  @Column('varchar')
   telefone: string;
 
-  @Column()
+  @Column('numeric')
   taxa_delivery: number;
 
   @Column({ default: false })

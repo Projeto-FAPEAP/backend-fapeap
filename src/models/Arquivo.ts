@@ -9,13 +9,13 @@ abstract class Arquivo {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column('varchar')
   nome_original: string;
 
-  @Column()
+  @Column('bigint')
   size: number;
 
-  @Column()
+  @Column('varchar')
   url: string;
 
   @CreateDateColumn()

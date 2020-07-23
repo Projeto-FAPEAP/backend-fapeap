@@ -18,7 +18,10 @@ class Produto {
   id: string;
 
   @OneToMany(() => ArquivoProduto, arquivos => arquivos.produto)
-  arquivos: ArquivoProduto;
+  arquivos: ArquivoProduto[];
+
+  @OneToMany(() => ItensPedido, itens_pedidos => itens_pedidos.produto)
+  itens_pedidos: ItensPedido[];
 
   @JoinColumn({ name: 'fornecedor_id' })
   @ManyToOne(() => Fornecedor, fornecedor => fornecedor.produtos, {
@@ -26,22 +29,22 @@ class Produto {
   })
   fornecedor: Fornecedor;
 
-  @Column()
+  @Column('uuid')
   fornecedor_id: string;
 
-  @Column()
+  @Column('varchar')
   nome: string;
 
-  @Column()
+  @Column('numeric')
   preco: number;
 
-  @Column()
+  @Column('boolean')
   status_produto: boolean;
 
-  @Column()
+  @Column('integer')
   estoque_produto: number;
 
-  @Column()
+  @Column('varchar')
   unidade_medida: string;
 
   @CreateDateColumn()

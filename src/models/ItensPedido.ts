@@ -1,6 +1,6 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
@@ -8,29 +8,31 @@ import {
   JoinColumn,
 } from 'typeorm';
 import Pedido from './Pedido';
+import Produto from './Produto';
 
 @Entity('itens_pedido')
 class ItensPedido {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryColumn()
+  pedido_id: string;
+
+  @PrimaryColumn()
+  produto_id: string;
 
   @ManyToOne(() => Pedido, pedido => pedido.itensPedidos, { eager: true })
   @JoinColumn({ name: 'pedido_id' })
   pedido: Pedido;
 
-  @Column()
-  produto_id: string;
+  @ManyToOne(() => Produto, produto => produto.itens_pedidos, { eager: true })
+  @JoinColumn({ name: 'produto_id' })
+  produto: Produto;
 
-  @Column()
-  pedido_id: string;
-
-  @Column()
+  @Column('numeric')
   preco_venda: number;
 
-  @Column()
+  @Column('integer')
   quantidade: number;
 
-  @Column()
+  @Column('numeric')
   total: number;
 
   @CreateDateColumn()
