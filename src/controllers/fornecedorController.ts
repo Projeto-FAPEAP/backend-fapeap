@@ -78,7 +78,7 @@ export const cadastrarFornecedor = async (
     const fornecedor = await fornecedorRepository.save(fornecedorDTO);
 
     const arquivoRepository = getRepository(ArquivoFornecedor);
-    
+
     request.files.forEach(async elementoFile => {
       const { filename: id, originalname: nome_original, size } = elementoFile;
 
@@ -140,7 +140,11 @@ export const listarFornecedor = async (
 
     response.status(200).json(fornecedor);
   } catch (error) {
-    response.status(400).json({ error: error.message });
+    if (error.message === 'Fornecedor não encontrado!') {
+      response.status(404).json({ error: error.message });
+    } else {
+      response.status(400).json({ error: error.message });
+    }
   }
   next();
 };
