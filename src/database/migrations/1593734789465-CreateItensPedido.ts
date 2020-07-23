@@ -8,33 +8,22 @@ export default class CreateItensPedido1593734789465
         name: 'itens_pedido',
         columns: [
           {
-            name: 'id',
-            type: 'uuid',
-            isPrimary: true,
-            generationStrategy: 'uuid',
-            default: 'uuid_generate_v4()',
-          },
-          {
             name: 'produto_id',
             type: 'uuid',
+            isPrimary: true,
           },
           {
             name: 'pedido_id',
             type: 'uuid',
+            isPrimary: true,
           },
           {
             name: 'preco_venda',
             type: 'numeric',
-            precision: 2,
           },
           {
             name: 'quantidade',
             type: 'integer',
-          },
-          {
-            name: 'total',
-            type: 'numeric',
-            precision: 2,
           },
           {
             name: 'created_at',
