@@ -81,9 +81,7 @@ export const listarProduto = async (
     }
     const produtoRepository = getRepository(Produto);
 
-    const produtoFornecedor = await produtoRepository.find({
-      where: { id },
-    });
+    const produtoFornecedor = await produtoRepository.findOne(id);
 
     if (!produtoFornecedor) {
       throw new Error('Produto não encontrado!');
