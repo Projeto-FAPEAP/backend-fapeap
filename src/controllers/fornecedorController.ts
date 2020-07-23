@@ -21,6 +21,7 @@ export const listarTodosFornecedores = async (
   next();
 };
 
+// Remember - Não esquecer de remover o campo verificado do req.body
 export const cadastrarFornecedor = async (
   request: Request,
   response: Response,
