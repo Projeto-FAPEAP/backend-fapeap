@@ -9,9 +9,6 @@ class Fornecedor extends Usuario {
   @OneToMany(() => Produto, produtos => produtos.fornecedor)
   produtos: Produto;
 
-  @OneToMany(() => Pedido, pedidos => pedidos.fornecedor)
-  pedidos: Pedido;
-
   @OneToMany(() => ArquivoFornecedor, arquivos => arquivos.fornecedor)
   arquivos: ArquivoFornecedor;
 
@@ -26,6 +23,9 @@ class Fornecedor extends Usuario {
 
   @Column()
   taxa_delivery: number;
+
+  @Column({ default: false })
+  verificado: boolean;
 }
 
 export default Fornecedor;

@@ -67,6 +67,10 @@ export default class Createfornecedor1593626320065
             type: 'varchar',
           },
           {
+            name: 'verificado',
+            type: 'boolean',
+          },
+          {
             name: 'created_at',
             type: 'timestamp',
             default: 'now()',
