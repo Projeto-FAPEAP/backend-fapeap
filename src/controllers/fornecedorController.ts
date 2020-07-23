@@ -41,6 +41,7 @@ export const cadastrarFornecedor = async (
       numero_local,
       bairro,
       cep,
+      verificado,
     } = request.body;
 
     const checkEmailExists = await fornecedorRepository.findOne({
@@ -74,6 +75,7 @@ export const cadastrarFornecedor = async (
       numero_local,
       bairro,
       cep,
+      verificado,
     });
     const fornecedor = await fornecedorRepository.save(fornecedorDTO);
 
