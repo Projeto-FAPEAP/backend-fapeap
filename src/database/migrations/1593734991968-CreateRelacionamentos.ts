@@ -71,18 +71,6 @@ export class CreateRelacionamentos1593734991968 implements MigrationInterface {
     );
 
     await queryRunner.createForeignKey(
-      'pedido',
-      new TableForeignKey({
-        name: 'FornecedorID',
-        columnNames: ['fornecedor_id'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'fornecedor',
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-      }),
-    );
-
-    await queryRunner.createForeignKey(
       'historico_pedido',
       new TableForeignKey({
         name: 'PedidoID',
@@ -175,7 +163,6 @@ export class CreateRelacionamentos1593734991968 implements MigrationInterface {
     await queryRunner.dropForeignKey('avaliacao_fornecedor', 'FornecedorID');
     await queryRunner.dropForeignKey('avaliacao_fornecedor', 'ConsumidorID');
     await queryRunner.dropForeignKey('historico_pedido', 'PedidoID');
-    await queryRunner.dropForeignKey('pedido', 'FornecedorID');
     await queryRunner.dropForeignKey('pedido', 'ConsumidorID');
     await queryRunner.dropForeignKey('produto', 'FornecedorID');
     await queryRunner.dropTable('arquivo_produto');
