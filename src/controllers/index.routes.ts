@@ -40,7 +40,12 @@ routes.get('/fornecedor/:id', listarFornecedor);
 routes.delete('/fornecedor', authMiddlewareFornecedor, deletarFornecedor);
 
 // Produto
-routes.post('/produto', authMiddlewareFornecedor, cadastrarProduto);
+routes.post(
+  '/produto',
+  authMiddlewareFornecedor,
+  multer(multerConfig).array('file', 4),
+  cadastrarProduto,
+);
 routes.get('/produto', authMiddlewareFornecedor, listarProdutos);
 routes.get('/produto/:id', authMiddlewareFornecedor, listarProduto);
 routes.put('/produto/:id', authMiddlewareFornecedor, atualizarProduto);
