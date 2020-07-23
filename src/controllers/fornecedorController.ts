@@ -2,7 +2,6 @@
 import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
 import { hash } from 'bcryptjs';
-import { uuid } from 'uuidv4';
 import Fornecedor from '../models/Fornecedor';
 import ArquivoFornecedor from '../models/ArquivoFornecedor';
 
@@ -79,7 +78,6 @@ export const cadastrarFornecedor = async (
     const fornecedor = await fornecedorRepository.save(fornecedorDTO);
 
     const arquivoRepository = getRepository(ArquivoFornecedor);
-    console.log(request.files);
     request.files.forEach(async elementoFile => {
       const { filename: id, originalname: nome_original, size } = elementoFile;
 
