@@ -19,9 +19,7 @@ export const listarPedidoConsumidor = async (
     }
     const pedidoRepository = getRepository(Pedido);
 
-    const pedidoConsumidor = await pedidoRepository.find({
-      where: { id },
-    });
+    const pedidoConsumidor = await pedidoRepository.findOne(id);
 
     if (!pedidoConsumidor) {
       throw new Error('Produto não encontrado!');
