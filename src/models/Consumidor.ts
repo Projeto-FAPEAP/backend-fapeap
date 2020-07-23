@@ -6,9 +6,9 @@ import Usuario from './Usuario';
 @Entity('consumidor')
 class Consumidor extends Usuario {
   @OneToMany(() => Pedido, pedidos => pedidos.consumidor)
-  pedidos: Pedido;
+  pedidos: Pedido[];
 
-  @Column()
+  @Column('varchar')
   cpf: string;
 }
 

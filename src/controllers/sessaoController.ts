@@ -57,15 +57,21 @@ export const autenticarFornecedor = async (
     const fornecedor = await fornecedorRepository.findOne({
       where: { cpf_cnpj },
     });
+
     if (!fornecedor) {
-      throw new Error('Cpf ou senha incorretos! 1');
+      throw new Error('Cpf ou senha incorretos!');
     }
 
     const senhaEncontrada = await compare(senha, fornecedor.senha);
 
     if (!senhaEncontrada) {
-      throw new Error('Cpf ou senha incorretos! 2');
+      throw new Error('Cpf ou senha incorretos!');
     }
+
+    if (!fornecedor.verificado) {
+      throw new Error('Estamos analisando o seu cadastro!');
+    }
+
     const { jwt_fornecedor } = jwtConfig;
 
     const tokenFornecedor = sign({}, jwt_fornecedor.secret, {
@@ -77,7 +83,11 @@ export const autenticarFornecedor = async (
     const fornecedorDTO = { fornecedor, tokenFornecedor };
     response.json(fornecedorDTO);
   } catch (error) {
-    response.status(400).json({ error: error.message });
+    if (error.message === 'Estamos analisando o seu cadastro!') {
+      response.status(403).json({ message: error.message });
+    } else {
+      response.status(400).json({ error: error.message });
+    }
   }
   next();
 };

@@ -78,7 +78,7 @@ export const cadastrarFornecedor = async (
     const fornecedor = await fornecedorRepository.save(fornecedorDTO);
 
     const arquivoRepository = getRepository(ArquivoFornecedor);
-
+    
     request.files.forEach(async elementoFile => {
       const { filename: id, originalname: nome_original, size } = elementoFile;
 
@@ -109,7 +109,7 @@ export const cadastrarFornecedor = async (
 
     if (request.files.length === 0) {
       const { id } = fornecedor;
-      fornecedorRepository.delete({ id });
+      await fornecedorRepository.delete({ id });
       throw new Error('Você não preencheu os campos de arquivos corretamente!');
     }
 

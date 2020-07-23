@@ -10,7 +10,6 @@ import {
 } from 'typeorm';
 import ItensPedido from './ItensPedido';
 import Consumidor from './Consumidor';
-import Fornecedor from './Fornecedor';
 import HistoricoPedido from './HistoricoPedido';
 
 /**
@@ -25,10 +24,10 @@ class Pedido {
   id: string;
 
   @OneToMany(() => ItensPedido, intens_pedidos => intens_pedidos.pedido)
-  itensPedidos: ItensPedido;
+  itensPedidos: ItensPedido[];
 
   @OneToMany(() => HistoricoPedido, historicosPedido => historicosPedido.pedido)
-  historicosPedido: ItensPedido;
+  historicosPedido: HistoricoPedido[];
 
   @ManyToOne(() => Consumidor, consumidor => consumidor.pedidos, {
     eager: true,
@@ -36,25 +35,16 @@ class Pedido {
   @JoinColumn({ name: 'consumidor_id' })
   consumidor: Consumidor;
 
-  @ManyToOne(() => Fornecedor, fornecedor => fornecedor.pedidos, {
-    eager: true,
-  })
-  @JoinColumn({ name: 'fornecedor_id' })
-  fornecedor: Fornecedor;
-
-  @Column()
+  @Column('varchar')
   consumidor_id: string;
 
-  @Column()
-  fornecedor_id: string;
-
-  @Column()
+  @Column('numeric')
   total: number;
 
-  @Column()
+  @Column('boolean')
   status_pedido: boolean;
 
-  @Column()
+  @Column('boolean')
   tipo_da_compra: boolean;
 
   @CreateDateColumn()

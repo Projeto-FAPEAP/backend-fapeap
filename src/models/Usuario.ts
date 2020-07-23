@@ -9,28 +9,28 @@ abstract class Usuario {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column('varchar')
   nome: string;
 
-  @Column()
+  @Column('varchar')
   email: string;
 
-  @Column()
+  @Column('varchar')
   senha: string;
 
-  @Column()
+  @Column('varchar')
   telefone_whatsapp: string;
 
-  @Column()
+  @Column('varchar')
   logradouro: string;
 
-  @Column()
+  @Column('varchar')
   numero_local: string;
 
-  @Column()
+  @Column('varchar')
   bairro: string;
 
-  @Column()
+  @Column('varchar')
   cep: string;
 
   @CreateDateColumn()
