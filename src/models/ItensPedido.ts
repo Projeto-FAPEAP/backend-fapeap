@@ -1,21 +1,24 @@
 import {
   Entity,
-  PrimaryColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import Pedido from './Pedido';
 import Produto from './Produto';
 
 @Entity('itens_pedido')
 class ItensPedido {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column('uuid')
   pedido_id: string;
 
-  @PrimaryColumn()
+  @Column('uuid')
   produto_id: string;
 
   @ManyToOne(() => Pedido, pedido => pedido.itensPedidos, { eager: true })
