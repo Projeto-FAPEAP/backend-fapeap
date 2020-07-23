@@ -76,7 +76,7 @@ export const cadastrarFornecedor = async (
       numero_local,
       bairro,
       cep,
-      verificado,
+      verificado: true,
     });
     const fornecedor = await fornecedorRepository.save(fornecedorDTO);
 
