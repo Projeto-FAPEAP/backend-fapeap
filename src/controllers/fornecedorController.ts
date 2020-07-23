@@ -42,7 +42,6 @@ export const cadastrarFornecedor = async (
       numero_local,
       bairro,
       cep,
-      verificado,
     } = request.body;
 
     const checkEmailExists = await fornecedorRepository.findOne({
