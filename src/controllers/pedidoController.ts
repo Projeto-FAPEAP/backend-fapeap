@@ -24,7 +24,7 @@ export const listarPedidoConsumidor = async (
     });
 
     if (!pedidoConsumidor) {
-      throw new Error('Produto não encontrado!');
+      throw new Error('Pedido não encontrado!');
     }
 
     response.status(200).json(pedidoConsumidor);
