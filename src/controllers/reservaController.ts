@@ -52,7 +52,7 @@ export const reservarProduto = async (
       tipo_da_compra,
     });
 
-    const pedido = pedidoRepository.save(pedidoDAO);
+    const pedido = await pedidoRepository.save(pedidoDAO);
 
     response.status(201).json(pedido);
   } catch (error) {
