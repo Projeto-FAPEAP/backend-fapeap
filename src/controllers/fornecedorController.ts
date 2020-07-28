@@ -2,6 +2,7 @@
 import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
 import { hash } from 'bcryptjs';
+import { validate } from 'class-validator';
 import Fornecedor from '../models/Fornecedor';
 import ArquivoFornecedor from '../models/ArquivoFornecedor';
 
@@ -21,6 +22,7 @@ export const listarTodosFornecedores = async (
   next();
 };
 
+// Remember - Não esquecer de remover o campo verificado na criacao do fornecedor
 export const cadastrarFornecedor = async (
   request: Request,
   response: Response,
@@ -74,7 +76,17 @@ export const cadastrarFornecedor = async (
       numero_local,
       bairro,
       cep,
+      verificado: true,
     });
+
+    const errors = await validate(fornecedorDTO);
+
+    if (errors.length > 0) {
+      response
+        .status(400)
+        .json({ error: 'Alguns campos são inválidos', errors });
+    }
+
     const fornecedor = await fornecedorRepository.save(fornecedorDTO);
 
     const arquivoRepository = getRepository(ArquivoFornecedor);
@@ -139,7 +151,11 @@ export const listarFornecedor = async (
 
     response.status(200).json(fornecedor);
   } catch (error) {
-    response.status(400).json({ error: error.message });
+    if (error.message === 'Fornecedor não encontrado!') {
+      response.status(404).json({ error: error.message });
+    } else {
+      response.status(400).json({ error: error.message });
+    }
   }
   next();
 };

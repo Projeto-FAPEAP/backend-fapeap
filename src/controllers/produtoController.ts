@@ -1,6 +1,7 @@
 import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
 import Produto from '../models/Produto';
+import ArquivoProduto from '../models/ArquivoProduto';
 
 export const cadastrarProduto = async (
   request: Request,
@@ -32,6 +33,22 @@ export const cadastrarProduto = async (
     });
 
     const produto = await produtoRepository.save(produtoDTO);
+
+    const arquivoRepository = getRepository(ArquivoProduto);
+
+    request.files.forEach(async elementoFile => {
+      const { filename: id, originalname: nome_original, size } = elementoFile;
+
+      const fileElement = arquivoRepository.create({
+        id,
+        nome_original,
+        size,
+        url: '',
+        produto_id: produto.id,
+      });
+
+      await arquivoRepository.save(fileElement);
+    });
 
     response.status(201).json(produto);
   } catch (error) {

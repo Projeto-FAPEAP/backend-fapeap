@@ -23,7 +23,7 @@ class Fornecedor extends Usuario {
   @Column('numeric')
   taxa_delivery: number;
 
-  @Column({ default: false })
+  @Column()
   verificado: boolean;
 }
 

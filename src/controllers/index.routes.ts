@@ -26,6 +26,7 @@ import {
   authMiddlewareFornecedor,
   authMiddlewareConsumidor,
 } from '../middlewares/authMiddleware';
+import { reservarProduto } from './reservaController';
 
 const routes = Router();
 
@@ -40,7 +41,12 @@ routes.get('/fornecedor/:id', listarFornecedor);
 routes.delete('/fornecedor', authMiddlewareFornecedor, deletarFornecedor);
 
 // Produto
-routes.post('/produto', authMiddlewareFornecedor, cadastrarProduto);
+routes.post(
+  '/produto',
+  authMiddlewareFornecedor,
+  multer(multerConfig).array('file', 4),
+  cadastrarProduto,
+);
 routes.get('/produto', authMiddlewareFornecedor, listarProdutos);
 routes.get('/produto/:id', authMiddlewareFornecedor, listarProduto);
 routes.put('/produto/:id', authMiddlewareFornecedor, atualizarProduto);
@@ -48,6 +54,7 @@ routes.delete('/produto/:id', authMiddlewareFornecedor, deletarProduto);
 
 // Consumidor
 routes.post('/consumidor', cadastrarConsumidor);
+routes.post('/consumidor/:id/:qntd', authMiddlewareConsumidor, reservarProduto);
 routes.get('/consumidor', listarTodosConsumidores);
 routes.get('/consumidor/:id', listarConsumidor);
 routes.delete('/consumidor', authMiddlewareConsumidor, deletarConsumidor);

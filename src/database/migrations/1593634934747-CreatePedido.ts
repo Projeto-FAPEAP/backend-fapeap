@@ -23,7 +23,7 @@ export default class CreatePedido1593634934747 implements MigrationInterface {
           },
           {
             name: 'status_pedido',
-            type: 'boolean',
+            type: 'varchar',
           },
           {
             name: 'tipo_da_compra',

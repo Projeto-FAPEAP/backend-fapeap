@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, ManyToOne, JoinColumn, Column } from 'typeorm';
 import Produto from './Produto';
 import Arquivo from './Arquivo';
 
@@ -9,6 +9,9 @@ class ArquivoProduto extends Arquivo {
     eager: true,
   })
   produto: Produto;
+
+  @Column('uuid')
+  produto_id: string;
 }
 
 export default ArquivoProduto;
