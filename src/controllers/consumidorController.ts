@@ -2,6 +2,7 @@
 import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
 import { hash } from 'bcryptjs';
+import { validate } from 'class-validator';
 import Consumidor from '../models/Consumidor';
 
 export const cadastrarConsumidor = async (
@@ -52,6 +53,15 @@ export const cadastrarConsumidor = async (
       bairro,
       cep,
     });
+
+    const errors = await validate(consumidorDTO);
+
+    if (errors.length > 0) {
+      response
+        .status(400)
+        .json({ error: 'Alguns campos são inválidos', errors });
+    }
+
     const consumidor = await consumidorRepository.save(consumidorDTO);
     delete consumidor.senha;
     response.status(201).json(consumidor);

@@ -2,6 +2,7 @@
 import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
 import { hash } from 'bcryptjs';
+import { validate } from 'class-validator';
 import Fornecedor from '../models/Fornecedor';
 import ArquivoFornecedor from '../models/ArquivoFornecedor';
 
@@ -77,6 +78,15 @@ export const cadastrarFornecedor = async (
       cep,
       verificado: true,
     });
+
+    const errors = await validate(fornecedorDTO);
+
+    if (errors.length > 0) {
+      response
+        .status(400)
+        .json({ error: 'Alguns campos são inválidos', errors });
+    }
+
     const fornecedor = await fornecedorRepository.save(fornecedorDTO);
 
     const arquivoRepository = getRepository(ArquivoFornecedor);

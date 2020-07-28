@@ -5,14 +5,20 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+import { IsEmail, MaxLength, MinLength, IsAlphanumeric } from 'class-validator';
+
 abstract class Usuario {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column('varchar')
+  @MaxLength(50, { message: 'O nome precisa ter no máximo 50 caracteres' })
+  @MinLength(2, { message: 'O nome precisa ter no minimo duas letras' })
+  @IsAlphanumeric()
   nome: string;
 
   @Column('varchar')
+  @IsEmail()
   email: string;
 
   @Column('varchar')
