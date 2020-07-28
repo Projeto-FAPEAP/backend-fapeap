@@ -26,6 +26,7 @@ import {
   authMiddlewareFornecedor,
   authMiddlewareConsumidor,
 } from '../middlewares/authMiddleware';
+import { reservarProduto } from './reservaController';
 
 const routes = Router();
 
@@ -53,6 +54,7 @@ routes.delete('/produto/:id', authMiddlewareFornecedor, deletarProduto);
 
 // Consumidor
 routes.post('/consumidor', cadastrarConsumidor);
+routes.post('/consumidor/:id/:qntd', authMiddlewareConsumidor, reservarProduto);
 routes.get('/consumidor', listarTodosConsumidores);
 routes.get('/consumidor/:id', listarConsumidor);
 routes.delete('/consumidor', authMiddlewareConsumidor, deletarConsumidor);
