@@ -11,6 +11,7 @@ import {
 import ItensPedido from './ItensPedido';
 import Consumidor from './Consumidor';
 import HistoricoPedido from './HistoricoPedido';
+import Fornecedor from './Fornecedor';
 
 /**
  * Um para um (OneToOne) x
@@ -35,8 +36,17 @@ class Pedido {
   @JoinColumn({ name: 'consumidor_id' })
   consumidor: Consumidor;
 
+  @ManyToOne(() => Fornecedor, fornecedor => fornecedor.pedidos, {
+    eager: true,
+  })
+  @JoinColumn({ name: 'fornecedor_id' })
+  fornecedor: Fornecedor;
+
   @Column('varchar')
   consumidor_id: string;
+
+  @Column('varchar')
+  fornecedor_id: string;
 
   @Column('numeric')
   total: number;
