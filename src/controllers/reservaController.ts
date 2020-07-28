@@ -39,7 +39,9 @@ export const reservarProduto = async (
 
     const pedidoRepository = getRepository(Pedido);
 
-    const total = produtoASerReservado.preco * qntd_produto;
+    const total = Number(
+      (produtoASerReservado.preco * qntd_produto).toFixed(2),
+    );
 
     const status_pedido = 'Pendente';
 
