@@ -42,10 +42,10 @@ class Pedido {
   @JoinColumn({ name: 'fornecedor_id' })
   fornecedor: Fornecedor;
 
-  @Column('varchar')
+  @Column('uuid')
   consumidor_id: string;
 
-  @Column('varchar')
+  @Column('uuid')
   fornecedor_id: string;
 
   @Column('numeric')
