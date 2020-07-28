@@ -137,15 +137,50 @@ export const validarPedidos = async (
       throw new Error('Pedido não encontrado!');
     }
 
-    let status_pedido = 'Reservado';
+    let status_pedido = 'Reserva confirmada';
 
     if (pedidoASerValidado.tipo_da_compra) {
-      status_pedido = 'Delivery';
+      status_pedido = 'Delivery confirmado';
     }
 
     pedidoASerValidado.status_pedido = status_pedido;
 
     response.status(201).json(pedidoASerValidado);
+  } catch (error) {
+    response.status(400).json({ error: error.message });
+  }
+  next();
+};
+
+export const listarPedidosConsumidor = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { id: consumidor_id } = request.user;
+
+    if (!consumidor_id) {
+      throw new Error('Usuário não autenticado!');
+    }
+
+    const pedidoRepository = getRepository(Pedido);
+
+    const pedidosConsumidor = await pedidoRepository.find({
+      where: { consumidor_id },
+    });
+
+    if (!pedidosConsumidor) {
+      throw new Error('Pedido não encontrado!');
+    }
+
+    const pedidos = pedidosConsumidor.filter(
+      pedido =>
+        pedido.status_pedido === 'Reserva confirmada' ||
+        pedido.status_pedido === 'Delivery confirmado',
+    );
+
+    response.status(200).json(pedidos);
   } catch (error) {
     response.status(400).json({ error: error.message });
   }

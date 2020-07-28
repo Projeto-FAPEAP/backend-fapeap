@@ -26,7 +26,12 @@ import {
   authMiddlewareFornecedor,
   authMiddlewareConsumidor,
 } from '../middlewares/authMiddleware';
-import { reservarProduto } from './reservaController';
+import {
+  reservarProduto,
+  listarPedidosConsumidor,
+  validarPedidos,
+  listarPedidosFornecedor,
+} from './reservaController';
 
 const routes = Router();
 
@@ -35,6 +40,12 @@ routes.post(
   '/fornecedor',
   multer(multerConfig).array('file', 5),
   cadastrarFornecedor,
+);
+routes.put('/fornecedor/pedidos/:id', authMiddlewareFornecedor, validarPedidos);
+routes.get(
+  '/fornecedor/pedidos',
+  authMiddlewareFornecedor,
+  listarPedidosFornecedor,
 );
 routes.get('/fornecedor', listarTodosFornecedores);
 routes.get('/fornecedor/:id', listarFornecedor);
@@ -57,6 +68,11 @@ routes.post('/consumidor', cadastrarConsumidor);
 routes.post('/consumidor/:id/:qntd', authMiddlewareConsumidor, reservarProduto);
 routes.get('/consumidor', listarTodosConsumidores);
 routes.get('/consumidor/:id', listarConsumidor);
+routes.get(
+  '/consumidor/pedidos',
+  authMiddlewareConsumidor,
+  listarPedidosConsumidor,
+);
 routes.delete('/consumidor', authMiddlewareConsumidor, deletarConsumidor);
 
 // Sessao - Login
