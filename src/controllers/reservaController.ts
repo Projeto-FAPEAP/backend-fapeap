@@ -2,7 +2,6 @@ import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
 import Produto from '../models/Produto';
 import Pedido from '../models/Pedido';
-import ItensPedido from '../models/ItensPedido';
 
 export const reservarProduto = async (
   request: Request,
@@ -59,22 +58,6 @@ export const reservarProduto = async (
     });
 
     const pedido = await pedidoRepository.save(pedidoDAO);
-
-    // Remember -> Verificar se a lógica abaixo faz sentido pra esse controller
-    const itensPedidoRepo = getRepository(ItensPedido);
-
-    const { preco: preco_venda, id: produto_id } = produtoASerReservado;
-    const quantidade = qntd_produto;
-    const { id: pedido_id } = pedido;
-
-    const itensPedidoDAO = itensPedidoRepo.create({
-      produto_id,
-      pedido_id,
-      preco_venda,
-      quantidade,
-    });
-
-    await itensPedidoRepo.save(itensPedidoDAO);
 
     response.status(201).json(pedido);
   } catch (error) {
