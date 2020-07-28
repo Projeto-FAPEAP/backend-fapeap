@@ -5,13 +5,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import {
-  IsEmail,
-  MaxLength,
-  MinLength,
-  IsNotEmpty,
-  IsAlpha,
-} from 'class-validator';
+import { IsEmail, MaxLength, MinLength, IsNotEmpty } from 'class-validator';
 
 abstract class Usuario {
   @PrimaryGeneratedColumn('uuid')
