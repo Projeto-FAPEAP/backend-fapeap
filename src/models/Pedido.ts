@@ -41,8 +41,8 @@ class Pedido {
   @Column('numeric')
   total: number;
 
-  @Column('boolean')
-  status_pedido: boolean;
+  @Column('varchar')
+  status_pedido: string;
 
   @Column('boolean')
   tipo_da_compra: boolean;
