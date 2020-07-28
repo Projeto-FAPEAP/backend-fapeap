@@ -81,7 +81,7 @@ export const listarPedidosFornecedor = async (
     const pedidoRepository = getRepository(Pedido);
 
     const pedidosFornecedor = await pedidoRepository.find({
-      where: fornecedor_id,
+      where: { fornecedor_id },
     });
 
     const pedidosPendentes = pedidosFornecedor.filter(
