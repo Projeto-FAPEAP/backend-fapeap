@@ -71,6 +71,18 @@ export class CreateRelacionamentos1593734991968 implements MigrationInterface {
     );
 
     await queryRunner.createForeignKey(
+      'pedido',
+      new TableForeignKey({
+        name: 'FornecedorID',
+        columnNames: ['fornecedor_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'fornecedor',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
+      }),
+    );
+
+    await queryRunner.createForeignKey(
       'historico_pedido',
       new TableForeignKey({
         name: 'PedidoID',
