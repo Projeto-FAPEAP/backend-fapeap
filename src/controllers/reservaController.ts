@@ -2,6 +2,7 @@ import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
 import Produto from '../models/Produto';
 import Pedido from '../models/Pedido';
+import Fornecedor from '../models/Fornecedor';
 
 export const reservarProduto = async (
   request: Request,
@@ -47,7 +48,17 @@ export const reservarProduto = async (
 
     const status_pedido = 'Pendente';
 
+    const fornecedorRepository = getRepository(Fornecedor);
+
+    const fornecedor = await fornecedorRepository.findOne({
+      id: fornecedor_id,
+    });
+
     const { tipo_da_compra } = request.body;
+
+    if (!fornecedor?.taxa_delivery && tipo_da_compra) {
+      throw new Error('O fornecedor só oferece opção de reserva/retirada');
+    }
 
     const pedidoDAO = pedidoRepository.create({
       consumidor_id,
