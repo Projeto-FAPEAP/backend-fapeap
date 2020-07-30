@@ -4,6 +4,8 @@ import { Request, Response, NextFunction } from 'express';
 import { hash } from 'bcryptjs';
 import { validate } from 'class-validator';
 import Consumidor from '../models/Consumidor';
+import AvaliacaoFornecedor from '../models/AvaliacaoFornecedor';
+import Pedido from '../models/Pedido';
 
 export const cadastrarConsumidor = async (
   request: Request,
@@ -127,6 +129,44 @@ export const deletarConsumidor = async (
     await consumidorRepository.delete(id);
 
     response.status(200).json({ deleted: 'sucess' });
+  } catch (error) {
+    response.status(400).json({ error: error.message });
+  }
+  next();
+};
+
+export const avalicaoFornecedor = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { id: consumidor_id } = request.user;
+
+    if (!consumidor_id) {
+      throw new Error('Usuário não autenticado!');
+    }
+
+    // ID Fornecedor
+    const { id: fornecedor_id } = request.params;
+
+    const { estrelas } = request.body;
+
+    if (estrelas <= 0 && estrelas > 5) {
+      throw new Error('Avaliacao de 0 à 5 estelas!');
+    }
+
+    const avalicaoRepository = getRepository(AvaliacaoFornecedor);
+
+    const avalicaoDTO = avalicaoRepository.create({
+      estrelas,
+      consumidor_id,
+      fornecedor_id,
+    });
+
+    const avalicao = await avalicaoRepository.save(avalicaoDTO);
+
+    response.status(200).json(avalicao);
   } catch (error) {
     response.status(400).json({ error: error.message });
   }

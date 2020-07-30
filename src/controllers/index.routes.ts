@@ -12,6 +12,7 @@ import {
   listarTodosConsumidores,
   listarConsumidor,
   deletarConsumidor,
+  avalicaoFornecedor,
 } from './consumidorController';
 import {
   cadastrarProduto,
@@ -67,6 +68,7 @@ routes.delete('/produto/:id', authMiddlewareFornecedor, deletarProduto);
 // Consumidor
 routes.post('/consumidor', cadastrarConsumidor);
 routes.post('/consumidor/:id/:qntd', authMiddlewareConsumidor, reservarProduto);
+routes.post('/avaliacao/:id', authMiddlewareConsumidor, avalicaoFornecedor);
 routes.get('/consumidor', listarTodosConsumidores);
 routes.get('/consumidor/:id', listarConsumidor);
 routes.delete('/consumidor', authMiddlewareConsumidor, deletarConsumidor);
