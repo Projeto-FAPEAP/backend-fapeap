@@ -41,6 +41,7 @@ routes.post(
   multer(multerConfig).array('file', 5),
   cadastrarFornecedor,
 );
+routes.put('/validarpedidos/:id', authMiddlewareFornecedor, validarPedidos);
 routes.put('/fornecedor/pedidos/:id', authMiddlewareFornecedor, validarPedidos);
 routes.get(
   '/fornecedor/pedidos',
@@ -68,12 +69,8 @@ routes.post('/consumidor', cadastrarConsumidor);
 routes.post('/consumidor/:id/:qntd', authMiddlewareConsumidor, reservarProduto);
 routes.get('/consumidor', listarTodosConsumidores);
 routes.get('/consumidor/:id', listarConsumidor);
-routes.get(
-  '/consumidor/pedidos',
-  authMiddlewareConsumidor,
-  listarPedidosConsumidor,
-);
 routes.delete('/consumidor', authMiddlewareConsumidor, deletarConsumidor);
+routes.get('/listapedidos', authMiddlewareConsumidor, listarPedidosConsumidor);
 
 // Sessao - Login
 routes.post('/sessao/consumidor', autenticarConsumidor);

@@ -113,7 +113,7 @@ export const validarPedidos = async (
     const pedidoRepository = getRepository(Pedido);
 
     const pedidoASerValidado = await pedidoRepository.findOne({
-      where: pedido_id,
+      where: { id: pedido_id },
     });
 
     if (!pedidoASerValidado) {
@@ -126,9 +126,12 @@ export const validarPedidos = async (
       status_pedido = 'Delivery confirmado';
     }
 
-    pedidoASerValidado.status_pedido = status_pedido;
+    const pedido = pedidoRepository.merge(pedidoASerValidado, {
+      status_pedido,
+    });
+    const pedidoAtualizado = await pedidoRepository.save(pedido);
 
-    response.status(201).json(pedidoASerValidado);
+    response.status(201).json(pedidoAtualizado);
   } catch (error) {
     response.status(400).json({ error: error.message });
   }

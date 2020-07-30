@@ -30,15 +30,11 @@ class Pedido {
   @OneToMany(() => HistoricoPedido, historicosPedido => historicosPedido.pedido)
   historicosPedido: HistoricoPedido[];
 
-  @ManyToOne(() => Consumidor, consumidor => consumidor.pedidos, {
-    eager: true,
-  })
+  @ManyToOne(() => Consumidor, consumidor => consumidor.pedidos)
   @JoinColumn({ name: 'consumidor_id' })
   consumidor: Consumidor;
 
-  @ManyToOne(() => Fornecedor, fornecedor => fornecedor.pedidos, {
-    eager: true,
-  })
+  @ManyToOne(() => Fornecedor, fornecedor => fornecedor.pedidos)
   @JoinColumn({ name: 'fornecedor_id' })
   fornecedor: Fornecedor;
 
