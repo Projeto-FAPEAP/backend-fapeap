@@ -21,7 +21,7 @@ class ItensPedido {
   @Column('uuid')
   produto_id: string;
 
-  @ManyToOne(() => Pedido, pedido => pedido.itensPedidos, { eager: true })
+  @ManyToOne(() => Pedido, pedido => pedido.itensPedidos)
   @JoinColumn({ name: 'pedido_id' })
   pedido: Pedido;
 
@@ -34,9 +34,6 @@ class ItensPedido {
 
   @Column('integer')
   quantidade: number;
-
-  @Column('numeric')
-  total: number;
 
   @CreateDateColumn()
   created_at: Date;
