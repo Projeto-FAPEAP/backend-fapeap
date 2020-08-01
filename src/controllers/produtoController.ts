@@ -63,10 +63,10 @@ export const listarProdutos = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const { id: fornecedor_id } = request.user;
+    const { idfornecedor: fornecedor_id } = request.params;
 
     if (!fornecedor_id) {
-      throw new Error('Usuário não autenticado!');
+      throw new Error('ID do Fornecedor não informado!');
     }
     const produtoRepository = getRepository(Produto);
 
@@ -87,14 +87,13 @@ export const listarProduto = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const { id } = request.params;
-    const { id: fornecedor_id } = request.user;
+    const { idproduto: id, idfornecedor: fornecedor_id } = request.params;
 
     if (!id) {
-      throw new Error('ID não informado!');
+      throw new Error('ID produto não informado!');
     }
     if (!fornecedor_id) {
-      throw new Error('Usuário não autenticado!');
+      throw new Error('ID fornecedor não informado!');
     }
     const produtoRepository = getRepository(Produto);
 

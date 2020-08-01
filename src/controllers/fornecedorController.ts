@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 /* eslint-disable no-param-reassign */
 import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
@@ -12,9 +13,14 @@ export const listarTodosFornecedores = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
+    // Carregar url dos arquivos dos fornecedores
     const fornecedorRepository = getRepository(Fornecedor);
-    const collectionsFornecedores = await fornecedorRepository.find();
+    const arquivoFornecedorRepository = getRepository(ArquivoFornecedor);
+    const collectionsFornecedores = await fornecedorRepository.find({
+      where: { verificado: true },
+    });
     collectionsFornecedores.forEach(fornecedor => delete fornecedor.senha);
+
     response.status(200).json(collectionsFornecedores);
   } catch (error) {
     response.status(400).json({ error: error.message });
@@ -138,6 +144,7 @@ export const listarFornecedor = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
+    // Carregar url dos arquivos do fornecedor
     const { id } = request.params;
     const fornecedorRepository = getRepository(Fornecedor);
 
@@ -177,6 +184,37 @@ export const deletarFornecedor = async (
     await fornecedorRepository.delete(id);
 
     response.status(200).json({ deleted: 'sucess' });
+  } catch (error) {
+    response.status(400).json({ error: error.message });
+  }
+  next();
+};
+
+export const atualizarFornecedor = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { id } = request.params;
+
+    if (!id) {
+      throw new Error('ID do fornecedor não informado!');
+    }
+
+    const fornecedorRepository = getRepository(Fornecedor);
+
+    const fornecedor = await fornecedorRepository.findOne(id);
+
+    if (!fornecedor) {
+      throw new Error('Fornecedor não encontrado!');
+    }
+
+    fornecedorRepository.merge(fornecedor, request.body);
+
+    const resultados = await fornecedorRepository.save(fornecedor);
+
+    response.status(200).json(resultados);
   } catch (error) {
     response.status(400).json({ error: error.message });
   }
