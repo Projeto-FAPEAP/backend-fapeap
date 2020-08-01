@@ -3,6 +3,7 @@ import Produto from './Produto';
 import ArquivoFornecedor from './ArquivoFornecedor';
 import Usuario from './Usuario';
 import Pedido from './Pedido';
+import AvaliacaoFornecedor from './AvaliacaoFornecedor';
 
 @Entity('fornecedor')
 class Fornecedor extends Usuario {
@@ -14,6 +15,9 @@ class Fornecedor extends Usuario {
 
   @OneToMany(() => ArquivoFornecedor, arquivos => arquivos.fornecedor)
   arquivos: ArquivoFornecedor[];
+
+  @OneToMany(() => AvaliacaoFornecedor, avaliacoes => avaliacoes.fornecedor)
+  avaliacoes: AvaliacaoFornecedor[];
 
   @Column('varchar')
   nome_fantasia: string;

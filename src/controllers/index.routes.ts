@@ -13,6 +13,7 @@ import {
   listarTodosConsumidores,
   listarConsumidor,
   deletarConsumidor,
+  avalicaoFornecedor,
 } from './consumidorController';
 import {
   cadastrarProduto,
