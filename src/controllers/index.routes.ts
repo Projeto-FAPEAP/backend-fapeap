@@ -7,6 +7,7 @@ import {
   listarFornecedor,
   deletarFornecedor,
   atualizarFornecedor,
+  listarForneceodresNaoVerificados,
 } from './fornecedorController';
 import {
   cadastrarConsumidor,
@@ -51,6 +52,7 @@ routes.get(
   listarPedidosFornecedor,
 );
 routes.get('/fornecedor', listarTodosFornecedores);
+routes.get('/dashboard/fornecedor', listarForneceodresNaoVerificados);
 routes.get('/fornecedor/:id', listarFornecedor);
 routes.delete('/fornecedor', authMiddlewareFornecedor, deletarFornecedor);
 
