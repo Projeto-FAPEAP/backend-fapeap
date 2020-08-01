@@ -6,6 +6,7 @@ import {
   listarTodosFornecedores,
   listarFornecedor,
   deletarFornecedor,
+  atualizarFornecedor,
 } from './fornecedorController';
 import {
   cadastrarConsumidor,
@@ -27,7 +28,7 @@ import {
   authMiddlewareConsumidor,
 } from '../middlewares/authMiddleware';
 import {
-  reservarProduto,
+  solicitarPedido,
   listarPedidosConsumidor,
   validarPedidos,
   listarPedidosFornecedor,
@@ -42,7 +43,7 @@ routes.post(
   cadastrarFornecedor,
 );
 routes.put('/validarpedidos/:id', authMiddlewareFornecedor, validarPedidos);
-routes.put('/fornecedor/pedidos/:id', authMiddlewareFornecedor, validarPedidos);
+routes.put('/fornecedor/:id', atualizarFornecedor);
 routes.get(
   '/fornecedor/pedidos',
   authMiddlewareFornecedor,
@@ -59,14 +60,18 @@ routes.post(
   multer(multerConfig).array('file', 4),
   cadastrarProduto,
 );
-routes.get('/produto', authMiddlewareFornecedor, listarProdutos);
-routes.get('/produto/:id', authMiddlewareFornecedor, listarProduto);
+routes.get('/produto/:idfornecedor', listarProdutos);
+routes.get('/produto/:idfornecedor/:idproduto', listarProduto);
 routes.put('/produto/:id', authMiddlewareFornecedor, atualizarProduto);
 routes.delete('/produto/:id', authMiddlewareFornecedor, deletarProduto);
 
 // Consumidor
 routes.post('/consumidor', cadastrarConsumidor);
-routes.post('/consumidor/:id/:qntd', authMiddlewareConsumidor, reservarProduto);
+routes.post(
+  '/consumidor/:id/:compra',
+  authMiddlewareConsumidor,
+  solicitarPedido,
+);
 routes.get('/consumidor', listarTodosConsumidores);
 routes.get('/consumidor/:id', listarConsumidor);
 routes.delete('/consumidor', authMiddlewareConsumidor, deletarConsumidor);
