@@ -1,65 +1,81 @@
 import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
-import Produto from '../models/Produto';
-import Pedido from '../models/Pedido';
 
-export const reservarProduto = async (
+import Pedido from '../models/Pedido';
+import ItensPedido from '../models/ItensPedido';
+import Fornecedor from '../models/Fornecedor';
+
+export const solicitarPedido = async (
   request: Request,
   response: Response,
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const produtoRepository = getRepository(Produto);
     const { id: consumidor_id } = request.user;
-    const { id } = request.params;
+    const { compra, id: fornecedor_id } = request.params;
 
-    const produtoASerReservado = await produtoRepository.findOne(id);
+    // true para delivery, false para retirada
+    const tipo_da_compra = compra !== 'false';
 
     if (!consumidor_id) {
       throw new Error('Usuário não autenticado!');
     }
 
-    if (!produtoASerReservado) {
-      throw new Error('Produto não encontrado!');
-    }
-
-    if (!produtoASerReservado.status_produto) {
-      throw new Error('Produto Indisponível no momento!');
-    }
-
-    const estoque = produtoASerReservado.estoque_produto;
-
-    const { qntd } = request.params;
-
-    const qntd_produto = Number(qntd);
-
-    if (estoque < qntd_produto) {
-      throw new Error(`O produto possui apenas ${estoque} unidades.`);
-    }
-
     const pedidoRepository = getRepository(Pedido);
 
-    const total = Number(
-      (produtoASerReservado.preco * qntd_produto).toFixed(2),
-    );
-
-    const { fornecedor_id } = produtoASerReservado;
-
     const status_pedido = 'Pendente';
-
-    const { tipo_da_compra } = request.body;
 
     const pedidoDAO = pedidoRepository.create({
       consumidor_id,
       fornecedor_id,
       status_pedido,
-      total,
+      total: 0,
       tipo_da_compra,
     });
 
     const pedido = await pedidoRepository.save(pedidoDAO);
 
-    response.status(201).json(pedido);
+    // Adiciona os itens do pedido no relacionamento entre pedido.
+    const itensPedidoRepository = getRepository(ItensPedido);
+
+    const data = request.body;
+
+    type elementITEM = {
+      produto_id: string;
+      preco_venda: number;
+      quantidade: number;
+    };
+
+    let total = 0;
+
+    data.forEach(async (element: elementITEM) => {
+      const { produto_id, preco_venda, quantidade } = element;
+
+      total += Number((preco_venda * quantidade).toFixed(2));
+      // TO DO - talvez precise validar a quantidade de itens a serem pedidos (não deve ultrapassar o valor do estpque)
+      const itensPedidoDAO = itensPedidoRepository.create({
+        pedido,
+        produto_id,
+        preco_venda,
+        quantidade,
+      });
+
+      await itensPedidoRepository.save(itensPedidoDAO);
+    });
+
+    const fornecedor = await getRepository(Fornecedor).findOne({
+      where: { id: fornecedor_id },
+    });
+
+    if (fornecedor?.taxa_delivery) {
+      total += Number(fornecedor.taxa_delivery);
+    }
+
+    const novoPedido = pedidoRepository.merge(pedido, { total });
+
+    const pedidoFinal = await pedidoRepository.save(novoPedido);
+
+    response.status(201).json(pedidoFinal);
   } catch (error) {
     response.status(400).json({ error: error.message });
   }
@@ -90,7 +106,17 @@ export const listarPedidosFornecedor = async (
       },
     );
 
-    response.status(200).json(pedidosPendentes);
+    const pedido_id = pedidosPendentes[0].id;
+
+    if (!pedido_id) {
+      throw new Error('ID Pedido inexistente!');
+    }
+
+    const itensPedidoRepository = getRepository(ItensPedido);
+
+    const itens = await itensPedidoRepository.find({ where: { pedido_id } });
+    // deletar alguns retornos de itens
+    response.status(200).json({ pedidosPendentes, itens });
   } catch (error) {
     response.status(400).json({ error: error.message });
   }
@@ -120,16 +146,27 @@ export const validarPedidos = async (
       throw new Error('Pedido não encontrado!');
     }
 
-    let status_pedido = 'Reserva confirmada';
+    let status_pedido;
 
-    if (pedidoASerValidado.tipo_da_compra) {
-      status_pedido = 'Delivery confirmado';
+    if (
+      pedidoASerValidado.status_pedido === 'Reserva confirmada' ||
+      pedidoASerValidado.status_pedido === 'Delivery confirmado'
+    ) {
+      status_pedido = 'Finalizado';
+    } else if (pedidoASerValidado.status_pedido === 'Pendente') {
+      status_pedido = 'Reserva confirmada';
+      if (pedidoASerValidado.tipo_da_compra) {
+        status_pedido = 'Delivery confirmado';
+      }
     }
 
     const pedido = pedidoRepository.merge(pedidoASerValidado, {
       status_pedido,
     });
     const pedidoAtualizado = await pedidoRepository.save(pedido);
+
+    // Carregar todos os itens pedidos associados ao pedido
+    // Ter uma rota para cancelamento de pedido, ou passar no request.body
 
     response.status(201).json(pedidoAtualizado);
   } catch (error) {
