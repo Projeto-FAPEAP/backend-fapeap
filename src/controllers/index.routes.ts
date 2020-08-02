@@ -34,6 +34,7 @@ import {
   listarPedidosConsumidor,
   validarPedidos,
   listarPedidosFornecedor,
+  historicoFornecedor,
 } from './reservaController';
 
 const routes = Router();
@@ -50,6 +51,11 @@ routes.get(
   '/fornecedor/pedidos',
   authMiddlewareFornecedor,
   listarPedidosFornecedor,
+);
+routes.get(
+  '/fornecedor/pedidos/historico',
+  authMiddlewareFornecedor,
+  historicoFornecedor,
 );
 routes.get('/fornecedor', listarTodosFornecedores);
 routes.get('/dashboard/fornecedor', listarForneceodresNaoVerificados);

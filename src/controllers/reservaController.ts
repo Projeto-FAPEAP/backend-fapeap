@@ -106,6 +106,10 @@ export const listarPedidosFornecedor = async (
       },
     );
 
+    if (!pedidosPendentes[0].id) {
+      response.status(200).json([]);
+    }
+
     const pedido_id = pedidosPendentes[0].id;
 
     if (!pedido_id) {
@@ -204,6 +208,31 @@ export const listarPedidosConsumidor = async (
     );
 
     response.status(200).json(pedidos);
+  } catch (error) {
+    response.status(400).json({ error: error.message });
+  }
+  next();
+};
+
+export const historicoFornecedor = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { id: fornecedor_id } = request.user;
+
+    if (!fornecedor_id) {
+      throw new Error('Usuário não autenticado!');
+    }
+
+    const pedidoRepository = getRepository(Pedido);
+
+    const pedidosFornecedor = await pedidoRepository.find({
+      where: { fornecedor_id },
+    });
+
+    response.status(200).json(pedidosFornecedor);
   } catch (error) {
     response.status(400).json({ error: error.message });
   }
