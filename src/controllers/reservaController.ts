@@ -105,22 +105,7 @@ export const listarPedidosFornecedor = async (
         return pedido.status_pedido === 'Pendente';
       },
     );
-
-    if (!pedidosPendentes[0].id) {
-      response.status(200).json([]);
-    }
-
-    const pedido_id = pedidosPendentes[0].id;
-
-    if (!pedido_id) {
-      throw new Error('ID Pedido inexistente!');
-    }
-
-    const itensPedidoRepository = getRepository(ItensPedido);
-
-    const itens = await itensPedidoRepository.find({ where: { pedido_id } });
-    // deletar alguns retornos de itens
-    response.status(200).json({ pedidosPendentes, itens });
+    response.status(200).json(pedidosPendentes);
   } catch (error) {
     response.status(400).json({ error: error.message });
   }
