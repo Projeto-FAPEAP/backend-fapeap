@@ -45,6 +45,45 @@ export const autenticarConsumidor = async (
   }
   next();
 };
+export const autenticarAdmin = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { email, senha } = request.body;
+    const consumidorRepository = getRepository(Consumidor);
+    const admin = await consumidorRepository.findOne({
+      where: { email },
+    });
+
+    if (!admin) {
+      throw new Error('Email ou senha incorretos!');
+    }
+
+    const senhaEncontrada = await compare(senha, admin.senha);
+
+    if (!senhaEncontrada) {
+      throw new Error('Email ou senha incorretos!');
+    }
+
+    const { jwt_admin } = jwtConfig;
+
+    const tokenAdmin = sign({}, jwt_admin.secret, {
+      subject: admin.id,
+      expiresIn: jwt_admin.expiresIn,
+    });
+
+    delete admin.senha;
+
+    const AdminDTO = { admin, tokenAdmin };
+
+    response.json(AdminDTO);
+  } catch (error) {
+    response.status(400).json({ error: error.message });
+  }
+  next();
+};
 
 export const autenticarFornecedor = async (
   request: Request,
