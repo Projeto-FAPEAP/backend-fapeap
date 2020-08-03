@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-await-in-loop */
 /* eslint-disable no-param-reassign */
 import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
@@ -15,12 +17,26 @@ export const listarTodosFornecedores = async (
     // Carregar url dos arquivos dos fornecedores
     const fornecedorRepository = getRepository(Fornecedor);
     const arquivoFornecedorRepository = getRepository(ArquivoFornecedor);
-    const collectionsFornecedores = await fornecedorRepository.find({
+
+    const fornecedores = await fornecedorRepository.find({
       where: { verificado: true },
     });
-    collectionsFornecedores.forEach(fornecedor => delete fornecedor.senha);
 
-    response.status(200).json(collectionsFornecedores);
+    const resultado = [];
+
+    for (const fornece of fornecedores) {
+      const arquivos = await arquivoFornecedorRepository.find({
+        where: { fornecedor_id: fornece.id },
+      });
+
+      delete fornece.senha;
+      arquivos.forEach(arq => delete arq.fornecedor);
+
+      resultado.push(fornece);
+      resultado.push({ arquivos });
+    }
+
+    response.status(200).json(resultado);
   } catch (error) {
     response.status(400).json({ error: error.message });
   }
@@ -147,15 +163,24 @@ export const listarFornecedor = async (
     const { id } = request.params;
     const fornecedorRepository = getRepository(Fornecedor);
 
-    const fornecedor = await fornecedorRepository.find({
-      where: { id },
-    });
+    const fornecedor = await fornecedorRepository.findOne(id);
 
     if (!fornecedor) {
       throw new Error('Fornecedor não encontrado!');
     }
 
-    response.status(200).json(fornecedor);
+    const arquivoFornecedorRepository = getRepository(ArquivoFornecedor);
+
+    const arquivos = await arquivoFornecedorRepository.find({
+      where: { fornecedor_id: id },
+    });
+
+    arquivos.forEach(arq => delete arq.fornecedor);
+    delete fornecedor.senha;
+
+    const resultado = { fornecedor, arquivos };
+
+    response.status(200).json(resultado);
   } catch (error) {
     if (error.message === 'Fornecedor não encontrado!') {
       response.status(404).json({ error: error.message });
