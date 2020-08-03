@@ -58,11 +58,9 @@ export const detalhesPedidoFornecedor = async (
       where: { pedido_id },
     });
 
-    const resultado = itensPedido.forEach(
-      itemPedido => delete itemPedido.produto.fornecedor,
-    );
+    itensPedido.forEach(itemPedido => delete itemPedido.produto.fornecedor);
 
-    response.status(200).json(resultado);
+    response.status(200).json(itensPedido);
   } catch (error) {
     response.status(400).json({ error: error.message });
   }
