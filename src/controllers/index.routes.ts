@@ -36,7 +36,7 @@ import {
   listarPedidosFornecedor,
   historicoFornecedor,
 } from './reservaController';
-import { detalhesPedidoFornecedor } from './pedidoController';
+import { listarDetalhesPedidoFornecedor } from './pedidoController';
 
 const routes = Router();
 
@@ -56,7 +56,7 @@ routes.get(
 routes.get(
   '/fornecedor/pedidos/itens/:id',
   authMiddlewareFornecedor,
-  detalhesPedidoFornecedor,
+  listarDetalhesPedidoFornecedor,
 );
 routes.get(
   '/fornecedor/pedidos/historico',
