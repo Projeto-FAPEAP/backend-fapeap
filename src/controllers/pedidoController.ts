@@ -1,6 +1,7 @@
 import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
 import Pedido from '../models/Pedido';
+import ItensPedido from '../models/ItensPedido';
 
 export const listarPedidoConsumidor = async (
   request: Request,
@@ -26,6 +27,37 @@ export const listarPedidoConsumidor = async (
     }
 
     response.status(200).json(pedidoConsumidor);
+  } catch (error) {
+    response.status(400).json({ error: error.message });
+  }
+  next();
+};
+
+export const detalhesPedidoFornecedor = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { id: fornecedor_id } = request.user;
+
+    const { id: pedido_id } = request.params;
+
+    if (!fornecedor_id) {
+      throw new Error('Usuário não autenticado!');
+    }
+
+    if (!pedido_id) {
+      throw new Error('ID do pedido não informado!');
+    }
+
+    const itensPedidoRepository = getRepository(ItensPedido);
+
+    const itensPedido = await itensPedidoRepository.find({
+      where: { pedido_id },
+    });
+
+    response.status(200).json(itensPedido);
   } catch (error) {
     response.status(400).json({ error: error.message });
   }

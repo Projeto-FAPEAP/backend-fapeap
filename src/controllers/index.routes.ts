@@ -7,8 +7,8 @@ import {
   listarFornecedor,
   deletarFornecedor,
   atualizarFornecedor,
-  listarForneceodresNaoVerificados,
 } from './fornecedorController';
+import { listarForneceodresNaoVerificados } from './validacaoFornecedor';
 import {
   cadastrarConsumidor,
   listarTodosConsumidores,
@@ -36,6 +36,7 @@ import {
   listarPedidosFornecedor,
   historicoFornecedor,
 } from './reservaController';
+import { detalhesPedidoFornecedor } from './pedidoController';
 
 const routes = Router();
 
@@ -51,6 +52,11 @@ routes.get(
   '/fornecedor/pedidos',
   authMiddlewareFornecedor,
   listarPedidosFornecedor,
+);
+routes.get(
+  '/fornecedor/pedidos/itens',
+  authMiddlewareFornecedor,
+  detalhesPedidoFornecedor,
 );
 routes.get(
   '/fornecedor/pedidos/historico',
