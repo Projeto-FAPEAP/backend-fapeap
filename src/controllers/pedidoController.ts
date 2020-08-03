@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
 import Pedido from '../models/Pedido';
@@ -57,7 +58,11 @@ export const detalhesPedidoFornecedor = async (
       where: { pedido_id },
     });
 
-    response.status(200).json(itensPedido);
+    const resultado = itensPedido.forEach(
+      itemPedido => delete itemPedido.produto.fornecedor,
+    );
+
+    response.status(200).json(resultado);
   } catch (error) {
     response.status(400).json({ error: error.message });
   }
