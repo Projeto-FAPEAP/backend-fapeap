@@ -23,11 +23,16 @@ import {
   atualizarProduto,
   deletarProduto,
 } from './produtoController';
-import { autenticarConsumidor, autenticarFornecedor } from './sessaoController';
+import {
+  autenticarConsumidor,
+  autenticarFornecedor,
+  autenticarAdmin,
+} from './sessaoController';
 import { listaArquivosFornecedor } from './arquivoController';
 import {
   authMiddlewareFornecedor,
   authMiddlewareConsumidor,
+  authMiddlewareAdmin,
 } from '../middlewares/authMiddleware';
 import {
   solicitarPedido,
@@ -47,7 +52,6 @@ routes.post(
   cadastrarFornecedor,
 );
 routes.put('/validarpedidos/:id', authMiddlewareFornecedor, validarPedidos);
-routes.put('/fornecedor/:id', atualizarFornecedor);
 routes.get(
   '/fornecedor/pedidos',
   authMiddlewareFornecedor,
@@ -64,7 +68,6 @@ routes.get(
   historicoFornecedor,
 );
 routes.get('/fornecedor', listarTodosFornecedores);
-routes.get('/dashboard/fornecedor', listarForneceodresNaoVerificados);
 routes.get('/fornecedor/:id', listarFornecedor);
 routes.delete('/fornecedor', authMiddlewareFornecedor, deletarFornecedor);
 
@@ -96,12 +99,25 @@ routes.get('/listapedidos', authMiddlewareConsumidor, listarPedidosConsumidor);
 // Sessao - Login
 routes.post('/sessao/consumidor', autenticarConsumidor);
 routes.post('/sessao/fornecedor', autenticarFornecedor);
+routes.post('/sessao/admin', autenticarAdmin);
 
 // Arquivos
 routes.get(
   '/arquivofornecedor',
   authMiddlewareFornecedor,
   listaArquivosFornecedor,
+);
+
+// Admin
+routes.get(
+  '/dashboard/fornecedor',
+  authMiddlewareAdmin,
+  listarForneceodresNaoVerificados,
+);
+routes.put(
+  '/dashboard/fornecedor/:id',
+  authMiddlewareAdmin,
+  atualizarFornecedor,
 );
 
 export default routes;

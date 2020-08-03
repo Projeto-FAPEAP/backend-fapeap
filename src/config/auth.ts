@@ -7,4 +7,8 @@ export default {
     secret: 'xblyvhjhp7',
     expiresIn: '30d',
   },
+  jwt_admin: {
+    secret: 'xblyvhjhp78a',
+    expiresIn: '30d',
+  },
 };

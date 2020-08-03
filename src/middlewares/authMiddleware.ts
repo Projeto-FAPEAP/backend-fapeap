@@ -59,3 +59,28 @@ export function authMiddlewareFornecedor(
   }
   return next();
 }
+export function authMiddlewareAdmin(
+  request: Request,
+  response: Response,
+  next: NextFunction,
+): void {
+  try {
+    const authHeader = request.headers.authorization;
+
+    if (!authHeader) {
+      throw new Error('JWT não está presente!');
+    }
+    // Barer-token
+    const [, token] = authHeader.split(' ');
+    const { jwt_admin } = jwtConfig;
+    const decoded = verify(token, jwt_admin.secret);
+    const { sub } = decoded as TokenPayload;
+
+    request.user = {
+      id: sub,
+    };
+  } catch (error) {
+    response.status(400).json({ error: error.message });
+  }
+  return next();
+}
