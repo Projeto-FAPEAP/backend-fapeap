@@ -54,7 +54,7 @@ routes.get(
   listarPedidosFornecedor,
 );
 routes.get(
-  '/fornecedor/pedidos/itens',
+  '/fornecedor/pedidos/itens/:id',
   authMiddlewareFornecedor,
   detalhesPedidoFornecedor,
 );
