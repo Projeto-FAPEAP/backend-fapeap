@@ -60,7 +60,7 @@ export const listarDetalhesPedidoFornecedor = async (
 
     itensPedido.forEach(itemPedido => {
       const consumidor = itemPedido.pedido;
-      Object.assign(itemPedido, consumidor);
+      Object.assign(itemPedido, { consumidor });
       delete itemPedido.produto.fornecedor;
     });
 
