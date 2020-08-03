@@ -34,7 +34,7 @@ export const listarPedidoConsumidor = async (
   next();
 };
 
-export const detalhesPedidoFornecedor = async (
+export const listarDetalhesPedidoFornecedor = async (
   request: Request,
   response: Response,
   next: NextFunction,
@@ -58,7 +58,11 @@ export const detalhesPedidoFornecedor = async (
       where: { pedido_id },
     });
 
-    itensPedido.forEach(itemPedido => delete itemPedido.produto.fornecedor);
+    itensPedido.forEach(itemPedido => {
+      const nome_consumidor = itemPedido.pedido.consumidor.nome;
+      Object.assign(itemPedido, nome_consumidor);
+      delete itemPedido.produto.fornecedor;
+    });
 
     response.status(200).json(itensPedido);
   } catch (error) {
