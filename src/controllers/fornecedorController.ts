@@ -156,7 +156,6 @@ class FornecedorController {
           estrelasFornecedor = [];
         }
 
-        estrelasFornecedor = [];
         const quantidadeAvaliacoes = avaliacoes[1];
 
         const avaliacoesFornecedor = [estrelasFornecedor, quantidadeAvaliacoes];
