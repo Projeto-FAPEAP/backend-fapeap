@@ -1,15 +1,15 @@
 import { Router } from 'express';
-import { awsStorageFiles } from '../config/multerConfig';
+import { awsStorageFiles } from './config/multerConfig';
 
-import FornecedorController from './fornecedorController';
-import ConsumidorController from './consumidorController';
-import DashboardController from './dashboardController';
-import ProdutoController from './produtoController';
-import SessaoController from './sessaoController';
-import ArquivoController from './arquivoController';
-import AuthController from '../middlewares/authMiddleware';
-import PedidoConsumidor from './pedidoConsumidorController';
-import PedidoFornecedor from './pedidoFornecedorController';
+import FornecedorController from './controllers/fornecedorController';
+import ConsumidorController from './controllers/consumidorController';
+import DashboardController from './controllers/dashboardController';
+import ProdutoController from './controllers/produtoController';
+import SessaoController from './controllers/sessaoController';
+import ArquivoController from './controllers/arquivoController';
+import AuthMiddleware from './middlewares/authMiddleware';
+import PedidoConsumidor from './controllers/pedidoConsumidorController';
+import PedidoFornecedor from './controllers/pedidoFornecedorController';
 
 const routes = Router();
 
@@ -21,36 +21,36 @@ routes.post(
 );
 routes.put(
   '/validarpedidos/:id',
-  AuthController.fornecedor,
+  AuthMiddleware.fornecedor,
   PedidoFornecedor.validarPedidos,
 );
 routes.get(
   '/fornecedor/pedidos',
-  AuthController.fornecedor,
+  AuthMiddleware.fornecedor,
   PedidoFornecedor.listarPedidosFornecedor,
 );
 routes.get(
   '/fornecedor/pedidos/itens/:id',
-  AuthController.fornecedor,
+  AuthMiddleware.fornecedor,
   PedidoFornecedor.listarDetalhesPedidoFornecedor,
 );
 routes.get(
   '/fornecedor/pedidos/historico',
-  AuthController.fornecedor,
+  AuthMiddleware.fornecedor,
   PedidoFornecedor.historicoFornecedor,
 );
 routes.get('/fornecedor', FornecedorController.listarTodosFornecedores);
 routes.get('/fornecedor/:id', FornecedorController.listarFornecedor);
 routes.delete(
   '/fornecedor',
-  AuthController.fornecedor,
+  AuthMiddleware.fornecedor,
   FornecedorController.deletarFornecedor,
 );
 
 // Produto
 routes.post(
   '/produto',
-  AuthController.fornecedor,
+  AuthMiddleware.fornecedor,
   awsStorageFiles.array('file', 4),
   ProdutoController.cadastrarProduto,
 );
@@ -61,12 +61,12 @@ routes.get(
 );
 routes.put(
   '/produto/:id',
-  AuthController.fornecedor,
+  AuthMiddleware.fornecedor,
   ProdutoController.atualizarProduto,
 );
 routes.delete(
   '/produto/:id',
-  AuthController.fornecedor,
+  AuthMiddleware.fornecedor,
   ProdutoController.deletarProduto,
 );
 
@@ -74,24 +74,24 @@ routes.delete(
 routes.post('/consumidor', ConsumidorController.cadastrarConsumidor);
 routes.post(
   '/consumidor/:id/:compra',
-  AuthController.consumidor,
+  AuthMiddleware.consumidor,
   PedidoConsumidor.solicitarPedido,
 );
 routes.post(
   '/avaliacao/:id',
-  AuthController.consumidor,
+  AuthMiddleware.consumidor,
   ConsumidorController.avaliarFornecedor,
 );
 routes.get('/consumidor', ConsumidorController.listarTodosConsumidores);
 routes.get('/consumidor/:id', ConsumidorController.listarConsumidor);
 routes.delete(
   '/consumidor',
-  AuthController.consumidor,
+  AuthMiddleware.consumidor,
   ConsumidorController.deletarConsumidor,
 );
 routes.get(
   '/listapedidos',
-  AuthController.consumidor,
+  AuthMiddleware.consumidor,
   PedidoConsumidor.listarPedidosConsumidor,
 );
 
@@ -103,19 +103,19 @@ routes.post('/sessao/admin', SessaoController.autenticarAdmin);
 // Arquivos
 routes.get(
   '/arquivofornecedor',
-  AuthController.fornecedor,
+  AuthMiddleware.fornecedor,
   ArquivoController.listaArquivosFornecedor,
 );
 
 // Dashboard - Admin
 routes.get(
   '/dashboard/fornecedor',
-  AuthController.admin,
+  AuthMiddleware.admin,
   DashboardController.listarForneceodresNaoVerificados,
 );
 routes.put(
   '/dashboard/fornecedor/:id',
-  AuthController.admin,
+  AuthMiddleware.admin,
   DashboardController.validarFornecedor,
 );
 

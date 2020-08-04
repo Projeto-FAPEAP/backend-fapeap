@@ -2,7 +2,7 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
-import routes from './controllers/index.routes';
+import routes from './index.routes';
 import './database';
 
 const app = express();
