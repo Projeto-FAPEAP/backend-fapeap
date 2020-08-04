@@ -88,6 +88,48 @@ class PedidoFornecedor {
     next();
   }
 
+  async cancelarPedido(
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { id: fornecedor_id } = request.user;
+      const { id: pedido_id } = request.params;
+
+      if (!fornecedor_id) {
+        throw new Error('Usuário não autenticado!');
+      }
+
+      const pedidoRepository = getRepository(Pedido);
+
+      const pedidoASerValidado = await pedidoRepository.findOne({
+        where: { id: pedido_id },
+      });
+
+      if (!pedidoASerValidado) {
+        throw new Error('Pedido não encontrado!');
+      }
+
+      let status_pedido;
+      if (pedidoASerValidado.status_pedido === 'Pendente') {
+        status_pedido = 'Cancelado';
+
+        const pedido = pedidoRepository.merge(pedidoASerValidado, {
+          status_pedido,
+        });
+        const pedidoAtualizado = await pedidoRepository.save(pedido);
+
+        response.status(201).json(pedidoAtualizado);
+      } else {
+        throw new Error('Cancelamento somente para pedidos Pendentes');
+      }
+    } catch (error) {
+      response.status(400).json({ error: error.message });
+    }
+    next();
+  }
+
   async historicoFornecedor(
     request: Request,
     response: Response,

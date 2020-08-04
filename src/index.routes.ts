@@ -24,6 +24,11 @@ routes.put(
   AuthMiddleware.fornecedor,
   PedidoFornecedor.validarPedidos,
 );
+routes.put(
+  '/cancelarpedidos/:id',
+  AuthMiddleware.fornecedor,
+  PedidoFornecedor.cancelarPedido,
+);
 routes.get(
   '/fornecedor/pedidos',
   AuthMiddleware.fornecedor,
