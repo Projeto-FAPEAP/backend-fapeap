@@ -131,8 +131,6 @@ class FornecedorController {
         where: { verificado: true },
       });
 
-      const resultado = [];
-
       for (const fornece of fornecedores) {
         const arquivos = await arquivoFornecedorRepository.find({
           where: { fornecedor_id: fornece.id },
@@ -142,23 +140,20 @@ class FornecedorController {
           where: { fornecedor_id: fornece.id },
         });
 
-        type Estrelas = { estrelas: number };
-
-        let estrelasFornecedor: Array<Estrelas>;
+        let estrelasFornecedor: number[] = [];
 
         if (avaliacoes[0].length > 0) {
-          estrelasFornecedor = avaliacoes[0].map(avaliacao => {
-            return {
-              estrelas: avaliacao.estrelas,
-            };
-          });
-        } else {
-          estrelasFornecedor = [];
+          estrelasFornecedor = avaliacoes[0].map(
+            avaliacao => avaliacao.estrelas,
+          );
         }
 
         const quantidadeAvaliacoes = avaliacoes[1];
 
-        const avaliacoesFornecedor = [estrelasFornecedor, quantidadeAvaliacoes];
+        const avaliacoesFornecedor = [
+          { estrelas: estrelasFornecedor },
+          { quantidade_estrelas: quantidadeAvaliacoes },
+        ];
 
         delete fornece.senha;
         arquivos.forEach(arq => delete arq.fornecedor);
@@ -203,23 +198,18 @@ class FornecedorController {
         where: { fornecedor_id: fornecedor.id },
       });
 
-      type Estrelas = { estrelas: number };
-
-      let estrelasFornecedor: Array<Estrelas>;
+      let estrelasFornecedor: number[] = [];
 
       if (avaliacoes[0].length > 0) {
-        estrelasFornecedor = avaliacoes[0].map(avaliacao => {
-          return {
-            estrelas: avaliacao.estrelas,
-          };
-        });
-      } else {
-        estrelasFornecedor = [];
+        estrelasFornecedor = avaliacoes[0].map(avaliacao => avaliacao.estrelas);
       }
 
       const quantidadeAvaliacoes = avaliacoes[1];
 
-      const avaliacoesFornecedor = [estrelasFornecedor, quantidadeAvaliacoes];
+      const avaliacoesFornecedor = [
+        { estrelas: estrelasFornecedor },
+        { quantidade_estrelas: quantidadeAvaliacoes },
+      ];
 
       const resultado = { fornecedor, arquivos, avaliacoesFornecedor };
 
