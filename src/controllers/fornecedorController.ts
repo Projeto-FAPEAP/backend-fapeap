@@ -163,10 +163,10 @@ class FornecedorController {
         delete fornece.senha;
         arquivos.forEach(arq => delete arq.fornecedor);
 
-        resultado.push({ fornecedor: fornece, arquivos, avaliacoesFornecedor });
+        Object.assign(fornece, arquivos, avaliacoesFornecedor);
       }
 
-      response.status(200).json(resultado);
+      response.status(200).json(fornecedores);
     } catch (error) {
       response.status(400).json({ error: error.message });
     }
