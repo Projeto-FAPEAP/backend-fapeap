@@ -24,12 +24,10 @@ class PedidoFornecedor {
         where: { fornecedor_id },
       });
 
-      const pedidosPendentes = pedidosFornecedor.filter(
-        (pedido: Pedido): boolean => {
-          return pedido.status_pedido === 'Pendente';
-        },
-      );
-      response.status(200).json(pedidosPendentes);
+      const pedidos = pedidosFornecedor.filter((pedido: Pedido): boolean => {
+        return pedido.status_pedido !== 'Finalizado';
+      });
+      response.status(200).json(pedidos);
     } catch (error) {
       response.status(400).json({ error: error.message });
     }
@@ -148,7 +146,12 @@ class PedidoFornecedor {
         where: { fornecedor_id },
       });
 
-      response.status(200).json(pedidosFornecedor);
+      const pedidosFinalizados = pedidosFornecedor.filter(
+        (pedido: Pedido): boolean => {
+          return pedido.status_pedido === 'Finalizado';
+        },
+      );
+      response.status(200).json(pedidosFinalizados);
     } catch (error) {
       response.status(400).json({ error: error.message });
     }
