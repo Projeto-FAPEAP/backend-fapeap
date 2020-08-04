@@ -139,16 +139,23 @@ class FornecedorController {
         });
 
         const avaliacoes = await avaliacaoRepository.findAndCount({
-          where: { fornecedor_id: fornece },
+          where: { fornecedor_id: fornece.id },
         });
 
-        let estrelasFornecedor: number[];
+        type Estrelas = { estrelas: number };
+
+        let estrelasFornecedor: Array<Estrelas>;
 
         if (avaliacoes[0].length > 0) {
-          estrelasFornecedor = avaliacoes[0].map(
-            avaliacao => avaliacao.estrelas,
-          );
+          estrelasFornecedor = avaliacoes[0].map(avaliacao => {
+            return {
+              estrelas: avaliacao.estrelas,
+            };
+          });
+        } else {
+          estrelasFornecedor = [];
         }
+
         estrelasFornecedor = [];
         const quantidadeAvaliacoes = avaliacoes[1];
 
@@ -184,6 +191,7 @@ class FornecedorController {
       }
 
       const arquivoFornecedorRepository = getRepository(ArquivoFornecedor);
+      const avaliacaoRepository = getRepository(AvaliacaoFornecedor);
 
       const arquivos = await arquivoFornecedorRepository.find({
         where: { fornecedor_id: id },
@@ -192,7 +200,29 @@ class FornecedorController {
       arquivos.forEach(arq => delete arq.fornecedor);
       delete fornecedor.senha;
 
-      const resultado = { fornecedor, arquivos };
+      const avaliacoes = await avaliacaoRepository.findAndCount({
+        where: { fornecedor_id: fornecedor.id },
+      });
+
+      type Estrelas = { estrelas: number };
+
+      let estrelasFornecedor: Array<Estrelas>;
+
+      if (avaliacoes[0].length > 0) {
+        estrelasFornecedor = avaliacoes[0].map(avaliacao => {
+          return {
+            estrelas: avaliacao.estrelas,
+          };
+        });
+      } else {
+        estrelasFornecedor = [];
+      }
+
+      const quantidadeAvaliacoes = avaliacoes[1];
+
+      const avaliacoesFornecedor = [estrelasFornecedor, quantidadeAvaliacoes];
+
+      const resultado = { fornecedor, arquivos, avaliacoesFornecedor };
 
       response.status(200).json(resultado);
     } catch (error) {
