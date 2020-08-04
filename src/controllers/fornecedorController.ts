@@ -142,16 +142,12 @@ class FornecedorController {
           where: { fornecedor_id: fornece },
         });
 
-        type Estrelas = { estrelas: number };
-
-        let estrelasFornecedor: Array<Estrelas>;
+        let estrelasFornecedor: number[];
 
         if (avaliacoes[0].length > 0) {
-          estrelasFornecedor = avaliacoes[0].map(avaliacao => {
-            const obj = { estrelas: 0 };
-            obj.estrelas = avaliacao.estrelas;
-            return obj;
-          });
+          estrelasFornecedor = avaliacoes[0].map(
+            avaliacao => avaliacao.estrelas,
+          );
         }
         estrelasFornecedor = [];
         const quantidadeAvaliacoes = avaliacoes[1];
