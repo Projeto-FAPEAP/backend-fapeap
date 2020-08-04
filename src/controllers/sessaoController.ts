@@ -110,7 +110,7 @@ class SessaoController {
       }
 
       if (!fornecedor.verificado) {
-        throw new Error('Estamos analisando o seu cadastro!');
+        response.status(200).json(fornecedor);
       }
 
       const { jwt_fornecedor } = jwtConfig;
