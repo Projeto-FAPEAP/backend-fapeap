@@ -8,6 +8,7 @@ import { validate } from 'class-validator';
 
 import Fornecedor from '../models/Fornecedor';
 import ArquivoFornecedor from '../models/ArquivoFornecedor';
+import AvaliacaoFornecedor from '../models/AvaliacaoFornecedor';
 
 // Remember - Não esquecer de remover o campo verificado na criacao do fornecedor
 
@@ -123,6 +124,7 @@ class FornecedorController {
     try {
       // Carregar url dos arquivos dos fornecedores
       const fornecedorRepository = getRepository(Fornecedor);
+      const avaliacaoRepository = getRepository(AvaliacaoFornecedor);
       const arquivoFornecedorRepository = getRepository(ArquivoFornecedor);
 
       const fornecedores = await fornecedorRepository.find({
@@ -136,11 +138,14 @@ class FornecedorController {
           where: { fornecedor_id: fornece.id },
         });
 
+        const avaliacoes = await avaliacaoRepository.findAndCount({
+          where: { fornecedor_id: fornece },
+        });
+
         delete fornece.senha;
         arquivos.forEach(arq => delete arq.fornecedor);
 
-        resultado.push(fornece);
-        resultado.push({ arquivos });
+        resultado.push({ fornecedor: fornece, arquivos, avaliacoes });
       }
 
       response.status(200).json(resultado);
