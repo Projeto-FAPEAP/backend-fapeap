@@ -142,10 +142,24 @@ class FornecedorController {
           where: { fornecedor_id: fornece },
         });
 
+        type Estrelas = { estrelas: number };
+
+        let estrelasFornecedor: Array<Estrelas>;
+
+        if (avaliacoes[0].length > 0) {
+          estrelasFornecedor = avaliacoes[0].map(avaliacao => {
+            return { estrelas: avaliacao.estrelas };
+          });
+        }
+        estrelasFornecedor = [];
+        const quantidadeAvaliacoes = avaliacoes[1];
+
+        const avaliacoesFornecedor = [estrelasFornecedor, quantidadeAvaliacoes];
+
         delete fornece.senha;
         arquivos.forEach(arq => delete arq.fornecedor);
 
-        resultado.push({ fornecedor: fornece, arquivos, avaliacoes });
+        resultado.push({ fornecedor: fornece, arquivos, avaliacoesFornecedor });
       }
 
       response.status(200).json(resultado);
