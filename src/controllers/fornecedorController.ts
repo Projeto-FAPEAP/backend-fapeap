@@ -148,7 +148,9 @@ class FornecedorController {
 
         if (avaliacoes[0].length > 0) {
           estrelasFornecedor = avaliacoes[0].map(avaliacao => {
-            return { estrelas: avaliacao.estrelas };
+            const obj = { estrelas: 0 };
+            obj.estrelas = avaliacao.estrelas;
+            return obj;
           });
         }
         estrelasFornecedor = [];
