@@ -113,6 +113,8 @@ export const cadastrarFornecedor = async (
 
     const arquivoRepository = getRepository(ArquivoFornecedor);
 
+    console.log(request.files);
+
     for (const arquivo_fornecedor of request.files) {
       const {
         key: id,
@@ -133,20 +135,6 @@ export const cadastrarFornecedor = async (
 
       await arquivoRepository.save(arquivo);
     }
-
-    /* request.files.video.forEach(async elementoVideo => {
-      const { filename: id, originalname: nome_original, size } = elementoVideo;
-
-      const video = arquivoRepository.create({
-        id,
-        nome_original,
-        size,
-        url: '',
-        fornecedor_id: fornecedor.id,
-      });
-
-      await arquivoRepository.save(video);
-    }); */
 
     if (request.files.length === 0) {
       const { id } = fornecedor;
