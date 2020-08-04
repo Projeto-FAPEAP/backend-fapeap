@@ -5,6 +5,7 @@ import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
 import { hash } from 'bcryptjs';
 import { validate } from 'class-validator';
+
 import Fornecedor from '../models/Fornecedor';
 import ArquivoFornecedor from '../models/ArquivoFornecedor';
 
@@ -111,19 +112,25 @@ export const cadastrarFornecedor = async (
     const fornecedor = await fornecedorRepository.save(fornecedorDTO);
 
     const arquivoRepository = getRepository(ArquivoFornecedor);
-    request.files.forEach(async elementoFile => {
-      const { filename: id, originalname: nome_original, size } = elementoFile;
 
-      const fileElement = arquivoRepository.create({
+    for (const arquivo_fornecedor of request.files) {
+      const {
+        key: id,
+        originalname: nome_original,
+        size,
+        location: url,
+      } = arquivo_fornecedor;
+
+      const arquivo = arquivoRepository.create({
         id,
         nome_original,
         size,
-        url: '',
+        url,
         fornecedor_id: fornecedor.id,
       });
 
-      await arquivoRepository.save(fileElement);
-    });
+      await arquivoRepository.save(arquivo);
+    }
 
     /* request.files.video.forEach(async elementoVideo => {
       const { filename: id, originalname: nome_original, size } = elementoVideo;

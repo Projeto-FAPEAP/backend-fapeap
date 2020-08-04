@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import multer from 'multer';
-import multerConfig from '../config/multerConfig';
+import { awsStorageFiles } from '../config/multerConfig';
+
 import {
   cadastrarFornecedor,
   listarTodosFornecedores,
@@ -48,7 +49,7 @@ const routes = Router();
 // Fornecedor
 routes.post(
   '/fornecedor',
-  multer(multerConfig).array('file', 5),
+  awsStorageFiles.array('file', 5),
   cadastrarFornecedor,
 );
 routes.put('/validarpedidos/:id', authMiddlewareFornecedor, validarPedidos);
@@ -75,7 +76,7 @@ routes.delete('/fornecedor', authMiddlewareFornecedor, deletarFornecedor);
 routes.post(
   '/produto',
   authMiddlewareFornecedor,
-  multer(multerConfig).array('file', 4),
+  awsStorageFiles.array('file', 4),
   cadastrarProduto,
 );
 routes.get('/produto/:idfornecedor', listarProdutos);
