@@ -1,48 +1,15 @@
 import { Router } from 'express';
-import multer from 'multer';
 import { awsStorageFiles } from '../config/multerConfig';
 
-import {
-  cadastrarFornecedor,
-  listarTodosFornecedores,
-  listarFornecedor,
-  deletarFornecedor,
-  atualizarFornecedor,
-} from './fornecedorController';
-import { listarForneceodresNaoVerificados } from './validacaoFornecedor';
-import {
-  cadastrarConsumidor,
-  listarTodosConsumidores,
-  listarConsumidor,
-  deletarConsumidor,
-  avalicaoFornecedor,
-} from './consumidorController';
-import {
-  cadastrarProduto,
-  listarProdutos,
-  listarProduto,
-  atualizarProduto,
-  deletarProduto,
-} from './produtoController';
-import {
-  autenticarConsumidor,
-  autenticarFornecedor,
-  autenticarAdmin,
-} from './sessaoController';
-import { listaArquivosFornecedor } from './arquivoController';
-import {
-  authMiddlewareFornecedor,
-  authMiddlewareConsumidor,
-  authMiddlewareAdmin,
-} from '../middlewares/authMiddleware';
-import {
-  solicitarPedido,
-  listarPedidosConsumidor,
-  validarPedidos,
-  listarPedidosFornecedor,
-  historicoFornecedor,
-} from './reservaController';
-import { listarDetalhesPedidoFornecedor } from './pedidoController';
+import FornecedorController from './fornecedorController';
+import ConsumidorController from './consumidorController';
+import DashboardController from './dashboardController';
+import ProdutoController from './produtoController';
+import SessaoController from './sessaoController';
+import ArquivoController from './arquivoController';
+import AuthController from '../middlewares/authMiddleware';
+import PedidoConsumidor from './pedidoConsumidorController';
+import PedidoFornecedor from './pedidoFornecedorController';
 
 const routes = Router();
 
@@ -50,75 +17,106 @@ const routes = Router();
 routes.post(
   '/fornecedor',
   awsStorageFiles.array('file', 5),
-  cadastrarFornecedor,
+  FornecedorController.cadastrarFornecedor,
 );
-routes.put('/validarpedidos/:id', authMiddlewareFornecedor, validarPedidos);
+routes.put(
+  '/validarpedidos/:id',
+  AuthController.fornecedor,
+  PedidoFornecedor.validarPedidos,
+);
 routes.get(
   '/fornecedor/pedidos',
-  authMiddlewareFornecedor,
-  listarPedidosFornecedor,
+  AuthController.fornecedor,
+  PedidoFornecedor.listarPedidosFornecedor,
 );
 routes.get(
   '/fornecedor/pedidos/itens/:id',
-  authMiddlewareFornecedor,
-  listarDetalhesPedidoFornecedor,
+  AuthController.fornecedor,
+  PedidoFornecedor.listarDetalhesPedidoFornecedor,
 );
 routes.get(
   '/fornecedor/pedidos/historico',
-  authMiddlewareFornecedor,
-  historicoFornecedor,
+  AuthController.fornecedor,
+  PedidoFornecedor.historicoFornecedor,
 );
-routes.get('/fornecedor', listarTodosFornecedores);
-routes.get('/fornecedor/:id', listarFornecedor);
-routes.delete('/fornecedor', authMiddlewareFornecedor, deletarFornecedor);
+routes.get('/fornecedor', FornecedorController.listarTodosFornecedores);
+routes.get('/fornecedor/:id', FornecedorController.listarFornecedor);
+routes.delete(
+  '/fornecedor',
+  AuthController.fornecedor,
+  FornecedorController.deletarFornecedor,
+);
 
 // Produto
 routes.post(
   '/produto',
-  authMiddlewareFornecedor,
+  AuthController.fornecedor,
   awsStorageFiles.array('file', 4),
-  cadastrarProduto,
+  ProdutoController.cadastrarProduto,
 );
-routes.get('/produto/:idfornecedor', listarProdutos);
-routes.get('/produto/:idfornecedor/:idproduto', listarProduto);
-routes.put('/produto/:id', authMiddlewareFornecedor, atualizarProduto);
-routes.delete('/produto/:id', authMiddlewareFornecedor, deletarProduto);
+routes.get('/produto/:idfornecedor', ProdutoController.listarProdutos);
+routes.get(
+  '/produto/:idfornecedor/:idproduto',
+  ProdutoController.listarProduto,
+);
+routes.put(
+  '/produto/:id',
+  AuthController.fornecedor,
+  ProdutoController.atualizarProduto,
+);
+routes.delete(
+  '/produto/:id',
+  AuthController.fornecedor,
+  ProdutoController.deletarProduto,
+);
 
 // Consumidor
-routes.post('/consumidor', cadastrarConsumidor);
+routes.post('/consumidor', ConsumidorController.cadastrarConsumidor);
 routes.post(
   '/consumidor/:id/:compra',
-  authMiddlewareConsumidor,
-  solicitarPedido,
+  AuthController.consumidor,
+  PedidoConsumidor.solicitarPedido,
 );
-routes.post('/avaliacao/:id', authMiddlewareConsumidor, avalicaoFornecedor);
-routes.get('/consumidor', listarTodosConsumidores);
-routes.get('/consumidor/:id', listarConsumidor);
-routes.delete('/consumidor', authMiddlewareConsumidor, deletarConsumidor);
-routes.get('/listapedidos', authMiddlewareConsumidor, listarPedidosConsumidor);
+routes.post(
+  '/avaliacao/:id',
+  AuthController.consumidor,
+  ConsumidorController.avaliarFornecedor,
+);
+routes.get('/consumidor', ConsumidorController.listarTodosConsumidores);
+routes.get('/consumidor/:id', ConsumidorController.listarConsumidor);
+routes.delete(
+  '/consumidor',
+  AuthController.consumidor,
+  ConsumidorController.deletarConsumidor,
+);
+routes.get(
+  '/listapedidos',
+  AuthController.consumidor,
+  PedidoConsumidor.listarPedidosConsumidor,
+);
 
 // Sessao - Login
-routes.post('/sessao/consumidor', autenticarConsumidor);
-routes.post('/sessao/fornecedor', autenticarFornecedor);
-routes.post('/sessao/admin', autenticarAdmin);
+routes.post('/sessao/consumidor', SessaoController.autenticarConsumidor);
+routes.post('/sessao/fornecedor', SessaoController.autenticarFornecedor);
+routes.post('/sessao/admin', SessaoController.autenticarAdmin);
 
 // Arquivos
 routes.get(
   '/arquivofornecedor',
-  authMiddlewareFornecedor,
-  listaArquivosFornecedor,
+  AuthController.fornecedor,
+  ArquivoController.listaArquivosFornecedor,
 );
 
-// Admin
+// Dashboard - Admin
 routes.get(
   '/dashboard/fornecedor',
-  authMiddlewareAdmin,
-  listarForneceodresNaoVerificados,
+  AuthController.admin,
+  DashboardController.listarForneceodresNaoVerificados,
 );
 routes.put(
   '/dashboard/fornecedor/:id',
-  authMiddlewareAdmin,
-  atualizarFornecedor,
+  AuthController.admin,
+  DashboardController.validarFornecedor,
 );
 
 export default routes;
