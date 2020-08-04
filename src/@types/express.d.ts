@@ -4,7 +4,8 @@ interface Field {
   encoding: string;
   mimetype: string;
   destination: string;
-  filename: string;
+  key: string;
+  location: string;
   path: string;
   size: number;
 }
