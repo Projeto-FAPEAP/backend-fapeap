@@ -81,6 +81,15 @@ class ProdutoController {
       const produtosFornecedor = await produtoRepository.find({
         where: { fornecedor_id },
       });
+      const arquivoRepository = getRepository(ArquivoProduto);
+
+      for (const produ of produtosFornecedor) {
+        const arquivos = arquivoRepository.find({
+          where: { produto_id: produ.id },
+        });
+
+        Object.assign(produ, { arquivos });
+      }
 
       response.status(200).json(produtosFornecedor);
     } catch (error) {
@@ -110,6 +119,12 @@ class ProdutoController {
       if (!produtoFornecedor) {
         throw new Error('Produto não encontrado!');
       }
+
+      const arquivoRepository = getRepository(ArquivoProduto);
+
+      const arquivos = arquivoRepository.find({ where: { produto_id: id } });
+
+      Object.assign(produtoFornecedor, { arquivos });
 
       response.status(200).json(produtoFornecedor);
     } catch (error) {
