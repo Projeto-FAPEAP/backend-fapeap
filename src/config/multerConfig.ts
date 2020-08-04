@@ -52,7 +52,6 @@ export const awsStorageFiles = multer({
       cb(null, `${uuidv4()}-${file.originalname}`);
     },
   }),
-  limits: { fileSize: 10000000 },
   fileFilter(req, file, cb) {
     checkFileType(file, cb);
   },
