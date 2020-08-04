@@ -121,6 +121,8 @@ export const cadastrarFornecedor = async (
         location: url,
       } = arquivo_fornecedor;
 
+      console.log(arquivo_fornecedor);
+
       const arquivo = arquivoRepository.create({
         id,
         nome_original,
