@@ -12,4 +12,6 @@ migrationsDir: './src/database/migrations',
 
 ## Arquivo .env
 
+Use sua configuração baseado no container que criou.
+
 DATABASE_URL = postgres://postgres:fapeap@localhost:5433/projeto_fapeap
