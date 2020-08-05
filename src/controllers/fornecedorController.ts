@@ -136,24 +136,13 @@ class FornecedorController {
           where: { fornecedor_id: fornece.id },
         });
 
-        const avaliacoes = await avaliacaoRepository.findAndCount({
+        const avaliacoes = await avaliacaoRepository.find({
           where: { fornecedor_id: fornece.id },
         });
 
-        let estrelasFornecedor: number[] = [];
-
-        if (avaliacoes[0].length > 0) {
-          estrelasFornecedor = avaliacoes[0].map(
-            avaliacao => avaliacao.estrelas,
-          );
-        }
-
-        const quantidadeAvaliacoes = avaliacoes[1];
-
-        const avaliacoesFornecedor = [
-          { estrelas: estrelasFornecedor },
-          { quantidade_estrelas: quantidadeAvaliacoes },
-        ];
+        const avaliacoesFornecedor = avaliacoes.map(
+          avaliacao => avaliacao.estrelas,
+        );
 
         delete fornece.senha;
         arquivos.forEach(arq => delete arq.fornecedor);
@@ -194,26 +183,17 @@ class FornecedorController {
       arquivos.forEach(arq => delete arq.fornecedor);
       delete fornecedor.senha;
 
-      const avaliacoes = await avaliacaoRepository.findAndCount({
+      const avaliacoes = await avaliacaoRepository.find({
         where: { fornecedor_id: fornecedor.id },
       });
 
-      let estrelasFornecedor: number[] = [];
+      const avaliacoesFornecedor = avaliacoes.map(
+        avaliacao => avaliacao.estrelas,
+      );
 
-      if (avaliacoes[0].length > 0) {
-        estrelasFornecedor = avaliacoes[0].map(avaliacao => avaliacao.estrelas);
-      }
+      Object.assign(fornecedor, { arquivos }, { avaliacoesFornecedor });
 
-      const quantidadeAvaliacoes = avaliacoes[1];
-
-      const avaliacoesFornecedor = [
-        { estrelas: estrelasFornecedor },
-        { quantidade_estrelas: quantidadeAvaliacoes },
-      ];
-
-      const resultado = { fornecedor, arquivos, avaliacoesFornecedor };
-
-      response.status(200).json(resultado);
+      response.status(200).json(fornecedor);
     } catch (error) {
       if (error.message === 'Fornecedor não encontrado!') {
         response.status(404).json({ error: error.message });
