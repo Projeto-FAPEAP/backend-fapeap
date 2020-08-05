@@ -53,7 +53,7 @@ class Pedido {
   status_pedido: string;
 
   @Column('boolean')
-  tipo_da_compra: boolean;
+  delivery: boolean;
 
   @CreateDateColumn()
   created_at: Date;

@@ -16,7 +16,7 @@ class PedidoConsumidor {
       const { compra, id: fornecedor_id } = request.params;
 
       // true para delivery, false para retirada
-      const tipo_da_compra = compra !== 'false';
+      const delivery = compra !== 'false';
 
       if (!consumidor_id) {
         throw new Error('Usuário não autenticado!');
@@ -31,7 +31,7 @@ class PedidoConsumidor {
         fornecedor_id,
         status_pedido,
         total: 0,
-        tipo_da_compra,
+        delivery,
       });
 
       const pedido = await pedidoRepository.save(pedidoDAO);

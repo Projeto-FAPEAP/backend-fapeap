@@ -69,7 +69,7 @@ class PedidoFornecedor {
         status_pedido = 'Finalizado';
       } else if (pedidoASerValidado.status_pedido === 'Pendente') {
         status_pedido = 'Reserva confirmada';
-        if (pedidoASerValidado.tipo_da_compra) {
+        if (pedidoASerValidado.delivery) {
           status_pedido = 'Delivery confirmado';
         }
       }
