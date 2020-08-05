@@ -147,15 +147,6 @@ class PedidoConsumidor {
     }
     next();
   }
-
-  /*  async fazerAvaliacao(
-    request: Request,
-    response: Response,
-    next: NextFunction,
-  ): Promise<void> {
-    try {
-    } catch (error) {}
-  } */
 }
 
 export default new PedidoConsumidor();
