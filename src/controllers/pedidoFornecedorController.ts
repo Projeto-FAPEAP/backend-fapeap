@@ -25,7 +25,10 @@ class PedidoFornecedor {
       });
 
       const pedidos = pedidosFornecedor.filter((pedido: Pedido): boolean => {
-        return pedido.status_pedido !== 'Finalizado';
+        return (
+          pedido.status_pedido !== 'Finalizado' &&
+          pedido.status_pedido !== 'Cancelado'
+        );
       });
       response.status(200).json(pedidos);
     } catch (error) {
@@ -136,6 +139,23 @@ class PedidoFornecedor {
     try {
       const { id: fornecedor_id } = request.user;
 
+      const { page } = request.query;
+      const numeroPagina = String(page);
+      const { limit } = request.query;
+      const numeroLimite = String(limit);
+
+      if (numeroPagina === undefined && numeroLimite === undefined) {
+        throw new Error('Query ausente! Deve ser passado page e limit');
+      }
+
+      const pagina = parseInt(numeroPagina, 10);
+      const limite = parseInt(numeroLimite, 10);
+
+      const [indexInicial, indexFinal] = [
+        (pagina - 1) * limite,
+        pagina * limite,
+      ];
+
       if (!fornecedor_id) {
         throw new Error('Usuário não autenticado!');
       }
@@ -146,12 +166,18 @@ class PedidoFornecedor {
         where: { fornecedor_id },
       });
 
-      const pedidosFinalizados = pedidosFornecedor.filter(
+      const pedidosHistorico = pedidosFornecedor.filter(
         (pedido: Pedido): boolean => {
-          return pedido.status_pedido === 'Finalizado';
+          return (
+            pedido.status_pedido === 'Finalizado' ||
+            pedido.status_pedido === 'Cancelado'
+          );
         },
       );
-      response.status(200).json(pedidosFinalizados);
+
+      const resultados = pedidosHistorico.slice(indexInicial, indexFinal);
+
+      response.status(200).json(resultados);
     } catch (error) {
       response.status(400).json({ error: error.message });
     }
