@@ -5,9 +5,7 @@ import Arquivo from './Arquivo';
 @Entity('arquivo_produto')
 class ArquivoProduto extends Arquivo {
   @JoinColumn({ name: 'produto_id' })
-  @ManyToOne(() => Produto, produto => produto.arquivos, {
-    eager: true,
-  })
+  @ManyToOne(() => Produto, produto => produto.arquivos)
   produto: Produto;
 
   @Column('uuid')
