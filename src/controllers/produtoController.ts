@@ -84,7 +84,7 @@ class ProdutoController {
       const arquivoRepository = getRepository(ArquivoProduto);
 
       for (const produ of produtosFornecedor) {
-        const arquivos = arquivoRepository.find({
+        const arquivos = await arquivoRepository.find({
           where: { produto_id: produ.id },
         });
 
@@ -122,7 +122,9 @@ class ProdutoController {
 
       const arquivoRepository = getRepository(ArquivoProduto);
 
-      const arquivos = arquivoRepository.find({ where: { produto_id: id } });
+      const arquivos = await arquivoRepository.find({
+        where: { produto_id: id },
+      });
 
       Object.assign(produtoFornecedor, { arquivos });
 
