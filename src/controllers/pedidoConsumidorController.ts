@@ -74,7 +74,7 @@ class PedidoConsumidor {
 
       if (fornecedor?.taxa_delivery) {
         total += Number(fornecedor.taxa_delivery);
-        taxa_entrega = fornecedor.taxa_delivery;
+        taxa_entrega = Number(fornecedor.taxa_delivery);
       }
 
       const novoPedido = pedidoRepository.merge(pedido, { total });
