@@ -44,7 +44,7 @@ class PedidoFornecedor {
         Object.assign(pedido, { subtotal }, { taxa_entrega });
       });
 
-      response.status(200).json({ pedidos });
+      response.status(200).json(pedidos);
     } catch (error) {
       response.status(400).json({ error: error.message });
     }
