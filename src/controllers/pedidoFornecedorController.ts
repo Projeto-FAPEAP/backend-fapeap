@@ -37,7 +37,7 @@ class PedidoFornecedor {
         where: { id: fornecedor_id },
       });
 
-      const taxa_entrega = fornecedor?.taxa_delivery || 0;
+      const taxa_entrega = Number(fornecedor?.taxa_delivery) || 0;
 
       pedidos.forEach(pedido => {
         const subtotal = pedido.total - taxa_entrega;
