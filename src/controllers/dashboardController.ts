@@ -13,14 +13,11 @@ class DashboardController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      // Carregar url dos arquivos dos fornecedores
       const fornecedorRepository = getRepository(Fornecedor);
       const arquivoFornecedorRepository = getRepository(ArquivoFornecedor);
       const fornecedores = await fornecedorRepository.find({
         where: { verificado: false },
       });
-
-      const resultado = [];
 
       // eslint-disable-next-line no-restricted-syntax
       for (const fornece of fornecedores) {
@@ -31,11 +28,12 @@ class DashboardController {
         delete fornece.senha;
         arquivos.forEach(arq => delete arq.fornecedor);
 
-        resultado.push(fornece);
-        resultado.push({ arquivos });
+        Object.assign(fornece, { arquivos });
       }
 
-      response.status(200).json(resultado);
+      console.log(fornecedores, fornecedores.length);
+
+      response.status(200).json(fornecedores);
     } catch (error) {
       response.status(400).json({ error: error.message });
     }
