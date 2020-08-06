@@ -70,15 +70,18 @@ class PedidoConsumidor {
         where: { id: fornecedor_id },
       });
 
+      let taxa_entrega = 0;
+
       if (fornecedor?.taxa_delivery) {
         total += Number(fornecedor.taxa_delivery);
+        taxa_entrega = fornecedor.taxa_delivery;
       }
 
       const novoPedido = pedidoRepository.merge(pedido, { total });
 
       const pedidoFinal = await pedidoRepository.save(novoPedido);
 
-      Object.assign(pedidoFinal, { subtotal });
+      Object.assign(pedidoFinal, { subtotal }, { taxa_entrega });
 
       response.status(201).json(pedidoFinal);
     } catch (error) {
