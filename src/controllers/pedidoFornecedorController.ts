@@ -4,6 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 
 import ItensPedido from '../models/ItensPedido';
 import Pedido from '../models/Pedido';
+import Fornecedor from '../models/Fornecedor';
 
 class PedidoFornecedor {
   async listarPedidosFornecedor(
@@ -30,7 +31,20 @@ class PedidoFornecedor {
           pedido.status_pedido !== 'Cancelado'
         );
       });
-      response.status(200).json(pedidos);
+      const fornecedorRepository = getRepository(Fornecedor);
+
+      const fornecedor = await fornecedorRepository.findOne({
+        where: { id: fornecedor_id },
+      });
+
+      const taxa_entrega = fornecedor?.taxa_delivery || 0;
+
+      pedidos.forEach(pedido => {
+        const subtotal = pedido.total - taxa_entrega;
+        Object.assign(pedido, { subtotal }, { taxa_entrega });
+      });
+
+      response.status(200).json({ pedidos });
     } catch (error) {
       response.status(400).json({ error: error.message });
     }
