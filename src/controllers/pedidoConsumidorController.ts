@@ -40,6 +40,7 @@ class PedidoConsumidor {
       const itensPedidoRepository = getRepository(ItensPedido);
 
       const data = request.body;
+      let subtotal;
 
       type elementITEM = {
         produto_id: string;
@@ -53,6 +54,7 @@ class PedidoConsumidor {
         const { produto_id, preco_venda, quantidade } = element;
 
         total += Number((preco_venda * quantidade).toFixed(2));
+        subtotal = total;
         // TO DO - talvez precise validar a quantidade de itens a serem pedidos (não deve ultrapassar o valor do estpque)
         const itensPedidoDAO = itensPedidoRepository.create({
           pedido,
@@ -75,6 +77,8 @@ class PedidoConsumidor {
       const novoPedido = pedidoRepository.merge(pedido, { total });
 
       const pedidoFinal = await pedidoRepository.save(novoPedido);
+
+      Object.assign(pedidoFinal, { subtotal });
 
       response.status(201).json(pedidoFinal);
     } catch (error) {
