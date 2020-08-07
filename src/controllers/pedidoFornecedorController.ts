@@ -153,9 +153,9 @@ class PedidoFornecedor {
     try {
       const { id: fornecedor_id } = request.user;
 
-      const { page } = request.query || 1;
+      const page = request.query.page || 1;
       const numeroPagina = String(page);
-      const { limit } = request.query || 30;
+      const limit = request.query.limit || 30;
       const numeroLimite = String(limit);
 
       if (numeroPagina === undefined && numeroLimite === undefined) {
