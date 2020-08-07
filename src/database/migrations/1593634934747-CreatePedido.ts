@@ -30,7 +30,7 @@ export default class CreatePedido1593634934747 implements MigrationInterface {
             type: 'varchar',
           },
           {
-            name: 'delivery',
+            name: 'tipo_da_compra',
             type: 'boolean',
           },
           {

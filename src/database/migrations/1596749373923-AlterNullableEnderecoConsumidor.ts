@@ -48,7 +48,27 @@ export default class AlterNullableEnderecoConsumidor1596749373923
       new TableColumn({
         name: 'logradouro',
         type: 'varchar',
-        isNullable: true,
+      }),
+    );
+    await queryRunner.addColumn(
+      'consumidor',
+      new TableColumn({
+        name: 'bairro',
+        type: 'varchar',
+      }),
+    );
+    await queryRunner.addColumn(
+      'consumidor',
+      new TableColumn({
+        name: 'cep',
+        type: 'varchar',
+      }),
+    );
+    await queryRunner.addColumn(
+      'consumidor',
+      new TableColumn({
+        name: 'numero_local',
+        type: 'varchar',
       }),
     );
   }
