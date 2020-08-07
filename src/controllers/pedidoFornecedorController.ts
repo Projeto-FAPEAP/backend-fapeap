@@ -153,9 +153,9 @@ class PedidoFornecedor {
     try {
       const { id: fornecedor_id } = request.user;
 
-      const { page } = request.query;
+      const { page } = request.query || 1;
       const numeroPagina = String(page);
-      const { limit } = request.query;
+      const { limit } = request.query || 30;
       const numeroLimite = String(limit);
 
       if (numeroPagina === undefined && numeroLimite === undefined) {
@@ -169,6 +169,14 @@ class PedidoFornecedor {
         (pagina - 1) * limite,
         pagina * limite,
       ];
+
+      type HistorioDTO = {
+        historico: Pedido[];
+        page: number;
+        perPage: number;
+        pages: number;
+        total: number;
+      };
 
       if (!fornecedor_id) {
         throw new Error('Usuário não autenticado!');
@@ -189,9 +197,19 @@ class PedidoFornecedor {
         },
       );
 
-      const resultados = pedidosHistorico.slice(indexInicial, indexFinal);
+      const historico = pedidosHistorico.slice(indexInicial, indexFinal);
+      const total_pedidos = historico.length;
+      const paginas = Math.ceil(total_pedidos / limite);
 
-      response.status(200).json(resultados);
+      const historicoResponse: HistorioDTO = {
+        historico,
+        page: pagina,
+        perPage: limite,
+        pages: paginas,
+        total: total_pedidos,
+      };
+
+      response.status(200).json(historicoResponse);
     } catch (error) {
       response.status(400).json({ error: error.message });
     }
