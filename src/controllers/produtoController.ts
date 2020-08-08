@@ -200,6 +200,53 @@ class ProdutoController {
     }
     next();
   }
+
+  async atualizarArqProduto(
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { id: arquivo_id } = request.params;
+      const { id: fornecedor_id } = request.user;
+
+      if (!arquivo_id) {
+        throw new Error('ID do arquivo_produto não informado!');
+      }
+      if (!fornecedor_id) {
+        throw new Error('Usuário não autenticado!');
+      }
+
+      const arquivoRepository = getRepository(ArquivoProduto);
+
+      const arquivoASerEditado = await arquivoRepository.findOne({
+        where: { id: arquivo_id },
+      });
+
+      if (!arquivoASerEditado) {
+        throw new Error('Arquivo não encontrado!');
+      }
+
+      const {
+        originalname: nome_original,
+        size,
+        location: url,
+      } = request.files[0];
+
+      const novoArquivo = arquivoRepository.merge(arquivoASerEditado, {
+        nome_original,
+        size,
+        url,
+      });
+
+      const result = arquivoRepository.save(novoArquivo);
+
+      response.status(200).json(result);
+    } catch (error) {
+      response.status(400).json({ error: error.message });
+    }
+    next();
+  }
 }
 
 export default new ProdutoController();

@@ -69,6 +69,11 @@ routes.put(
   AuthMiddleware.fornecedor,
   ProdutoController.atualizarProduto,
 );
+routes.put(
+  '/arquivoproduto/:id',
+  AuthMiddleware.fornecedor,
+  ProdutoController.atualizarArqProduto,
+);
 routes.delete(
   '/produto/:id',
   AuthMiddleware.fornecedor,
