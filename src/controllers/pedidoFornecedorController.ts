@@ -78,7 +78,7 @@ class PedidoFornecedor {
 
       if (
         pedidoASerValidado.status_pedido === 'Reserva confirmada' ||
-        pedidoASerValidado.status_pedido === 'Delivery confirmado'
+        pedidoASerValidado.status_pedido === 'Pedido em rota de entrega'
       ) {
         status_pedido = 'Finalizado';
       } else if (pedidoASerValidado.status_pedido === 'Pendente') {
@@ -86,6 +86,8 @@ class PedidoFornecedor {
         if (pedidoASerValidado.delivery) {
           status_pedido = 'Delivery confirmado';
         }
+      } else if (pedidoASerValidado.status_pedido === 'Delivery confirmado') {
+        status_pedido = 'Pedido em rota de entrega';
       }
 
       const pedido = pedidoRepository.merge(pedidoASerValidado, {
