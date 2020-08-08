@@ -211,6 +211,27 @@ class PedidoFornecedor {
         total: total_pedidos,
       };
 
+      const fornecedorRepository = getRepository(Fornecedor);
+
+      const fornecedor = await fornecedorRepository.findOne({
+        where: { id: fornecedor_id },
+      });
+
+      let taxa;
+
+      if (!fornecedor) {
+        taxa = 0;
+      }
+
+      taxa = fornecedor?.taxa_delivery;
+
+      const taxa_entrega = Number(taxa) || 0;
+
+      pedidosHistorico.forEach(pedido => {
+        const subtotal = pedido.total - taxa_entrega;
+        Object.assign(pedido, { subtotal }, { taxa_entrega });
+      });
+
       response.status(200).json(historicoResponse);
     } catch (error) {
       response.status(400).json({ error: error.message });
