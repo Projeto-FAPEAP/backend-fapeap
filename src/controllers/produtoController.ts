@@ -143,6 +143,7 @@ class ProdutoController {
     try {
       const { id } = request.params;
       const { id: fornecedor_id } = request.user;
+
       if (!id) {
         throw new Error('ID do produto não informado!');
       }
@@ -151,11 +152,21 @@ class ProdutoController {
       }
 
       const produtoRepository = getRepository(Produto);
+      const arquivoRepository = getRepository(ArquivoProduto);
 
       const produto = await produtoRepository.findOne(id);
+      const arquivosProdutos = await arquivoRepository.find({
+        where: { produto_id: id },
+      });
 
       if (!produto) {
         throw new Error('Produto não encontrado!');
+      }
+
+      if (arquivosProdutos.length > 0) {
+        for (const arquivo_produto of arquivosProdutos) {
+          await arquivoRepository.delete(arquivo_produto);
+        }
       }
 
       await produtoRepository.delete(id);
