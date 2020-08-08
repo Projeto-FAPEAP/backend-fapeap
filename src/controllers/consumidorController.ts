@@ -137,6 +137,39 @@ class ConsumidorController {
     next();
   }
 
+  async atualizarConsumidor(
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { id: consumidor_id } = request.user;
+
+      if (!consumidor_id) {
+        throw new Error('Usuário não autenticado!');
+      }
+
+      const consumidorRepository = getRepository(Consumidor);
+
+      const consumidor = await consumidorRepository.findOne({
+        where: { id: consumidor_id },
+      });
+
+      if (!consumidor) {
+        throw new Error('Consumidor não encontrado!');
+      }
+
+      consumidorRepository.merge(consumidor, request.body);
+
+      const resultados = await consumidorRepository.save(consumidor);
+
+      response.status(200).json(resultados);
+    } catch (error) {
+      response.status(400).json({ error: error.message });
+    }
+    next();
+  }
+
   async avaliarFornecedor(
     request: Request,
     response: Response,

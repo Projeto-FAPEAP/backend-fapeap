@@ -87,6 +87,11 @@ routes.post(
   AuthMiddleware.consumidor,
   ConsumidorController.avaliarFornecedor,
 );
+routes.put(
+  '/consumidor/:id',
+  AuthMiddleware.consumidor,
+  ConsumidorController.atualizarConsumidor,
+);
 routes.get('/consumidor', ConsumidorController.listarTodosConsumidores);
 routes.get('/consumidor/:id', ConsumidorController.listarConsumidor);
 routes.delete(
