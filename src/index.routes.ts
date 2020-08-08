@@ -79,6 +79,11 @@ routes.delete(
   AuthMiddleware.fornecedor,
   ProdutoController.deletarProduto,
 );
+routes.delete(
+  '/arquivoproduto/:id',
+  AuthMiddleware.fornecedor,
+  ProdutoController.deletarArqProduto,
+);
 
 // Consumidor
 routes.post('/consumidor', ConsumidorController.cadastrarConsumidor);
