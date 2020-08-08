@@ -59,6 +59,12 @@ routes.post(
   awsStorageFiles.array('file', 4),
   ProdutoController.cadastrarProduto,
 );
+routes.post(
+  '/arquivoproduto/:id',
+  AuthMiddleware.fornecedor,
+  awsStorageFiles.array('file', 1),
+  ProdutoController.adicionarArqProduto,
+);
 routes.get('/produto/:idfornecedor', ProdutoController.listarProdutos);
 routes.get(
   '/produto/:idfornecedor/:idproduto',

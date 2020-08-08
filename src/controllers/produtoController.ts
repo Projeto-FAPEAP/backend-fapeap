@@ -39,23 +39,25 @@ class ProdutoController {
 
       const arquivoRepository = getRepository(ArquivoProduto);
 
-      for (const arquivo_produto of request.files) {
-        const {
-          key: id,
-          originalname: nome_original,
-          size,
-          location: url,
-        } = arquivo_produto;
+      if (request.files.length > 0) {
+        for (const arquivo_produto of request.files) {
+          const {
+            key: id,
+            originalname: nome_original,
+            size,
+            location: url,
+          } = arquivo_produto;
 
-        const arquivo = arquivoRepository.create({
-          id,
-          nome_original,
-          size,
-          url,
-          produto_id: produto.id,
-        });
+          const arquivo = arquivoRepository.create({
+            id,
+            nome_original,
+            size,
+            url,
+            produto_id: produto.id,
+          });
 
-        await arquivoRepository.save(arquivo);
+          await arquivoRepository.save(arquivo);
+        }
       }
 
       response.status(201).json(produto);
@@ -206,6 +208,51 @@ class ProdutoController {
       const resultados = await produtoRepository.save(produto);
 
       response.status(200).json(resultados);
+    } catch (error) {
+      response.status(400).json({ error: error.message });
+    }
+    next();
+  }
+
+  async adicionarArqProduto(
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { id } = request.params;
+      const { id: fornecedor_id } = request.user;
+
+      if (!id) {
+        throw new Error('ID do produto não informado!');
+      }
+      if (!fornecedor_id) {
+        throw new Error('Usuário não autenticado!');
+      }
+
+      if (request.files.length > 0) {
+        const arquivoRepository = getRepository(ArquivoProduto);
+
+        const {
+          key,
+          originalname: nome_original,
+          location: url,
+          size,
+        } = request.files[0];
+
+        const arqProdutoDAO = arquivoRepository.create({
+          id: key,
+          nome_original,
+          size,
+          url,
+          produto_id: id,
+        });
+
+        const resultado = await arquivoRepository.save(arqProdutoDAO);
+        response.status(200).json(resultado);
+      } else {
+        response.status(200).json({ message: 'Sem arquivos selecionados' });
+      }
     } catch (error) {
       response.status(400).json({ error: error.message });
     }
