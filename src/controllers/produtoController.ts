@@ -297,7 +297,7 @@ class ProdutoController {
             url,
           });
 
-          const result = arquivoRepository.save(novoArquivo);
+          const result = await arquivoRepository.save(novoArquivo);
           response.status(200).json(result);
         }
       } else {
