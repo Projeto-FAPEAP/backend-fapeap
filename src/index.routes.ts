@@ -78,6 +78,7 @@ routes.put(
 routes.put(
   '/arquivoproduto/:id',
   AuthMiddleware.fornecedor,
+  awsStorageFiles.array('file', 1),
   ProdutoController.atualizarArqProduto,
 );
 routes.delete(
