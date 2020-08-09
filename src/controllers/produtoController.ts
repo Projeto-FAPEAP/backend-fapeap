@@ -232,6 +232,7 @@ class ProdutoController {
 
       if (request.files.length > 0) {
         const arquivoRepository = getRepository(ArquivoProduto);
+        const resultado = [];
         for (const arq_prod of request.files) {
           const {
             key,
@@ -248,9 +249,10 @@ class ProdutoController {
             produto_id: id,
           });
 
-          const resultado = await arquivoRepository.save(arqProdutoDAO);
-          response.status(200).json(resultado);
+          const arq = await arquivoRepository.save(arqProdutoDAO);
+          resultado.push(arq);
         }
+        response.status(200).json(resultado);
       } else {
         response.status(200).json({ message: 'Sem arquivos selecionados' });
       }
