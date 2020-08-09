@@ -232,24 +232,25 @@ class ProdutoController {
 
       if (request.files.length > 0) {
         const arquivoRepository = getRepository(ArquivoProduto);
+        for (const arq_prod of request.files) {
+          const {
+            key,
+            originalname: nome_original,
+            location: url,
+            size,
+          } = arq_prod;
 
-        const {
-          key,
-          originalname: nome_original,
-          location: url,
-          size,
-        } = request.files[0];
+          const arqProdutoDAO = arquivoRepository.create({
+            id: key,
+            nome_original,
+            size,
+            url,
+            produto_id: id,
+          });
 
-        const arqProdutoDAO = arquivoRepository.create({
-          id: key,
-          nome_original,
-          size,
-          url,
-          produto_id: id,
-        });
-
-        const resultado = await arquivoRepository.save(arqProdutoDAO);
-        response.status(200).json(resultado);
+          const resultado = await arquivoRepository.save(arqProdutoDAO);
+          response.status(200).json(resultado);
+        }
       } else {
         response.status(200).json({ message: 'Sem arquivos selecionados' });
       }

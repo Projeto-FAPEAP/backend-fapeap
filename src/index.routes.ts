@@ -62,7 +62,7 @@ routes.post(
 routes.post(
   '/arquivoproduto/:id',
   AuthMiddleware.fornecedor,
-  awsStorageFiles.array('file', 4),
+  awsStorageFiles.array('file', 2),
   ProdutoController.adicionarArqProduto,
 );
 routes.get('/produto/:idfornecedor', ProdutoController.listarProdutos);
