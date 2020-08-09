@@ -287,22 +287,24 @@ class ProdutoController {
       if (!arquivoASerEditado) {
         throw new Error('Arquivo não encontrado!');
       }
+      if (request.files.length === 1) {
+        for (const arq_prod of request.files) {
+          const { originalname: nome_original, size, location: url } = arq_prod;
 
-      const {
-        originalname: nome_original,
-        size,
-        location: url,
-      } = request.files[0];
+          const novoArquivo = arquivoRepository.merge(arquivoASerEditado, {
+            nome_original,
+            size,
+            url,
+          });
 
-      const novoArquivo = arquivoRepository.merge(arquivoASerEditado, {
-        nome_original,
-        size,
-        url,
-      });
-
-      const result = arquivoRepository.save(novoArquivo);
-
-      response.status(200).json(result);
+          const result = arquivoRepository.save(novoArquivo);
+          response.status(200).json(result);
+        }
+      } else {
+        response
+          .status(400)
+          .json({ message: 'Permitido atualizar um arquivo por vez' });
+      }
     } catch (error) {
       response.status(400).json({ error: error.message });
     }
