@@ -1,3 +1,5 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-param-reassign */
 import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
@@ -5,6 +7,7 @@ import { Request, Response, NextFunction } from 'express';
 import ItensPedido from '../models/ItensPedido';
 import Pedido from '../models/Pedido';
 import Fornecedor from '../models/Fornecedor';
+import Produto from '../models/Produto';
 
 class PedidoFornecedor {
   async listarPedidosFornecedor(
@@ -74,7 +77,22 @@ class PedidoFornecedor {
         throw new Error('Pedido não encontrado!');
       }
 
+      const itensPedidoRepository = getRepository(ItensPedido);
+
+      const itensPedido = await itensPedidoRepository.find({
+        where: { pedido_id: pedidoASerValidado.id },
+      });
+
+      const dataItens = itensPedido.map(item => {
+        const obj = {
+          produto_id: item.produto_id,
+          quantidade: item.quantidade,
+        };
+        return obj;
+      });
+
       let status_pedido;
+      const produtoRepository = getRepository(Produto);
 
       if (
         pedidoASerValidado.status_pedido === 'Reserva confirmada' ||
@@ -83,8 +101,50 @@ class PedidoFornecedor {
         status_pedido = 'Finalizado';
       } else if (pedidoASerValidado.status_pedido === 'Pendente') {
         status_pedido = 'Reserva confirmada';
+
+        for (const item of dataItens) {
+          const { produto_id, quantidade } = item;
+
+          const produto = await produtoRepository.findOne({
+            where: { id: produto_id },
+          });
+
+          if (!produto) {
+            throw new Error('Não foi possivel confirmar o pedido');
+          }
+
+          const estoque_produto = Number(produto.estoque_produto) - quantidade;
+
+          const produtoMerge = produtoRepository.merge(produto, {
+            estoque_produto,
+          });
+
+          await produtoRepository.save(produtoMerge);
+        }
+
         if (pedidoASerValidado.delivery) {
           status_pedido = 'Delivery confirmado';
+
+          for (const item of dataItens) {
+            const { produto_id, quantidade } = item;
+
+            const produto = await produtoRepository.findOne({
+              where: { id: produto_id },
+            });
+
+            if (!produto) {
+              throw new Error('Não foi possivel confirmar o pedido');
+            }
+
+            const estoque_produto =
+              Number(produto.estoque_produto) - quantidade;
+
+            const produtoMerge = produtoRepository.merge(produto, {
+              estoque_produto,
+            });
+
+            await produtoRepository.save(produtoMerge);
+          }
         }
       } else if (pedidoASerValidado.status_pedido === 'Delivery confirmado') {
         status_pedido = 'Pedido em rota de entrega';
@@ -129,8 +189,46 @@ class PedidoFornecedor {
       }
 
       let status_pedido;
-      if (pedidoASerValidado.status_pedido === 'Pendente') {
+      if (
+        pedidoASerValidado.status_pedido === 'Pendente' ||
+        pedidoASerValidado.status_pedido === 'Reserva confirmada'
+      ) {
         status_pedido = 'Cancelado';
+
+        const itensPedidoRepository = getRepository(ItensPedido);
+        const produtoRepository = getRepository(Produto);
+
+        const itensPedido = await itensPedidoRepository.find({
+          where: { pedido_id: pedidoASerValidado.id },
+        });
+
+        const dataItens = itensPedido.map(item => {
+          const obj = {
+            produto_id: item.produto_id,
+            quantidade: item.quantidade,
+          };
+          return obj;
+        });
+
+        for (const item of dataItens) {
+          const { produto_id, quantidade } = item;
+
+          const produto = await produtoRepository.findOne({
+            where: { id: produto_id },
+          });
+
+          if (!produto) {
+            throw new Error('Produto não encontrado');
+          }
+
+          const estoque_produto = Number(produto.estoque_produto) + quantidade;
+
+          const produtoMerge = produtoRepository.merge(produto, {
+            estoque_produto,
+          });
+
+          await produtoRepository.save(produtoMerge);
+        }
 
         const pedido = pedidoRepository.merge(pedidoASerValidado, {
           status_pedido,
@@ -139,7 +237,9 @@ class PedidoFornecedor {
 
         response.status(201).json(pedidoAtualizado);
       } else {
-        throw new Error('Cancelamento somente para pedidos Pendentes');
+        throw new Error(
+          'Cancelamento somente para pedidos Pendentes e de Reserva',
+        );
       }
     } catch (error) {
       response.status(400).json({ error: error.message });
