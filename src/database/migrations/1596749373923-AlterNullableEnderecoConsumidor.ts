@@ -43,6 +43,9 @@ export default class AlterNullableEnderecoConsumidor1596749373923
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropColumn('consumidor', 'logradouro');
+    await queryRunner.dropColumn('consumidor', 'bairro');
+    await queryRunner.dropColumn('consumidor', 'cep');
+    await queryRunner.dropColumn('consumidor', 'numero_local');
     await queryRunner.addColumn(
       'consumidor',
       new TableColumn({
