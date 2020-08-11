@@ -36,7 +36,9 @@ class Pedido {
   @JoinColumn({ name: 'consumidor_id' })
   consumidor: Consumidor;
 
-  @ManyToOne(() => Fornecedor, fornecedor => fornecedor.pedidos)
+  @ManyToOne(() => Fornecedor, fornecedor => fornecedor.pedidos, {
+    eager: true,
+  })
   @JoinColumn({ name: 'fornecedor_id' })
   fornecedor: Fornecedor;
 
