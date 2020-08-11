@@ -1,3 +1,5 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-param-reassign */
 import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
@@ -51,8 +53,8 @@ class PedidoConsumidor {
 
       let total = 0;
 
-      data.forEach(async (element: elementITEM) => {
-        const { produto_id, preco_venda, quantidade } = element;
+      for (const dataDTO of data) {
+        const { produto_id, preco_venda, quantidade } = dataDTO;
 
         total += Number((preco_venda * quantidade).toFixed(2));
         subtotal = total;
@@ -65,7 +67,7 @@ class PedidoConsumidor {
         });
 
         await itensPedidoRepository.save(itensPedidoDAO);
-      });
+      }
 
       const fornecedor = await getRepository(Fornecedor).findOne({
         where: { id: fornecedor_id },
@@ -73,7 +75,11 @@ class PedidoConsumidor {
 
       let taxa_entrega = 0;
 
-      if (fornecedor?.taxa_delivery) {
+      if (!fornecedor) {
+        throw new Error('Fornecedor não encontrado');
+      }
+
+      if (fornecedor.taxa_delivery !== null) {
         total += Number(fornecedor.taxa_delivery);
         taxa_entrega = Number(fornecedor.taxa_delivery);
       }
