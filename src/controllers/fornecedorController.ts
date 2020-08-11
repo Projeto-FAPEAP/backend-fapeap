@@ -127,11 +127,11 @@ class FornecedorController {
       const avaliacaoRepository = getRepository(AvaliacaoFornecedor);
       const arquivoFornecedorRepository = getRepository(ArquivoFornecedor);
 
-      const fornecedores = await fornecedorRepository.find({
+      const fornecedoresDTO = await fornecedorRepository.find({
         where: { verificado: true },
       });
 
-      for (const fornece of fornecedores) {
+      for (const fornece of fornecedoresDTO) {
         const arquivos = await arquivoFornecedorRepository.find({
           where: { fornecedor_id: fornece.id },
         });
@@ -149,6 +149,10 @@ class FornecedorController {
 
         Object.assign(fornece, { arquivos }, { avaliacoesFornecedor });
       }
+
+      const fornecedores = fornecedoresDTO.sort(
+        () => Math.round(Math.random()) - 0.5,
+      );
 
       response.status(200).json(fornecedores);
     } catch (error) {
