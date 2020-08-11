@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
 
@@ -115,6 +116,9 @@ class PedidoConsumidor {
       const pedidos = pedidosConsumidor.filter(
         pedido => pedido.status_pedido !== 'Finalizado',
       );
+
+      pedidos.forEach(pedido => delete pedido.fornecedor.senha);
+      pedidos.forEach(pedido => delete pedido.consumidor.senha);
 
       response.status(200).json(pedidos);
     } catch (error) {
