@@ -137,7 +137,7 @@ export class CreateRelacionamentos1593734991968 implements MigrationInterface {
         columnNames: ['produto_id'],
         referencedColumnNames: ['id'],
         referencedTableName: 'produto',
-        onDelete: 'CASCADE',
+        onDelete: 'SET NULL',
         onUpdate: 'CASCADE',
       }),
     );
