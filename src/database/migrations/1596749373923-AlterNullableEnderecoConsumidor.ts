@@ -48,6 +48,7 @@ export default class AlterNullableEnderecoConsumidor1596749373923
       new TableColumn({
         name: 'logradouro',
         type: 'varchar',
+        isNullable: true,
       }),
     );
     await queryRunner.addColumn(
@@ -55,6 +56,7 @@ export default class AlterNullableEnderecoConsumidor1596749373923
       new TableColumn({
         name: 'bairro',
         type: 'varchar',
+        isNullable: true,
       }),
     );
     await queryRunner.addColumn(
@@ -62,6 +64,7 @@ export default class AlterNullableEnderecoConsumidor1596749373923
       new TableColumn({
         name: 'cep',
         type: 'varchar',
+        isNullable: true,
       }),
     );
     await queryRunner.addColumn(
@@ -69,6 +72,7 @@ export default class AlterNullableEnderecoConsumidor1596749373923
       new TableColumn({
         name: 'numero_local',
         type: 'varchar',
+        isNullable: true,
       }),
     );
   }
