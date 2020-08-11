@@ -31,8 +31,6 @@ class DashboardController {
         Object.assign(fornece, { arquivos });
       }
 
-      console.log(fornecedores, fornecedores.length);
-
       response.status(200).json(fornecedores);
     } catch (error) {
       response.status(400).json({ error: error.message });
