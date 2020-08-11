@@ -55,4 +55,5 @@ export const awsStorageFiles = multer({
   fileFilter(req, file, cb) {
     checkFileType(file, cb);
   },
+  limits: { fieldSize: 30 * 1024 * 1024 },
 });
