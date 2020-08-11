@@ -113,9 +113,7 @@ class PedidoConsumidor {
       }
 
       const pedidos = pedidosConsumidor.filter(
-        pedido =>
-          pedido.status_pedido === 'Reserva confirmada' ||
-          pedido.status_pedido === 'Delivery confirmado',
+        pedido => pedido.status_pedido !== 'Finalizado',
       );
 
       response.status(200).json(pedidos);
