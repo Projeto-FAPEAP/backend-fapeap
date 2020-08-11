@@ -189,10 +189,7 @@ class PedidoFornecedor {
       }
 
       let status_pedido;
-      if (
-        pedidoASerValidado.status_pedido === 'Pendente' ||
-        pedidoASerValidado.status_pedido === 'Reserva confirmada'
-      ) {
+      if (pedidoASerValidado.status_pedido === 'Reserva confirmada') {
         status_pedido = 'Cancelado';
 
         const itensPedidoRepository = getRepository(ItensPedido);
@@ -233,6 +230,16 @@ class PedidoFornecedor {
         const pedido = pedidoRepository.merge(pedidoASerValidado, {
           status_pedido,
         });
+        const pedidoAtualizado = await pedidoRepository.save(pedido);
+
+        response.status(201).json(pedidoAtualizado);
+      } else if (pedidoASerValidado.status_pedido === 'Pendente') {
+        status_pedido = 'Cancelado';
+
+        const pedido = pedidoRepository.merge(pedidoASerValidado, {
+          status_pedido,
+        });
+
         const pedidoAtualizado = await pedidoRepository.save(pedido);
 
         response.status(201).json(pedidoAtualizado);
