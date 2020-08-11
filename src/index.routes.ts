@@ -105,7 +105,7 @@ routes.post(
   ConsumidorController.avaliarFornecedor,
 );
 routes.put(
-  '/consumidor/:id',
+  '/consumidor',
   AuthMiddleware.consumidor,
   ConsumidorController.atualizarConsumidor,
 );
