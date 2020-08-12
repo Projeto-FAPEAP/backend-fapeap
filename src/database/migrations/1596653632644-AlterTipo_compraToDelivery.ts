@@ -9,6 +9,7 @@ export default class AlterTipoCompraToDelivery1596653632644
       new TableColumn({
         name: 'delivery',
         type: 'boolean',
+        isNullable: true,
       }),
     );
   }
@@ -20,6 +21,7 @@ export default class AlterTipoCompraToDelivery1596653632644
       new TableColumn({
         name: 'tipo_da_compra',
         type: 'boolean',
+        isNullable: true,
       }),
     );
   }
