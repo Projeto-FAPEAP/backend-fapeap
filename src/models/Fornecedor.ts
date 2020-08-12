@@ -29,7 +29,7 @@ class Fornecedor extends Usuario {
   telefone: string;
 
   @Column('numeric')
-  taxa_delivery: number;
+  taxa_delivery: number | null;
 
   @Column()
   verificado: boolean;

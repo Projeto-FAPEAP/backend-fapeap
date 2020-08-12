@@ -44,15 +44,9 @@ class PedidoConsumidor {
       const itensPedidoRepository = getRepository(ItensPedido);
 
       const data = request.body;
-      let subtotal;
-
-      type elementITEM = {
-        produto_id: string;
-        preco_venda: number;
-        quantidade: number;
-      };
 
       let total = 0;
+      let subtotal;
 
       for (const dataDTO of data) {
         const { produto_id, preco_venda, quantidade } = dataDTO;
@@ -61,7 +55,7 @@ class PedidoConsumidor {
         subtotal = total;
         // TO DO - talvez precise validar a quantidade de itens a serem pedidos (não deve ultrapassar o valor do estpque)
         const itensPedidoDAO = itensPedidoRepository.create({
-          pedido,
+          pedido_id: pedido.id,
           produto_id,
           preco_venda,
           quantidade,

@@ -15,12 +15,6 @@ class ItensPedido {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('uuid')
-  pedido_id: string;
-
-  @Column('uuid')
-  produto_id: string;
-
   @ManyToOne(() => Pedido, pedido => pedido.itensPedidos)
   @JoinColumn({ name: 'pedido_id' })
   pedido: Pedido;
@@ -28,6 +22,12 @@ class ItensPedido {
   @ManyToOne(() => Produto, produto => produto.itens_pedidos, { eager: true })
   @JoinColumn({ name: 'produto_id' })
   produto: Produto;
+
+  @Column('uuid')
+  pedido_id: string;
+
+  @Column('uuid')
+  produto_id: string;
 
   @Column('numeric')
   preco_venda: number;
