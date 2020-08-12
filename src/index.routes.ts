@@ -109,6 +109,11 @@ routes.put(
   AuthMiddleware.consumidor,
   ConsumidorController.atualizarConsumidor,
 );
+routes.put(
+  '/cancelar/pedido/:id',
+  AuthMiddleware.consumidor,
+  PedidoConsumidor.cancelarPedido,
+);
 routes.get('/consumidor', ConsumidorController.listarTodosConsumidores);
 routes.get('/consumidor/:id', ConsumidorController.listarConsumidor);
 routes.delete(
