@@ -208,6 +208,37 @@ class FornecedorController {
     next();
   }
 
+  async atualizarFornecedor(
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { id } = request.user;
+
+      if (!id) {
+        throw new Error('Usuário não autenticado!');
+      }
+
+      const fornecedorRepository = getRepository(Fornecedor);
+
+      const fornecedor = await fornecedorRepository.findOne(id);
+
+      if (!fornecedor) {
+        throw new Error('Fornecedor não encontrado!');
+      }
+
+      fornecedorRepository.merge(fornecedor, request.body);
+
+      const fornecedorAtualizado = await fornecedorRepository.save(fornecedor);
+
+      response.status(200).json(fornecedorAtualizado);
+    } catch (error) {
+      response.status(400).json({ error: error.message });
+    }
+    next();
+  }
+
   async deletarFornecedor(
     request: Request,
     response: Response,

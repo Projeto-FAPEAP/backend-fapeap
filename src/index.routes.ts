@@ -20,6 +20,11 @@ routes.post(
   FornecedorController.cadastrarFornecedor,
 );
 routes.put(
+  '/fornecedor',
+  AuthMiddleware.fornecedor,
+  FornecedorController.atualizarFornecedor,
+);
+routes.put(
   '/validarpedidos/:id',
   AuthMiddleware.fornecedor,
   PedidoFornecedor.validarPedidos,
