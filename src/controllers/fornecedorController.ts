@@ -3,9 +3,8 @@
 /* eslint-disable no-param-reassign */
 import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
-import { hash } from 'bcryptjs';
+import { hash, compare } from 'bcryptjs';
 import { validate } from 'class-validator';
-
 import Fornecedor from '../models/Fornecedor';
 import ArquivoFornecedor from '../models/ArquivoFornecedor';
 import AvaliacaoFornecedor from '../models/AvaliacaoFornecedor';
@@ -226,6 +225,11 @@ class FornecedorController {
 
       if (!fornecedor) {
         throw new Error('Fornecedor não encontrado!');
+      }
+
+      if (request.body.senha) {
+        const senha = await hash(request.body.senha, 8);
+        Object.assign(request.body, { senha });
       }
 
       fornecedorRepository.merge(fornecedor, request.body);
