@@ -143,8 +143,24 @@ class FornecedorController {
           avaliacao => avaliacao.estrelas,
         );
 
+        // imagens
+        const fileExtension_img = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+        // videos
+        const fileExtension_vid = ['mp4', 'mpeg', 'wmv'];
+
         delete fornece.senha;
-        arquivos.forEach(arq => delete arq.fornecedor);
+        arquivos.forEach(arq => {
+          const extensao = arq.nome_original.split('.')[1];
+          let arquivoTipo = '';
+
+          if (fileExtension_img.includes(extensao)) {
+            arquivoTipo = 'imagem';
+          } else if (fileExtension_vid.includes(extensao)) {
+            arquivoTipo = 'video';
+          }
+          Object.assign(arq, { arquivoTipo });
+          delete arq.fornecedor;
+        });
 
         Object.assign(fornece, { arquivos }, { avaliacoesFornecedor });
       }
