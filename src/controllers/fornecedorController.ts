@@ -149,8 +149,9 @@ class FornecedorController {
         const fileExtension_vid = ['mp4', 'mpeg', 'wmv'];
 
         delete fornece.senha;
-        arquivos.forEach(arq => {
-          const extensao = arq.nome_original.split('.')[1];
+
+        for (const arquivo of arquivos) {
+          const extensao = arquivo.nome_original.split('.')[1];
           let arquivoTipo = '';
 
           if (fileExtension_img.includes(extensao)) {
@@ -158,9 +159,11 @@ class FornecedorController {
           } else if (fileExtension_vid.includes(extensao)) {
             arquivoTipo = 'video';
           }
-          Object.assign(arq, { arquivoTipo });
-          delete arq.fornecedor;
-        });
+
+          Object.assign(arquivo, { arquivoTipo });
+
+          delete arquivo.fornecedor;
+        }
 
         Object.assign(fornece, { arquivos }, { avaliacoesFornecedor });
       }
