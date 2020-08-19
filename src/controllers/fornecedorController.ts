@@ -152,15 +152,15 @@ class FornecedorController {
 
         for (const arquivo of arquivos) {
           const extensao = arquivo.nome_original.split('.')[1];
-          let arquivoTipo = '';
+          let arquivo_tipo = '';
 
           if (fileExtension_img.includes(extensao)) {
-            arquivoTipo = 'imagem';
+            arquivo_tipo = 'imagem';
           } else if (fileExtension_vid.includes(extensao)) {
-            arquivoTipo = 'video';
+            arquivo_tipo = 'video';
           }
 
-          Object.assign(arquivo, { arquivoTipo });
+          Object.assign(arquivo, { arquivo_tipo });
 
           delete arquivo.fornecedor;
         }
