@@ -202,7 +202,26 @@ class FornecedorController {
         where: { fornecedor_id: id },
       });
 
-      arquivos.forEach(arq => delete arq.fornecedor);
+      // imagens
+      const fileExtension_img = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+      // videos
+      const fileExtension_vid = ['mp4', 'mpeg', 'wmv'];
+
+      for (const arquivo of arquivos) {
+        delete arquivo.fornecedor;
+
+        const extensao = arquivo.nome_original.split('.')[1];
+        let arquivo_tipo = '';
+
+        if (fileExtension_img.includes(extensao)) {
+          arquivo_tipo = 'imagem';
+        } else if (fileExtension_vid.includes(extensao)) {
+          arquivo_tipo = 'video';
+        }
+
+        Object.assign(arquivo, { arquivo_tipo });
+      }
+
       delete fornecedor.senha;
 
       const avaliacoes = await avaliacaoRepository.find({
