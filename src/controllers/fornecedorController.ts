@@ -265,7 +265,15 @@ class FornecedorController {
         throw new Error('Fornecedor não encontrado!');
       }
 
-      if (request.body.senha) {
+      if (request.body.senhaAtual) {
+        const senhaEncontrada = await compare(
+          request.body.senhaAtual,
+          fornecedor.senha,
+        );
+        if (!senhaEncontrada) {
+          throw new Error('Senha atual incorreta!');
+        }
+
         const senha = await hash(request.body.senha, 8);
         Object.assign(request.body, { senha });
       }
