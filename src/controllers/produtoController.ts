@@ -288,6 +288,11 @@ class ProdutoController {
         throw new Error('Arquivo não encontrado!');
       }
       if (request.files.length === 1) {
+        // imagens
+        const fileExtension_img = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+        // videos
+        const fileExtension_vid = ['mp4', 'mpeg', 'wmv'];
+
         for (const arq_prod of request.files) {
           const { originalname: nome_original, size, location: url } = arq_prod;
 
@@ -297,7 +302,18 @@ class ProdutoController {
             url,
           });
 
+          const extensao = novoArquivo.nome_original.split('.')[1];
+          let arquivo_tipo = '';
+
+          if (fileExtension_img.includes(extensao)) {
+            arquivo_tipo = 'imagem';
+          } else if (fileExtension_vid.includes(extensao)) {
+            arquivo_tipo = 'video';
+          }
+
           const result = await arquivoRepository.save(novoArquivo);
+
+          Object.assign(result, { arquivo_tipo });
           response.status(200).json(result);
         }
       } else {
