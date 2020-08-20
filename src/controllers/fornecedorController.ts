@@ -278,6 +278,8 @@ class FornecedorController {
         Object.assign(request.body, { senha });
       }
 
+      delete request.body.senhaAtual;
+
       fornecedorRepository.merge(fornecedor, request.body);
 
       const fornecedorAtualizado = await fornecedorRepository.save(fornecedor);

@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
-import { hash } from 'bcryptjs';
+import { hash, compare } from 'bcryptjs';
 import { validate } from 'class-validator';
 import Consumidor from '../models/Consumidor';
 import AvaliacaoFornecedor from '../models/AvaliacaoFornecedor';
@@ -158,6 +158,21 @@ class ConsumidorController {
       if (!consumidor) {
         throw new Error('Consumidor não encontrado!');
       }
+
+      if (request.body.senhaAtual) {
+        const senhaEncontrada = await compare(
+          request.body.senhaAtual,
+          consumidor.senha,
+        );
+        if (!senhaEncontrada) {
+          throw new Error('Senha atual incorreta!');
+        }
+
+        const senha = await hash(request.body.senha, 8);
+        Object.assign(request.body, { senha });
+      }
+
+      delete request.body.senhaAtual;
 
       consumidorRepository.merge(consumidor, request.body);
 
