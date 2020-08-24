@@ -209,6 +209,7 @@ class ConsumidorController {
       const avalicaoRepository = getRepository(AvaliacaoFornecedor);
 
       const avalicaoDTO = avalicaoRepository.create({
+        consumidor_id,
         estrelas,
         fornecedor_id,
       });
