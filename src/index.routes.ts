@@ -25,6 +25,16 @@ routes.put(
   FornecedorController.atualizarFornecedor,
 );
 routes.put(
+  '/arqfornecedor/imagem/:id',
+  AuthMiddleware.fornecedor,
+  ArquivoController.atualizarArqImagemFornecedor,
+);
+routes.put(
+  '/arqfornecedor/video/:id',
+  AuthMiddleware.fornecedor,
+  ArquivoController.atualizarArqVideoFornecedor,
+);
+routes.put(
   '/validarpedidos/:id',
   AuthMiddleware.fornecedor,
   PedidoFornecedor.validarPedidos,
