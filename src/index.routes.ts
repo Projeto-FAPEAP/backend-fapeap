@@ -24,6 +24,12 @@ routes.put(
   AuthMiddleware.fornecedor,
   FornecedorController.atualizarFornecedor,
 );
+routes.post(
+  '/arqfornecedor',
+  awsStorageFiles.array('file', 2),
+  AuthMiddleware.fornecedor,
+  ArquivoController.adicionarArqFornecedor,
+);
 routes.put(
   '/arqfornecedor/imagem/:id',
   awsStorageFiles.array('file', 1),

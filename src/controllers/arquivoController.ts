@@ -163,6 +163,50 @@ class ArquivoController {
     }
     next();
   }
+
+  async adicionarArqFornecedor(
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { id: fornecedor_id } = request.user;
+
+      if (!fornecedor_id) {
+        throw new Error('Usuário não autenticado!');
+      }
+
+      const arquivoRepository = getRepository(ArquivoFornecedor);
+
+      if (request.files.length > 0) {
+        const resultado = [];
+        for (const arq_fornecedor of request.files) {
+          const {
+            key,
+            originalname: nome_original,
+            location: url,
+            size,
+          } = arq_fornecedor;
+
+          const arqFornecedorDAO = arquivoRepository.create({
+            id: key,
+            nome_original,
+            size,
+            url,
+          });
+
+          const arq = await arquivoRepository.save(arqFornecedorDAO);
+          resultado.push(arq);
+        }
+        response.status(200).json(resultado);
+      } else {
+        response.status(200).json({ message: 'Sem arquivos selecionados' });
+      }
+    } catch (error) {
+      response.status(400).json({ error: error.message });
+    }
+    next();
+  }
 }
 
 export default new ArquivoController();
