@@ -26,11 +26,13 @@ routes.put(
 );
 routes.put(
   '/arqfornecedor/imagem/:id',
+  awsStorageFiles.array('file', 1),
   AuthMiddleware.fornecedor,
   ArquivoController.atualizarArqImagemFornecedor,
 );
 routes.put(
   '/arqfornecedor/video/:id',
+  awsStorageFiles.array('file', 1),
   AuthMiddleware.fornecedor,
   ArquivoController.atualizarArqVideoFornecedor,
 );
