@@ -36,6 +36,11 @@ routes.put(
   AuthMiddleware.fornecedor,
   ArquivoController.atualizarArqImagemFornecedor,
 );
+routes.delete(
+  '/arqfornecedor/imagem/:id',
+  AuthMiddleware.fornecedor,
+  ArquivoController.deletarArqFornecedor,
+);
 routes.put(
   '/arqfornecedor/video/:id',
   awsStorageFiles.array('file', 1),
