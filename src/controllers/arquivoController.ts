@@ -193,6 +193,7 @@ class ArquivoController {
             nome_original,
             size,
             url,
+            fornecedor_id,
           });
 
           const arq = await arquivoRepository.save(arqFornecedorDAO);
