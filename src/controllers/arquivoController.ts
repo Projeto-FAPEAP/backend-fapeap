@@ -215,10 +215,10 @@ class ArquivoController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const { id: arquivo_id } = request.params;
+      const { id } = request.params;
       const { id: fornecedor_id } = request.user;
 
-      if (!arquivo_id) {
+      if (!id) {
         throw new Error('ID do arquivo_produto não informado!');
       }
       if (!fornecedor_id) {
@@ -227,15 +227,13 @@ class ArquivoController {
 
       const arquivoRepository = getRepository(ArquivoFornecedor);
 
-      const arquivo = await arquivoRepository.findOne({
-        where: { id: arquivo_id },
-      });
+      const arquivo = await arquivoRepository.findOne(id);
 
       if (!arquivo) {
         throw new Error('Arquivo não encontrado!');
       }
 
-      await arquivoRepository.delete(arquivo);
+      await arquivoRepository.delete(id);
 
       response.status(200).json({ sucess: 'Imagem deletada com sucesso!' });
     } catch (error) {
