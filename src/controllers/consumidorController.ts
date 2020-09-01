@@ -24,6 +24,8 @@ class ConsumidorController {
         numero_local,
         bairro,
         cep,
+        cidade,
+        uf,
       } = request.body;
 
       const checkEmailExists = await consumidorRepository.findOne({
@@ -54,6 +56,8 @@ class ConsumidorController {
         numero_local,
         bairro,
         cep,
+        cidade,
+        uf,
       });
 
       const errors = await validate(consumidorDTO);

@@ -39,6 +39,12 @@ abstract class Usuario {
   @Column('varchar')
   cep: string;
 
+  @Column('varchar')
+  cidade: string;
+
+  @Column('varchar')
+  uf: string;
+
   @CreateDateColumn()
   created_at: Date;
 

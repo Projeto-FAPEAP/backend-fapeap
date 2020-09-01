@@ -32,6 +32,8 @@ class FornecedorController {
         numero_local,
         bairro,
         cep,
+        cidade,
+        uf,
       } = request.body;
 
       const checkEmailExists = await fornecedorRepository.findOne({
@@ -64,6 +66,8 @@ class FornecedorController {
         logradouro,
         numero_local,
         bairro,
+        cidade,
+        uf,
         cep,
         verificado: true,
       });
