@@ -2,6 +2,7 @@
 import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
 import { hash, compare } from 'bcryptjs';
+import axios from 'axios';
 import { validate } from 'class-validator';
 import Consumidor from '../models/Consumidor';
 import AvaliacaoFornecedor from '../models/AvaliacaoFornecedor';
@@ -46,6 +47,14 @@ class ConsumidorController {
 
       const hashedSenha = await hash(senha, 8);
 
+      const logradouroFormatado = logradouro.split(' ').join('+');
+
+      const axiosResult = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${numero_local}+${logradouroFormatado},+${cidade},+${uf}&key=${'AIzaSyARpgEngeu2k129CS3cdlp4HjTUhKyPblU'}`,
+      );
+
+      const coordenadasEndereco = axiosResult.data.results[0].geometry.location;
+
       const consumidorDTO = consumidorRepository.create({
         nome,
         cpf,
@@ -58,6 +67,8 @@ class ConsumidorController {
         cep,
         cidade,
         uf,
+        latitude: coordenadasEndereco.lat,
+        longitude: coordenadasEndereco.lng,
       });
 
       const errors = await validate(consumidorDTO);
