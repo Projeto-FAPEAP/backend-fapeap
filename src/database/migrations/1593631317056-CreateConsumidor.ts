@@ -63,6 +63,14 @@ export default class CreateConsumidor1593631317056
             length: '2',
           },
           {
+            name: 'latitude',
+            type: 'varchar',
+          },
+          {
+            name: 'longitude',
+            type: 'varchar',
+          },
+          {
             name: 'created_at',
             type: 'timestamp',
             default: 'now()',

@@ -77,6 +77,14 @@ export default class Createfornecedor1593626320065
             length: '2',
           },
           {
+            name: 'latitude',
+            type: 'varchar',
+          },
+          {
+            name: 'longitude',
+            type: 'varchar',
+          },
+          {
             name: 'verificado',
             type: 'boolean',
             default: false,

@@ -45,6 +45,12 @@ abstract class Usuario {
   @Column('varchar')
   uf: string;
 
+  @Column('varchar')
+  latitude: string;
+
+  @Column('varchar')
+  longitude: string;
+
   @CreateDateColumn()
   created_at: Date;
 
