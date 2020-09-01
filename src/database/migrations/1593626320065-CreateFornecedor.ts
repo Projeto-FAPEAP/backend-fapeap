@@ -67,6 +67,16 @@ export default class Createfornecedor1593626320065
             type: 'varchar',
           },
           {
+            name: 'cidade',
+            type: 'varchar',
+            length: '100',
+          },
+          {
+            name: 'uf',
+            type: 'varchar',
+            length: '2',
+          },
+          {
             name: 'verificado',
             type: 'boolean',
             default: false,
