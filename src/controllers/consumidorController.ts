@@ -49,11 +49,14 @@ class ConsumidorController {
 
       const logradouroFormatado = logradouro.split(' ').join('+');
 
-      const axiosResult = await axios.get(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${numero_local}+${logradouroFormatado},+${cidade},+${uf}&key=${'AIzaSyARpgEngeu2k129CS3cdlp4HjTUhKyPblU'}`,
+      const cidadeFormatada = cidade.normalize('NFD');
+
+      const respostaAxios = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${numero_local}+${logradouroFormatado},+${cidadeFormatada},+${uf}&key=${'AIzaSyARpgEngeu2k129CS3cdlp4HjTUhKyPblU'}`,
       );
 
-      const coordenadasEndereco = axiosResult.data.results[0].geometry.location;
+      const coordenadasEndereco =
+        respostaAxios.data.results[0].geometry.location;
 
       const consumidorDTO = consumidorRepository.create({
         nome,
