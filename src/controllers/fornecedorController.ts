@@ -59,7 +59,9 @@ class FornecedorController {
 
       const logradouroFormatado = logradouro.split(' ').join('+');
 
-      const cidadeFormatada = cidade.normalize('NFD');
+      const cidadeFormatada = cidade
+        .normalize('NFD')
+        .replace(/[^a-zA-Zs]/g, '');
 
       const respostaAxios = await axios.get(
         `https://maps.googleapis.com/maps/api/geocode/json?address=${numero_local}+${logradouroFormatado},+${cidadeFormatada},+${uf}&key=${'AIzaSyARpgEngeu2k129CS3cdlp4HjTUhKyPblU'}`,
