@@ -53,24 +53,6 @@ export default class CreateConsumidor1593631317056
             type: 'varchar',
           },
           {
-            name: 'cidade',
-            type: 'varchar',
-            length: '100',
-          },
-          {
-            name: 'uf',
-            type: 'varchar',
-            length: '2',
-          },
-          {
-            name: 'latitude',
-            type: 'varchar',
-          },
-          {
-            name: 'longitude',
-            type: 'varchar',
-          },
-          {
             name: 'created_at',
             type: 'timestamp',
             default: 'now()',
