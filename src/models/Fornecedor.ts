@@ -33,6 +33,18 @@ class Fornecedor extends Usuario {
 
   @Column()
   verificado: boolean;
+
+  @Column('varchar')
+  cidade: string;
+
+  @Column('varchar')
+  uf: string;
+
+  @Column('varchar')
+  latitude: string;
+
+  @Column('varchar')
+  longitude: string;
 }
 
 export default Fornecedor;
