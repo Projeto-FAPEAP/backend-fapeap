@@ -8,6 +8,7 @@ import Pedido from '../models/Pedido';
 import ItensPedido from '../models/ItensPedido';
 import Fornecedor from '../models/Fornecedor';
 import Produto from '../models/Produto';
+import ArquivoFornecedor from '../models/ArquivoFornecedor';
 
 class PedidoConsumidor {
   async solicitarPedido(
@@ -151,7 +152,27 @@ class PedidoConsumidor {
         throw new Error('Pedido não encontrado!');
       }
 
-      response.status(200).json(pedidoConsumidor);
+      const { fornecedor_id } = pedidoConsumidor;
+
+      const arquivoFornecedorRepository = getRepository(ArquivoFornecedor);
+
+      const arquivos = await arquivoFornecedorRepository.find({
+        where: { fornecedor_id },
+      });
+
+      const fileExtension_img = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+      const respostaArquivo = {};
+
+      for (const arquivo of arquivos) {
+        const extensao = arquivo.nome_original.split('.')[1];
+
+        if (fileExtension_img.includes(extensao)) {
+          Object.assign(respostaArquivo, { arquivo });
+          break;
+        }
+      }
+
+      response.status(200).json({ pedidoConsumidor, respostaArquivo });
     } catch (error) {
       response.status(400).json({ error: error.message });
     }
