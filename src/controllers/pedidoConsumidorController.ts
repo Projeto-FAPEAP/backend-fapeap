@@ -160,19 +160,9 @@ class PedidoConsumidor {
         where: { fornecedor_id },
       });
 
-      const fileExtension_img = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
-      const respostaArquivo = {};
+      Object.assign(pedidoConsumidor, { arquivos });
 
-      for (const arquivo of arquivos) {
-        const extensao = arquivo.nome_original.split('.')[1];
-
-        if (fileExtension_img.includes(extensao)) {
-          Object.assign(respostaArquivo, { arquivo });
-          break;
-        }
-      }
-
-      response.status(200).json({ pedidoConsumidor, respostaArquivo });
+      response.status(200).json(pedidoConsumidor);
     } catch (error) {
       response.status(400).json({ error: error.message });
     }
