@@ -37,8 +37,6 @@ class FornecedorController {
         uf,
       } = request.body;
 
-      console.log(request.body);
-
       const checkEmailExists = await fornecedorRepository.findOne({
         where: { email },
       });
