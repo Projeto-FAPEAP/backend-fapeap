@@ -157,8 +157,8 @@ routes.get(
 
 routes.get(
   '/consumidor/pedidos/itens/:id',
-  AuthMiddleware.fornecedor,
-  PedidoFornecedor.listarDetalhesPedidoFornecedor,
+  AuthMiddleware.consumidor,
+  PedidoConsumidor.listarDetalhesPedidoConsumidor,
 );
 
 // Sessao - Login
