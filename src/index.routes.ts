@@ -155,6 +155,12 @@ routes.get(
   PedidoConsumidor.listarPedidosConsumidor,
 );
 
+routes.get(
+  '/consumidor/pedidos/itens/:id',
+  AuthMiddleware.fornecedor,
+  PedidoFornecedor.listarDetalhesPedidoFornecedor,
+);
+
 // Sessao - Login
 routes.post('/sessao/consumidor', SessaoController.autenticarConsumidor);
 routes.post('/sessao/fornecedor', SessaoController.autenticarFornecedor);

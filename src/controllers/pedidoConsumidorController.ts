@@ -246,6 +246,41 @@ class PedidoConsumidor {
     }
     next();
   }
+
+  async listarDetalhesPedidoConsumidor(
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { id: consumidor_id } = request.user;
+
+      const { id: pedido_id } = request.params;
+
+      if (!consumidor_id) {
+        throw new Error('Usuário não autenticado!');
+      }
+
+      if (!pedido_id) {
+        throw new Error('ID do pedido não informado!');
+      }
+
+      const itensPedidoRepository = getRepository(ItensPedido);
+
+      const itensPedido = await itensPedidoRepository.find({
+        where: { pedido_id },
+      });
+
+      itensPedido.forEach(itemPedido => {
+        delete itemPedido.produto.fornecedor;
+      });
+
+      response.status(200).json(itensPedido);
+    } catch (error) {
+      response.status(400).json({ error: error.message });
+    }
+    next();
+  }
 }
 
 export default new PedidoConsumidor();
