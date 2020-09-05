@@ -124,27 +124,6 @@ class PedidoFornecedor {
 
         if (pedidoASerValidado.delivery) {
           status_pedido = 'Delivery confirmado';
-
-          for (const item of dataItens) {
-            const { produto_id, quantidade } = item;
-
-            const produto = await produtoRepository.findOne({
-              where: { id: produto_id },
-            });
-
-            if (!produto) {
-              throw new Error('Não foi possivel confirmar o pedido');
-            }
-
-            const estoque_produto =
-              Number(produto.estoque_produto) - quantidade;
-
-            const produtoMerge = produtoRepository.merge(produto, {
-              estoque_produto,
-            });
-
-            await produtoRepository.save(produtoMerge);
-          }
         }
       } else if (pedidoASerValidado.status_pedido === 'Delivery confirmado') {
         status_pedido = 'Pedido em rota de entrega';
