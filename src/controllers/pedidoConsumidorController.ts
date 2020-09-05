@@ -10,6 +10,7 @@ import ItensPedido from '../models/ItensPedido';
 import Fornecedor from '../models/Fornecedor';
 import Produto from '../models/Produto';
 import ArquivoFornecedor from '../models/ArquivoFornecedor';
+import sendNotification from '../notificacao';
 // import apiOneSignal from '../config/apiOneSignal';
 
 class PedidoConsumidor {
@@ -28,11 +29,6 @@ class PedidoConsumidor {
       if (!consumidor_id) {
         throw new Error('Usuário não autenticado!');
       }
-
-      /*       const client = new OneSignal.Client(
-        apiOneSignal.appId,
-        apiOneSignal.appKey,
-      ); */
 
       const pedidoRepository = getRepository(Pedido);
 
@@ -87,20 +83,18 @@ class PedidoConsumidor {
         taxa_entrega = Number(fornecedor.taxa_delivery);
       }
 
-      /*       const notificacao = {
-        contents: {
-          'pt-br': 'Você tem um novo pedido! ',
-        },
-        filters: [{ field: 'tag', key: 'user', relation: '=', value: 'id' }],
-      };
-
-      await client.createNotification(notificacao); */
-
       const novoPedido = pedidoRepository.merge(pedido, { total });
 
       const pedidoFinal = await pedidoRepository.save(novoPedido);
 
       Object.assign(pedidoFinal, { subtotal }, { taxa_entrega });
+
+      sendNotification({
+        title: 'Você tem um novo pedido',
+        subtitle: 'Acompanhe seus pedidos na tela inicial',
+        user_id: fornecedor_id,
+        additional_data: { pedido_id: pedido.id },
+      });
 
       response.status(201).json(pedidoFinal);
     } catch (error) {
