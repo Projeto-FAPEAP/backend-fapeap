@@ -3,12 +3,14 @@
 /* eslint-disable no-param-reassign */
 import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
+// import OneSignal from 'onesignal-node';
 
 import Pedido from '../models/Pedido';
 import ItensPedido from '../models/ItensPedido';
 import Fornecedor from '../models/Fornecedor';
 import Produto from '../models/Produto';
 import ArquivoFornecedor from '../models/ArquivoFornecedor';
+// import apiOneSignal from '../config/apiOneSignal';
 
 class PedidoConsumidor {
   async solicitarPedido(
@@ -26,6 +28,11 @@ class PedidoConsumidor {
       if (!consumidor_id) {
         throw new Error('Usuário não autenticado!');
       }
+
+      /*       const client = new OneSignal.Client(
+        apiOneSignal.appId,
+        apiOneSignal.appKey,
+      ); */
 
       const pedidoRepository = getRepository(Pedido);
 
@@ -75,10 +82,19 @@ class PedidoConsumidor {
         throw new Error('Fornecedor não encontrado');
       }
 
-      if (fornecedor.taxa_delivery !== null) {
+      if (fornecedor.taxa_delivery !== null && delivery) {
         total += Number(fornecedor.taxa_delivery);
         taxa_entrega = Number(fornecedor.taxa_delivery);
       }
+
+      /*       const notificacao = {
+        contents: {
+          'pt-br': 'Você tem um novo pedido! ',
+        },
+        filters: [{ field: 'tag', key: 'user', relation: '=', value: 'id' }],
+      };
+
+      await client.createNotification(notificacao); */
 
       const novoPedido = pedidoRepository.merge(pedido, { total });
 
