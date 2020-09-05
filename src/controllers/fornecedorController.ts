@@ -85,7 +85,7 @@ class FornecedorController {
         cep,
         latitude: coordenadasEndereco.lat,
         longitude: coordenadasEndereco.lng,
-        verificado: true,
+        verificado: false,
       });
 
       const errors = await validate(fornecedorDTO);
