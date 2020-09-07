@@ -39,8 +39,6 @@ export default function sendNotification(data: INotification) {
     Authorization: `Basic ${apiKey}`,
   };
 
-  console.log(dataRequest, headers);
-
   const options = {
     host: 'onesignal.com',
     port: 443,
