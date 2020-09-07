@@ -139,6 +139,8 @@ class PedidoConsumidor {
 
         const arqFornece = arquivos[0];
 
+        delete arqFornece.fornecedor;
+
         Object.assign(pedido, { arqFornece });
       }
 
@@ -342,6 +344,8 @@ class PedidoConsumidor {
         });
 
         const arqFornece = arquivos[0];
+
+        delete arqFornece.fornecedor;
 
         Object.assign(pedido, { arqFornece });
       }
