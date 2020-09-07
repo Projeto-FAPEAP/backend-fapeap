@@ -137,6 +137,24 @@ class PedidoConsumidor {
           where: { fornecedor_id: pedido.fornecedor_id },
         });
 
+        let arqFornecedor;
+
+        for (const arquivo of arquivos) {
+          const tipo_arq = arquivo.nome_original.split('.')[1];
+
+          const fileExtension_img = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+
+          if (fileExtension_img.includes(tipo_arq)) {
+            arqFornecedor = arquivo;
+            delete arqFornecedor.fornecedor;
+            break;
+          }
+        }
+
+        if (!arqFornecedor) {
+          break;
+        }
+
         const arqFornece = arquivos[0];
 
         delete arqFornece.fornecedor;
@@ -343,11 +361,25 @@ class PedidoConsumidor {
           where: { fornecedor_id: pedido.fornecedor_id },
         });
 
-        const arqFornece = arquivos[0];
+        let arqFornecedor;
 
-        delete arqFornece.fornecedor;
+        for (const arquivo of arquivos) {
+          const tipo_arq = arquivo.nome_original.split('.')[1];
 
-        Object.assign(pedido, { arqFornece });
+          const fileExtension_img = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+
+          if (fileExtension_img.includes(tipo_arq)) {
+            arqFornecedor = arquivo;
+            delete arqFornecedor.fornecedor;
+            break;
+          }
+        }
+
+        if (!arqFornecedor) {
+          break;
+        }
+
+        Object.assign(pedido, { arqFornecedor });
       }
 
       const historico = pedidosHistorico.slice(indexInicial, indexFinal);
