@@ -390,7 +390,7 @@ class PedidoFornecedor {
 
       const taxa_entrega = Number(fornecedor?.taxa_delivery) || 0;
 
-      const infoPedido = pedidos.map((pedido: Pedido): void => {
+      const infoPedido = pedidos.map((pedido: Pedido): object => {
         const subtotal = pedido.total - taxa_entrega;
         const {
           nome,
@@ -415,6 +415,7 @@ class PedidoFornecedor {
         };
 
         Object.assign(objPedido, { subtotal }, { taxa_entrega });
+        return objPedido;
       });
 
       const itensPedidoRepository = getRepository(ItensPedido);
