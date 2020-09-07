@@ -168,9 +168,9 @@ class PedidoConsumidor {
         where: { fornecedor_id },
       });
 
-      Object.assign(pedidoConsumidor, { arquivos });
+      const arqFornecedor = arquivos[0];
 
-      response.status(200).json(pedidoConsumidor);
+      response.status(200).json({ pedidoConsumidor, arqFornecedor });
     } catch (error) {
       response.status(400).json({ error: error.message });
     }
@@ -267,6 +267,74 @@ class PedidoConsumidor {
           'Cancelamento somente para pedidos Pendentes e de Reserva',
         );
       }
+    } catch (error) {
+      response.status(400).json({ error: error.message });
+    }
+    next();
+  }
+
+  async listarPedidosFinalizados(
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { id: consumidor_id } = request.user;
+
+      const page = request.query.page || 1;
+      const numeroPagina = String(page);
+      const limit = request.query.limit || 30;
+      const numeroLimite = String(limit);
+
+      if (numeroPagina === undefined && numeroLimite === undefined) {
+        throw new Error('Query ausente! Deve ser passado page e limit');
+      }
+
+      const pagina = parseInt(numeroPagina, 10);
+      const limite = parseInt(numeroLimite, 10);
+
+      const [indexInicial, indexFinal] = [
+        (pagina - 1) * limite,
+        pagina * limite,
+      ];
+
+      type HistorioDTO = {
+        historico: Pedido[];
+        page: number;
+        perPage: number;
+        pages: number;
+        total: number;
+      };
+
+      if (!consumidor_id) {
+        throw new Error('Usuário não autenticado!');
+      }
+
+      const pedidoRepository = getRepository(Pedido);
+
+      const pedidosFornecedor = await pedidoRepository.find({
+        where: { consumidor_id },
+      });
+
+      const pedidosHistorico = pedidosFornecedor.filter(
+        (pedido: Pedido): boolean => {
+          return pedido.status_pedido === 'Finalizado';
+        },
+      );
+
+      const historico = pedidosHistorico.slice(indexInicial, indexFinal);
+      const total_pedidos = historico.length;
+      const paginas = Math.ceil(total_pedidos / limite);
+
+      const historicoResponse: HistorioDTO = {
+        historico,
+        page: pagina,
+        perPage: limite,
+        pages: paginas,
+        total: total_pedidos,
+      };
+
+      response.status(200).json(historicoResponse);
     } catch (error) {
       response.status(400).json({ error: error.message });
     }

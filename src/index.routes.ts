@@ -143,6 +143,11 @@ routes.put(
   PedidoConsumidor.cancelarPedido,
 );
 routes.get('/consumidor', ConsumidorController.listarTodosConsumidores);
+routes.get(
+  '/consumidor/finalizados',
+  AuthMiddleware.consumidor,
+  PedidoConsumidor.listarPedidosFinalizados,
+);
 routes.get('/consumidor/:id', ConsumidorController.listarConsumidor);
 routes.delete(
   '/consumidor',
