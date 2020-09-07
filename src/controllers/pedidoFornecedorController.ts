@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-param-reassign */
@@ -8,6 +9,7 @@ import ItensPedido from '../models/ItensPedido';
 import Pedido from '../models/Pedido';
 import Fornecedor from '../models/Fornecedor';
 import Produto from '../models/Produto';
+import sendNotification from '../notificacao';
 
 class PedidoFornecedor {
   async listarPedidosFornecedor(
@@ -132,10 +134,21 @@ class PedidoFornecedor {
       const pedido = pedidoRepository.merge(pedidoASerValidado, {
         status_pedido,
       });
+
+      const { consumidor_id, id } = pedido;
+
       const pedidoAtualizado = await pedidoRepository.save(pedido);
 
-      // Carregar todos os itens pedidos associados ao pedido
-      // Ter uma rota para cancelamento de pedido, ou passar no request.body
+      sendNotification({
+        title: 'Atualização do pedido',
+        subtitle: 'Acompanhe seus pedidos na tela inicial',
+        user_id: consumidor_id,
+        additional_data: {
+          type: 'STATUS_PEDIDO',
+          pedido_id: id,
+          status_pedido,
+        },
+      });
 
       response.status(201).json(pedidoAtualizado);
     } catch (error) {
@@ -343,6 +356,54 @@ class PedidoFornecedor {
         throw new Error('ID do pedido não informado!');
       }
 
+      const pedidoRepository = getRepository(Pedido);
+
+      const pedidosFornecedor = await pedidoRepository.find({
+        where: { fornecedor_id },
+      });
+
+      const pedidos = pedidosFornecedor.filter((pedido: Pedido): boolean => {
+        return (
+          pedido.status_pedido !== 'Finalizado' &&
+          pedido.status_pedido !== 'Cancelado'
+        );
+      });
+
+      const fornecedorRepository = getRepository(Fornecedor);
+
+      const fornecedor = await fornecedorRepository.findOne({
+        where: { id: fornecedor_id },
+      });
+
+      const taxa_entrega = Number(fornecedor?.taxa_delivery) || 0;
+
+      const infoPedido = pedidos.map((pedido: Pedido): void => {
+        const subtotal = pedido.total - taxa_entrega;
+        const {
+          nome,
+          logradouro,
+          bairro,
+          numero_local,
+          cep,
+        } = pedido.consumidor;
+        const { delivery, status_pedido, total, created_at } = pedido;
+
+        const objPedido = {
+          nome,
+          logradouro,
+          bairro,
+          numero_local,
+          cep,
+          delivery,
+          status_pedido,
+          total,
+          taxa_entrega,
+          created_at,
+        };
+
+        Object.assign(objPedido, { subtotal }, { taxa_entrega });
+      });
+
       const itensPedidoRepository = getRepository(ItensPedido);
 
       const itensPedido = await itensPedidoRepository.find({
@@ -352,6 +413,8 @@ class PedidoFornecedor {
       itensPedido.forEach(itemPedido => {
         delete itemPedido.produto.fornecedor;
       });
+
+      Object.assign(itensPedido, { infoPedido });
 
       response.status(200).json(itensPedido);
     } catch (error) {
