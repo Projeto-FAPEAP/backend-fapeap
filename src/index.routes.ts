@@ -144,7 +144,7 @@ routes.put(
 );
 routes.get('/consumidor', ConsumidorController.listarTodosConsumidores);
 routes.get(
-  '/consumidor/finalizados',
+  '/pedidos/finalizados',
   AuthMiddleware.consumidor,
   PedidoConsumidor.listarPedidosFinalizados,
 );
