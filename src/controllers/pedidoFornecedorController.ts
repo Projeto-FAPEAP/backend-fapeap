@@ -371,16 +371,13 @@ class PedidoFornecedor {
 
       const pedidoRepository = getRepository(Pedido);
 
-      const pedidosFornecedor = await pedidoRepository.find({
-        where: { fornecedor_id },
+      const pedidoFornecedor = await pedidoRepository.findOne({
+        where: { id: pedido_id },
       });
 
-      const pedidos = pedidosFornecedor.filter((pedido: Pedido): boolean => {
-        return (
-          pedido.status_pedido !== 'Finalizado' &&
-          pedido.status_pedido !== 'Cancelado'
-        );
-      });
+      if (!pedidoFornecedor) {
+        throw new Error('Pedido não encontrado');
+      }
 
       const fornecedorRepository = getRepository(Fornecedor);
 
@@ -390,33 +387,30 @@ class PedidoFornecedor {
 
       const taxa_entrega = Number(fornecedor?.taxa_delivery) || 0;
 
-      const infoPedido = pedidos.map((pedido: Pedido): object => {
-        const subtotal = pedido.total - taxa_entrega;
-        const {
-          nome,
-          logradouro,
-          bairro,
-          numero_local,
-          cep,
-        } = pedido.consumidor;
-        const { delivery, status_pedido, total, created_at } = pedido;
+      const subtotal = pedidoFornecedor.total - taxa_entrega;
+      const {
+        nome,
+        logradouro,
+        bairro,
+        numero_local,
+        cep,
+      } = pedidoFornecedor.consumidor;
+      const { delivery, status_pedido, total, created_at } = pedidoFornecedor;
 
-        const objPedido = {
-          nome,
-          logradouro,
-          bairro,
-          numero_local,
-          cep,
-          delivery,
-          status_pedido,
-          total,
-          taxa_entrega,
-          created_at,
-        };
+      const objPedido = {
+        nome,
+        logradouro,
+        bairro,
+        numero_local,
+        cep,
+        delivery,
+        status_pedido,
+        total,
+        taxa_entrega,
+        created_at,
+      };
 
-        Object.assign(objPedido, { subtotal }, { taxa_entrega });
-        return objPedido;
-      });
+      Object.assign(objPedido, { subtotal }, { taxa_entrega });
 
       const itensPedidoRepository = getRepository(ItensPedido);
 
@@ -428,7 +422,7 @@ class PedidoFornecedor {
         delete itemPedido.produto.fornecedor;
       });
 
-      response.status(200).json({ itensPedido, infoPedido });
+      response.status(200).json({ itensPedido, objPedido });
     } catch (error) {
       response.status(400).json({ error: error.message });
     }
