@@ -92,7 +92,7 @@ class PedidoConsumidor {
         title: 'Você tem um novo pedido',
         subtitle: 'Acompanhe seus pedidos na tela inicial',
         user_id: fornecedor_id,
-        additional_data: { pedido_id: pedido.id },
+        additional_data: { pedido_id: pedido.id, status_pedido },
       });
 
       return response.status(201).json(pedidoFinal);
@@ -253,6 +253,13 @@ class PedidoConsumidor {
         });
 
         const pedidoAtualizado = await pedidoRepository.save(pedido);
+
+        sendNotification({
+          title: 'O consumidor cancelou o pedido',
+          subtitle: 'Acompanhe seus pedidos na tela inicial',
+          user_id: pedido.fornecedor_id,
+          additional_data: { pedido_id: pedido.id, status_pedido },
+        });
 
         response.status(201).json(pedidoAtualizado);
       } else {
