@@ -113,8 +113,6 @@ class ConsumidorController {
     next();
   }
 
-  // Fazer atualizar Consumidor
-
   async deletarConsumidor(
     request: Request,
     response: Response,

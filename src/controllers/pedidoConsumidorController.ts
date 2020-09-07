@@ -123,14 +123,22 @@ class PedidoConsumidor {
         throw new Error('Pedido não encontrado!');
       }
 
-      const pedidos = pedidosConsumidor.filter(
-        pedido => pedido.status_pedido !== 'Finalizado',
-      );
+      pedidosConsumidor.forEach(pedido => delete pedido.fornecedor.senha);
+      pedidosConsumidor.forEach(pedido => delete pedido.consumidor.senha);
 
-      pedidos.forEach(pedido => delete pedido.fornecedor.senha);
-      pedidos.forEach(pedido => delete pedido.consumidor.senha);
+      const arquivoFornecedorRepository = getRepository(ArquivoFornecedor);
 
-      response.status(200).json(pedidos);
+      for (const pedido of pedidosConsumidor) {
+        const arquivos = await arquivoFornecedorRepository.find({
+          where: { fornecedor_id: pedido.fornecedor_id },
+        });
+
+        const arqFornece = arquivos[0];
+
+        Object.assign(pedido, { arqFornece });
+      }
+
+      response.status(200).json(pedidosConsumidor);
     } catch (error) {
       response.status(400).json({ error: error.message });
     }
