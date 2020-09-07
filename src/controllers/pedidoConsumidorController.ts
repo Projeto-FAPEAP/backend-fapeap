@@ -123,8 +123,12 @@ class PedidoConsumidor {
         throw new Error('Pedido não encontrado!');
       }
 
-      pedidosConsumidor.forEach(pedido => delete pedido.fornecedor.senha);
-      pedidosConsumidor.forEach(pedido => delete pedido.consumidor.senha);
+      const pedidos = pedidosConsumidor.filter(
+        pedido => pedido.status_pedido !== 'Finalizado',
+      );
+
+      pedidos.forEach(pedido => delete pedido.fornecedor.senha);
+      pedidos.forEach(pedido => delete pedido.consumidor.senha);
 
       const arquivoFornecedorRepository = getRepository(ArquivoFornecedor);
 
@@ -138,7 +142,7 @@ class PedidoConsumidor {
         Object.assign(pedido, { arqFornece });
       }
 
-      response.status(200).json(pedidosConsumidor);
+      response.status(200).json(pedidos);
     } catch (error) {
       response.status(400).json({ error: error.message });
     }
@@ -297,8 +301,8 @@ class PedidoConsumidor {
       if (numeroPagina === undefined && numeroLimite === undefined) {
         throw new Error('Query ausente! Deve ser passado page e limit');
       }
-
       const pagina = parseInt(numeroPagina, 10);
+
       const limite = parseInt(numeroLimite, 10);
 
       const [indexInicial, indexFinal] = [
@@ -329,6 +333,18 @@ class PedidoConsumidor {
           return pedido.status_pedido === 'Finalizado';
         },
       );
+
+      const arquivoFornecedorRepository = getRepository(ArquivoFornecedor);
+
+      for (const pedido of pedidosHistorico) {
+        const arquivos = await arquivoFornecedorRepository.find({
+          where: { fornecedor_id: pedido.fornecedor_id },
+        });
+
+        const arqFornece = arquivos[0];
+
+        Object.assign(pedido, { arqFornece });
+      }
 
       const historico = pedidosHistorico.slice(indexInicial, indexFinal);
       const total_pedidos = historico.length;
