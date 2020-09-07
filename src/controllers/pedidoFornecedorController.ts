@@ -427,9 +427,7 @@ class PedidoFornecedor {
         delete itemPedido.produto.fornecedor;
       });
 
-      Object.assign(itensPedido, { infoPedido });
-
-      response.status(200).json(itensPedido);
+      response.status(200).json({ itensPedido, infoPedido });
     } catch (error) {
       response.status(400).json({ error: error.message });
     }
