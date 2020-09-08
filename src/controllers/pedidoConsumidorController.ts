@@ -155,11 +155,9 @@ class PedidoConsumidor {
           break;
         }
 
-        const arqFornece = arquivos[0];
+        delete arqFornecedor.fornecedor;
 
-        delete arqFornece.fornecedor;
-
-        Object.assign(pedido, { arqFornece });
+        Object.assign(pedido, { arqFornecedor });
       }
 
       response.status(200).json(pedidos);
