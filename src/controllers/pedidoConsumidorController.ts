@@ -123,9 +123,12 @@ class PedidoConsumidor {
         throw new Error('Pedido não encontrado!');
       }
 
-      const pedidos = pedidosConsumidor.filter(
-        pedido => pedido.status_pedido !== 'Finalizado',
-      );
+      const pedidos = pedidosConsumidor.filter((pedido: Pedido): boolean => {
+        return (
+          pedido.status_pedido !== 'Finalizado' &&
+          pedido.status_pedido !== 'Cancelado'
+        );
+      });
 
       pedidos.forEach(pedido => delete pedido.fornecedor.senha);
       pedidos.forEach(pedido => delete pedido.consumidor.senha);
@@ -303,7 +306,7 @@ class PedidoConsumidor {
     next();
   }
 
-  async listarPedidosFinalizados(
+  async historicoPedido(
     request: Request,
     response: Response,
     next: NextFunction,
@@ -348,7 +351,10 @@ class PedidoConsumidor {
 
       const pedidosHistorico = pedidosFornecedor.filter(
         (pedido: Pedido): boolean => {
-          return pedido.status_pedido === 'Finalizado';
+          return (
+            pedido.status_pedido === 'Finalizado' ||
+            pedido.status_pedido === 'Cancelado'
+          );
         },
       );
 
