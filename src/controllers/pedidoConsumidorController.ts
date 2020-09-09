@@ -4,7 +4,6 @@
 /* eslint-disable no-param-reassign */
 import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
-// import OneSignal from 'onesignal-node';
 
 import Pedido from '../models/Pedido';
 import ItensPedido from '../models/ItensPedido';
@@ -12,7 +11,6 @@ import Fornecedor from '../models/Fornecedor';
 import Produto from '../models/Produto';
 import ArquivoFornecedor from '../models/ArquivoFornecedor';
 import sendNotification from '../notificacao';
-// import apiOneSignal from '../config/apiOneSignal';
 
 class PedidoConsumidor {
   async solicitarPedido(
@@ -186,6 +184,10 @@ class PedidoConsumidor {
     try {
       const { id: consumidor_id } = request.user;
 
+      if (!consumidor_id) {
+        throw new Error('Usuário não autenticado!');
+      }
+
       const page = request.query.page || 1;
       const numeroPagina = String(page);
       const limit = request.query.limit || 30;
@@ -210,10 +212,6 @@ class PedidoConsumidor {
         pages: number;
         total: number;
       };
-
-      if (!consumidor_id) {
-        throw new Error('Usuário não autenticado!');
-      }
 
       const pedidoRepository = getRepository(Pedido);
 
