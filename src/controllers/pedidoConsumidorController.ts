@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-param-reassign */
@@ -133,6 +134,13 @@ class PedidoConsumidor {
       pedidos.forEach(pedido => delete pedido.fornecedor.senha);
       pedidos.forEach(pedido => delete pedido.consumidor.senha);
 
+      pedidos.sort(function (date01, date02) {
+        return (
+          new Date(date02.updated_at).valueOf() -
+          new Date(date01.updated_at).valueOf()
+        );
+      });
+
       const arquivoFornecedorRepository = getRepository(ArquivoFornecedor);
 
       for (const pedido of pedidosConsumidor) {
@@ -164,6 +172,112 @@ class PedidoConsumidor {
       }
 
       response.status(200).json(pedidos);
+    } catch (error) {
+      response.status(400).json({ error: error.message });
+    }
+    next();
+  }
+
+  async historicoPedido(
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { id: consumidor_id } = request.user;
+
+      const page = request.query.page || 1;
+      const numeroPagina = String(page);
+      const limit = request.query.limit || 30;
+      const numeroLimite = String(limit);
+
+      if (numeroPagina === undefined && numeroLimite === undefined) {
+        throw new Error('Query ausente! Deve ser passado page e limit');
+      }
+      const pagina = parseInt(numeroPagina, 10);
+
+      const limite = parseInt(numeroLimite, 10);
+
+      const [indexInicial, indexFinal] = [
+        (pagina - 1) * limite,
+        pagina * limite,
+      ];
+
+      type HistorioDTO = {
+        historico: Pedido[];
+        page: number;
+        perPage: number;
+        pages: number;
+        total: number;
+      };
+
+      if (!consumidor_id) {
+        throw new Error('Usuário não autenticado!');
+      }
+
+      const pedidoRepository = getRepository(Pedido);
+
+      const pedidosFornecedor = await pedidoRepository.find({
+        where: { consumidor_id },
+      });
+
+      const pedidosHistorico = pedidosFornecedor.filter(
+        (pedido: Pedido): boolean => {
+          return (
+            pedido.status_pedido === 'Finalizado' ||
+            pedido.status_pedido === 'Cancelado'
+          );
+        },
+      );
+
+      pedidosHistorico.sort(function (date01, date02) {
+        return (
+          new Date(date02.updated_at).valueOf() -
+          new Date(date01.updated_at).valueOf()
+        );
+      });
+
+      const arquivoFornecedorRepository = getRepository(ArquivoFornecedor);
+
+      for (const pedido of pedidosHistorico) {
+        const arquivos = await arquivoFornecedorRepository.find({
+          where: { fornecedor_id: pedido.fornecedor_id },
+        });
+
+        let arqFornecedor;
+
+        for (const arquivo of arquivos) {
+          const tipo_arq = arquivo.nome_original.split('.')[1];
+
+          const fileExtension_img = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+
+          if (fileExtension_img.includes(tipo_arq)) {
+            arqFornecedor = arquivo;
+            delete arqFornecedor.fornecedor;
+            break;
+          }
+        }
+
+        if (!arqFornecedor) {
+          break;
+        }
+
+        Object.assign(pedido, { arqFornecedor });
+      }
+
+      const historico = pedidosHistorico.slice(indexInicial, indexFinal);
+      const total_pedidos = historico.length;
+      const paginas = Math.ceil(total_pedidos / limite);
+
+      const historicoResponse: HistorioDTO = {
+        historico,
+        page: pagina,
+        perPage: limite,
+        pages: paginas,
+        total: total_pedidos,
+      };
+
+      response.status(200).json(historicoResponse);
     } catch (error) {
       response.status(400).json({ error: error.message });
     }
@@ -300,105 +414,6 @@ class PedidoConsumidor {
           'Cancelamento somente para pedidos Pendentes e de Reserva',
         );
       }
-    } catch (error) {
-      response.status(400).json({ error: error.message });
-    }
-    next();
-  }
-
-  async historicoPedido(
-    request: Request,
-    response: Response,
-    next: NextFunction,
-  ): Promise<void> {
-    try {
-      const { id: consumidor_id } = request.user;
-
-      const page = request.query.page || 1;
-      const numeroPagina = String(page);
-      const limit = request.query.limit || 30;
-      const numeroLimite = String(limit);
-
-      if (numeroPagina === undefined && numeroLimite === undefined) {
-        throw new Error('Query ausente! Deve ser passado page e limit');
-      }
-      const pagina = parseInt(numeroPagina, 10);
-
-      const limite = parseInt(numeroLimite, 10);
-
-      const [indexInicial, indexFinal] = [
-        (pagina - 1) * limite,
-        pagina * limite,
-      ];
-
-      type HistorioDTO = {
-        historico: Pedido[];
-        page: number;
-        perPage: number;
-        pages: number;
-        total: number;
-      };
-
-      if (!consumidor_id) {
-        throw new Error('Usuário não autenticado!');
-      }
-
-      const pedidoRepository = getRepository(Pedido);
-
-      const pedidosFornecedor = await pedidoRepository.find({
-        where: { consumidor_id },
-      });
-
-      const pedidosHistorico = pedidosFornecedor.filter(
-        (pedido: Pedido): boolean => {
-          return (
-            pedido.status_pedido === 'Finalizado' ||
-            pedido.status_pedido === 'Cancelado'
-          );
-        },
-      );
-
-      const arquivoFornecedorRepository = getRepository(ArquivoFornecedor);
-
-      for (const pedido of pedidosHistorico) {
-        const arquivos = await arquivoFornecedorRepository.find({
-          where: { fornecedor_id: pedido.fornecedor_id },
-        });
-
-        let arqFornecedor;
-
-        for (const arquivo of arquivos) {
-          const tipo_arq = arquivo.nome_original.split('.')[1];
-
-          const fileExtension_img = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
-
-          if (fileExtension_img.includes(tipo_arq)) {
-            arqFornecedor = arquivo;
-            delete arqFornecedor.fornecedor;
-            break;
-          }
-        }
-
-        if (!arqFornecedor) {
-          break;
-        }
-
-        Object.assign(pedido, { arqFornecedor });
-      }
-
-      const historico = pedidosHistorico.slice(indexInicial, indexFinal);
-      const total_pedidos = historico.length;
-      const paginas = Math.ceil(total_pedidos / limite);
-
-      const historicoResponse: HistorioDTO = {
-        historico,
-        page: pagina,
-        perPage: limite,
-        pages: paginas,
-        total: total_pedidos,
-      };
-
-      response.status(200).json(historicoResponse);
     } catch (error) {
       response.status(400).json({ error: error.message });
     }
