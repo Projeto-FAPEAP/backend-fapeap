@@ -135,7 +135,7 @@ class PedidoFornecedor {
         status_pedido,
       });
 
-      const { consumidor_id, id } = pedido;
+      const { consumidor_id } = pedido;
 
       const pedidoAtualizado = await pedidoRepository.save(pedido);
 
@@ -144,8 +144,7 @@ class PedidoFornecedor {
         subtitle: 'Acompanhe seus pedidos na tela inicial',
         user_id: consumidor_id,
         additional_data: {
-          type: 'STATUS_PEDIDO',
-          pedido_id: id,
+          pedido_id: pedido.id,
           status_pedido,
         },
       });

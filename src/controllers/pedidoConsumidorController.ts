@@ -18,7 +18,8 @@ class PedidoConsumidor {
   async solicitarPedido(
     request: Request,
     response: Response,
-  ): Promise<Response> {
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const { id: consumidor_id } = request.user;
       const { compra, id: fornecedor_id } = request.params;
@@ -96,10 +97,11 @@ class PedidoConsumidor {
         additional_data: { pedido_id: pedido.id, status_pedido },
       });
 
-      return response.status(201).json(pedidoFinal);
+      response.status(201).json(pedidoFinal);
     } catch (error) {
-      return response.status(400).json({ error: error.message });
+      response.status(400).json({ error: error.message });
     }
+    next();
   }
 
   async listarPedidosConsumidor(
