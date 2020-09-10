@@ -393,6 +393,16 @@ class PedidoConsumidor {
         });
         const pedidoAtualizado = await pedidoRepository.save(pedido);
 
+        sendNotification({
+          title: 'O consumidor cancelou o pedido',
+          subtitle: 'Acompanhe seus pedidos na tela inicial',
+          user_id: pedido.fornecedor_id,
+          additional_data: {
+            pedido_id: pedidoAtualizado.id,
+            status_pedido: pedidoAtualizado.status_pedido,
+          },
+        });
+
         response.status(201).json(pedidoAtualizado);
       } else if (pedidoASerValidado.status_pedido === 'Pendente') {
         status_pedido = 'Cancelado';
@@ -407,7 +417,10 @@ class PedidoConsumidor {
           title: 'O consumidor cancelou o pedido',
           subtitle: 'Acompanhe seus pedidos na tela inicial',
           user_id: pedido.fornecedor_id,
-          additional_data: { pedido_id: pedido.id, status_pedido },
+          additional_data: {
+            pedido_id: pedidoAtualizado.id,
+            status_pedido: pedidoAtualizado.status_pedido,
+          },
         });
 
         response.status(201).json(pedidoAtualizado);
