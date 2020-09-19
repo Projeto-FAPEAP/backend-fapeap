@@ -365,7 +365,9 @@ class PedidoConsumidor {
 
         response.status(201).json(pedidoAtualizado);
       } else {
-        throw new Error('Cancelamento somente para pedidos Pendentes');
+        throw new Error(
+          'Cancelamento somente para pedidos Pendentes e de Reserva',
+        );
       }
     } catch (error) {
       response.status(400).json({ error: error.message });
