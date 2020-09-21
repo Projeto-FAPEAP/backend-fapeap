@@ -109,7 +109,10 @@ class SessaoController {
         throw new Error('Cpf ou senha incorretos!');
       }
 
-      if (!fornecedor.verificado) {
+      if (
+        !fornecedor.verificado ||
+        (fornecedor.verificado && fornecedor.status_aprovado === 'Não aprovado')
+      ) {
         response.status(200).json(fornecedor);
       }
 
@@ -124,11 +127,7 @@ class SessaoController {
       const fornecedorDTO = { fornecedor, tokenFornecedor };
       response.json(fornecedorDTO);
     } catch (error) {
-      if (error.message === 'Estamos analisando o seu cadastro!') {
-        response.status(403).json({ message: error.message });
-      } else {
-        response.status(400).json({ error: error.message });
-      }
+      response.status(400).json({ error: error.message });
     }
     next();
   }
