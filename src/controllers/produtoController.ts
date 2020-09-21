@@ -39,6 +39,8 @@ class ProdutoController {
 
       const arquivoRepository = getRepository(ArquivoProduto);
 
+      const arquivos = [];
+
       if (request.files.length > 0) {
         for (const arquivo_produto of request.files) {
           const {
@@ -58,9 +60,11 @@ class ProdutoController {
 
           await arquivoRepository.save(arquivo);
 
-          Object.assign(produto, { arquivo });
+          arquivos.push(arquivo);
         }
       }
+
+      Object.assign(produto, { arquivos });
 
       response.status(201).json(produto);
     } catch (error) {
