@@ -426,6 +426,8 @@ class PedidoConsumidor {
           updated_at,
         } = itemPedido;
 
+        delete produto.fornecedor;
+
         arrayItensPedido.push({
           id,
           pedido_id,
