@@ -165,7 +165,7 @@ class SessaoController {
 
       await fornecedorRepository.save(fornecedorDTO); */
 
-      const novaSenha = uuidv4().slice(0, 4);
+      const novaSenha = uuidv4().slice(0, 7);
 
       const hashedSenha = await hash(novaSenha, 8);
 
@@ -219,7 +219,7 @@ class SessaoController {
 
       await fornecedorRepository.save(fornecedorDTO); */
 
-      const novaSenha = uuidv4().slice(0, 4);
+      const novaSenha = uuidv4().slice(0, 7);
 
       const hashedSenha = await hash(novaSenha, 8);
 
