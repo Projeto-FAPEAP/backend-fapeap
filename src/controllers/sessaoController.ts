@@ -1,10 +1,13 @@
 import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
-import { compare } from 'bcryptjs';
+import { compare, hash } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
+import crypto from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
 import Consumidor from '../models/Consumidor';
 import Fornecedor from '../models/Fornecedor';
 import jwtConfig from '../config/auth';
+import { transport as mailer } from '../config/mailer';
 
 class SessaoController {
   async autenticarConsumidor(
@@ -126,6 +129,60 @@ class SessaoController {
       delete fornecedor.senha;
       const fornecedorDTO = { fornecedor, tokenFornecedor };
       response.json(fornecedorDTO);
+    } catch (error) {
+      response.status(400).json({ error: error.message });
+    }
+    next();
+  }
+
+  async resetSenha(
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { cpf_cnpj } = request.body;
+
+      const fornecedorRepository = getRepository(Fornecedor);
+      const fornecedor = await fornecedorRepository.findOne({
+        where: { cpf_cnpj },
+      });
+
+      if (!fornecedor) {
+        throw new Error('Usuário não encontrado');
+      }
+
+      /*       const token = crypto.randomBytes(20).toString('hex');
+
+      const dataAtual = new Date();
+
+      dataAtual.setHours(Number(dataAtual.getHours) + 1); */
+
+      /*    const fornecedorDTO = fornecedorRepository.merge(fornecedor, {
+        senhaResetToken: token,
+        senhaResetExpires: dataAtual,
+      });
+
+      await fornecedorRepository.save(fornecedorDTO); */
+
+      const novaSenha = uuidv4().slice(0, 4);
+
+      const hashedSenha = await hash(novaSenha, 8);
+
+      const fornecedorNovaSenha = fornecedorRepository.merge(fornecedor, {
+        senha: hashedSenha,
+      });
+
+      await fornecedorRepository.save(fornecedorNovaSenha);
+
+      mailer.sendMail({
+        to: fornecedor.email,
+        from: 'leozartino@outlook.com',
+        subject: 'Esqueceu sua senha?',
+        text: `${'Você está recebendo isto porque você (ou outra pessoa) solicitou a redefinição da senha de sua conta.\n'} ${'Use a nova senha para acessar sua conta no aplicativo e após isso altere para uma senha própria. \n'} ${novaSenha}`,
+      });
+
+      response.json({ message: 'Senha resetada com sucesso' });
     } catch (error) {
       response.status(400).json({ error: error.message });
     }
