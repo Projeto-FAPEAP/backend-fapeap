@@ -91,7 +91,7 @@ export default class Createfornecedor1593626320065
           },
           {
             name: 'status_aprovado',
-            type: 'string',
+            type: 'varchar',
             default: 'Em andamento',
           },
           {
