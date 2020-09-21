@@ -86,6 +86,7 @@ class FornecedorController {
         latitude: coordenadasEndereco.lat,
         longitude: coordenadasEndereco.lng,
         verificado: false,
+        status_aprovado: 'Em andamento',
       });
 
       const errors = await validate(fornecedorDTO);
