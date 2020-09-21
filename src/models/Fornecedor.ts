@@ -35,6 +35,9 @@ class Fornecedor extends Usuario {
   verificado: boolean;
 
   @Column('varchar')
+  status_aprovado: string;
+
+  @Column('varchar')
   cidade: string;
 
   @Column('varchar')

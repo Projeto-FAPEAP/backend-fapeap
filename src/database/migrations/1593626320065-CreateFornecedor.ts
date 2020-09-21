@@ -90,6 +90,11 @@ export default class Createfornecedor1593626320065
             default: false,
           },
           {
+            name: 'status_aprovado',
+            type: 'string',
+            default: 'Em andamento',
+          },
+          {
             name: 'created_at',
             type: 'timestamp',
             default: 'now()',
