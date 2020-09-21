@@ -115,6 +115,10 @@ class PedidoFornecedor {
             throw new Error('Não foi possivel confirmar o pedido');
           }
 
+          if (quantidade > produto.estoque_produto) {
+            throw new Error('Quantidade solicitada maior do que o estoque');
+          }
+
           const estoque_produto = Number(produto.estoque_produto) - quantidade;
 
           const produtoMerge = produtoRepository.merge(produto, {
