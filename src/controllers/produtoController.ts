@@ -161,6 +161,7 @@ class ProdutoController {
       const arquivoRepository = getRepository(ArquivoProduto);
 
       const produto = await produtoRepository.findOne(id);
+
       const arquivosProdutos = await arquivoRepository.find({
         where: { produto_id: id },
       });
@@ -357,7 +358,7 @@ class ProdutoController {
         throw new Error('Arquivo não encontrado!');
       }
 
-      const arquivoDeletado = await arquivoRepository.delete(arquivo);
+      const arquivoDeletado = await arquivoRepository.delete(arquivo_id);
 
       response.status(200).json(arquivoDeletado);
     } catch (error) {
