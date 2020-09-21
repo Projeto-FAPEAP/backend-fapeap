@@ -5,7 +5,6 @@
 import { getRepository } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
 
-import { stringify } from 'uuid';
 import Pedido from '../models/Pedido';
 import ItensPedido from '../models/ItensPedido';
 import Fornecedor from '../models/Fornecedor';
@@ -483,25 +482,11 @@ class PedidoConsumidor {
         where: { pedido_id },
       });
 
-      type ItensPedidoDTO = {
-        id: string;
-        pedido: Pedido;
-        pedido_id: string;
-        produto: Produto;
-        produto_id: string;
-        quantidade: number;
-        preco_venda: number;
-        created_at: Date;
-        updated_at: Date;
-      };
-
-      const arrayItensPedido: Array<ItensPedidoDTO> = [];
-
       itensPedido.forEach(itemPedido => {
         delete itemPedido.produto.fornecedor;
       });
 
-      response.status(200).json(arrayItensPedido);
+      response.status(200).json(itensPedido);
     } catch (error) {
       response.status(400).json({ error: error.message });
     }
