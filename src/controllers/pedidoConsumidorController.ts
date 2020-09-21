@@ -415,30 +415,7 @@ class PedidoConsumidor {
       const arrayItensPedido: Array<ItensPedidoDTO> = [];
 
       itensPedido.forEach(itemPedido => {
-        const {
-          id,
-          pedido,
-          produto,
-          produto_id,
-          quantidade,
-          preco_venda,
-          created_at,
-          updated_at,
-        } = itemPedido;
-
-        delete produto.fornecedor;
-
-        arrayItensPedido.push({
-          id,
-          pedido_id,
-          produto_id,
-          preco_venda,
-          quantidade,
-          created_at,
-          updated_at,
-          produto,
-          pedido,
-        });
+        delete itemPedido.produto.fornecedor;
       });
 
       response.status(200).json(arrayItensPedido);
