@@ -12,6 +12,7 @@ import Fornecedor from '../models/Fornecedor';
 import Produto from '../models/Produto';
 import ArquivoFornecedor from '../models/ArquivoFornecedor';
 import sendNotification from '../notificacao';
+import AvaliacaoFornecedor from '../models/AvaliacaoFornecedor';
 
 class PedidoConsumidor {
   async solicitarPedido(
@@ -201,6 +202,20 @@ class PedidoConsumidor {
           where: { fornecedor_id: pedido.fornecedor_id },
         });
 
+        const { fornecedor_id } = pedido;
+
+        const avaliacaoRepo = getRepository(AvaliacaoFornecedor);
+
+        const matchAvaliacao = avaliacaoRepo.findOne({
+          where: { consumidor_id, fornecedor_id },
+        });
+
+        let fornecedorAvaliado = true;
+
+        if (!matchAvaliacao) {
+          fornecedorAvaliado = false;
+        }
+
         let arqFornecedor;
 
         for (const arquivo of arquivos) {
@@ -221,7 +236,7 @@ class PedidoConsumidor {
 
         delete arqFornecedor.fornecedor;
 
-        Object.assign(pedido, { arqFornecedor });
+        Object.assign(pedido, { fornecedorAvaliado }, { arqFornecedor });
       }
 
       response.status(200).json(pedidos);
