@@ -138,6 +138,18 @@ class PedidoConsumidor {
 
       const { fornecedor_id } = pedidoAtualizado;
 
+      const avaliacaoRepo = getRepository(AvaliacaoFornecedor);
+
+      const matchAvaliacao = await avaliacaoRepo.findOne({
+        where: { consumidor_id, fornecedor_id },
+      });
+
+      let fornecedorAvaliado = true;
+
+      if (!matchAvaliacao) {
+        fornecedorAvaliado = false;
+      }
+
       sendNotification({
         title: 'Atualização do pedido',
         subtitle: 'Acompanhe seus pedidos na tela inicial',
@@ -147,6 +159,8 @@ class PedidoConsumidor {
           status_pedido: pedidoAtualizado.status_pedido,
         },
       });
+
+      Object.assign(pedidoAtualizado, { fornecedorAvaliado });
 
       response.status(201).json(pedidoAtualizado);
     } catch (error) {
