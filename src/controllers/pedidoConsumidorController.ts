@@ -384,7 +384,7 @@ class PedidoConsumidor {
 
       const avaliacaoRepo = getRepository(AvaliacaoFornecedor);
 
-      const matchAvaliacao = avaliacaoRepo.findOne({
+      const matchAvaliacao = await avaliacaoRepo.findOne({
         where: { consumidor_id, fornecedor_id },
       });
 
