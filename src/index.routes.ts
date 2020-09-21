@@ -171,7 +171,7 @@ routes.post('/sessao/consumidor', SessaoController.autenticarConsumidor);
 routes.post('/sessao/fornecedor', SessaoController.autenticarFornecedor);
 routes.post('/sessao/admin', SessaoController.autenticarAdmin);
 
-routes.post('/sessao/reset_senha', SessaoController.resetSenha);
+routes.post('/sessao/fornecedor/reset_senha', SessaoController.resetSenha);
 
 // Arquivos
 routes.get(
