@@ -383,9 +383,23 @@ class PedidoConsumidor {
         where: { fornecedor_id },
       });
 
+      const avaliacaoRepo = getRepository(AvaliacaoFornecedor);
+
+      const matchAvaliacao = avaliacaoRepo.findOne({
+        where: { consumidor_id, fornecedor_id },
+      });
+
+      let fornecedorAvaliado = true;
+
+      if (!matchAvaliacao) {
+        fornecedorAvaliado = false;
+      }
+
       const arqFornecedor = arquivos[0];
 
-      response.status(200).json({ pedidoConsumidor, arqFornecedor });
+      response
+        .status(200)
+        .json({ pedidoConsumidor, fornecedorAvaliado, arqFornecedor });
     } catch (error) {
       response.status(400).json({ error: error.message });
     }
