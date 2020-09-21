@@ -92,7 +92,6 @@ export default class Createfornecedor1593626320065
           {
             name: 'status_aprovado',
             type: 'varchar',
-            default: 'Em andamento',
           },
           {
             name: 'created_at',
