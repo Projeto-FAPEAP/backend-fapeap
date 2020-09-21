@@ -353,9 +353,9 @@ class ProdutoController {
         throw new Error('Arquivo não encontrado!');
       }
 
-      await arquivoRepository.delete(arquivo);
+      const arquivoDeletado = await arquivoRepository.delete(arquivo);
 
-      response.status(200).json({ sucess: 'Imagem deletada com sucesso!' });
+      response.status(200).json(arquivoDeletado);
     } catch (error) {
       response.status(400).json({ error: error.message });
     }
