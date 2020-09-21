@@ -101,6 +101,60 @@ class PedidoConsumidor {
     }
   }
 
+  async finalizarPedido(
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { id: consumidor_id } = request.user;
+      const { id: pedido_id } = request.params;
+
+      if (!consumidor_id) {
+        throw new Error('Usuário não autenticado!');
+      }
+
+      const pedidoRepository = getRepository(Pedido);
+
+      const pedidoASerValidado = await pedidoRepository.findOne({
+        where: { id: pedido_id },
+      });
+
+      if (!pedidoASerValidado) {
+        throw new Error('Pedido não encontrado!');
+      }
+
+      const status_pedido = 'Finalizado';
+
+      if (pedidoASerValidado.status_pedido !== 'Pedido em rota de entrega') {
+        throw new Error('Finalização do consumidor somente para delivery');
+      }
+
+      const pedido = pedidoRepository.merge(pedidoASerValidado, {
+        status_pedido,
+      });
+
+      const pedidoAtualizado = await pedidoRepository.save(pedido);
+
+      const { fornecedor_id } = pedidoAtualizado;
+
+      sendNotification({
+        title: 'Atualização do pedido',
+        subtitle: 'Acompanhe seus pedidos na tela inicial',
+        user_id: fornecedor_id,
+        additional_data: {
+          pedido_id: pedidoAtualizado.id,
+          status_pedido: pedidoAtualizado.status_pedido,
+        },
+      });
+
+      response.status(201).json(pedidoAtualizado);
+    } catch (error) {
+      response.status(400).json({ error: error.message });
+    }
+    next();
+  }
+
   async listarPedidosConsumidor(
     request: Request,
     response: Response,

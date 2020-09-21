@@ -159,6 +159,11 @@ routes.get(
   AuthMiddleware.consumidor,
   PedidoConsumidor.listarPedidosConsumidor,
 );
+routes.put(
+  '/pedidos/finalizar/:id',
+  AuthMiddleware.consumidor,
+  PedidoConsumidor.finalizarPedido,
+);
 
 routes.get(
   '/consumidor/pedidos/itens/:id',
