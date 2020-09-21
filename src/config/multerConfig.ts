@@ -49,7 +49,7 @@ export const awsStorageFiles = multer({
     bucket: 'app-ws-fapeap',
     acl: 'public-read',
     key(req, file, cb) {
-      cb(null, `${uuidv4()}-${file.originalname}`);
+      cb(null, `${uuidv4()}`);
     },
   }),
   fileFilter(req, file, cb) {
