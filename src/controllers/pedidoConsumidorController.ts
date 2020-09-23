@@ -314,6 +314,8 @@ class PedidoConsumidor {
       for (const pedidoH of pedidosHistorico) {
         const { fornecedor_id } = pedidoH;
 
+        delete pedidoH.fornecedor.senha;
+
         const avaliacaoRepo = getRepository(AvaliacaoFornecedor);
 
         const matchAvaliacao = await avaliacaoRepo.findOne({
