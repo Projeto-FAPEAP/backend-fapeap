@@ -311,6 +311,24 @@ class PedidoConsumidor {
         },
       );
 
+      for (const pedidoH of pedidosHistorico) {
+        const { fornecedor_id } = pedidoH;
+
+        const avaliacaoRepo = getRepository(AvaliacaoFornecedor);
+
+        const matchAvaliacao = await avaliacaoRepo.findOne({
+          where: { consumidor_id, fornecedor_id },
+        });
+
+        let fornecedorAvaliado = true;
+
+        if (!matchAvaliacao) {
+          fornecedorAvaliado = false;
+        }
+
+        Object.assign(pedidoH, { fornecedorAvaliado });
+      }
+
       pedidosHistorico.sort(function (date01, date02) {
         return (
           new Date(date02.updated_at).valueOf() -
