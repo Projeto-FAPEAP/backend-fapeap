@@ -8,7 +8,6 @@ import { Request, Response, NextFunction } from 'express';
 import Pedido from '../models/Pedido';
 import ItensPedido from '../models/ItensPedido';
 import Fornecedor from '../models/Fornecedor';
-import Produto from '../models/Produto';
 import ArquivoFornecedor from '../models/ArquivoFornecedor';
 import sendNotification from '../notificacao';
 import AvaliacaoFornecedor from '../models/AvaliacaoFornecedor';
@@ -467,7 +466,19 @@ class PedidoConsumidor {
 
       let status_pedido;
 
-      if (pedidoASerValidado.status_pedido === 'Pendente') {
+      const hoje = new Date();
+      const dataPedido = new Date(pedidoASerValidado.updated_at);
+
+      if (
+        pedidoASerValidado.status_pedido === 'Pendente' &&
+        pedidoASerValidado.updated_at.getHours() === hoje.getHours()
+      ) {
+        const diffMinutos = hoje.getMinutes() - dataPedido.getMinutes();
+
+        if (diffMinutos < 5) {
+          throw new Error('Pedidos só podem ser cancelados após 5 minutos');
+        }
+
         status_pedido = 'Cancelado';
 
         const pedido = pedidoRepository.merge(pedidoASerValidado, {
