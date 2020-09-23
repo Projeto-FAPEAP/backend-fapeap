@@ -315,6 +315,7 @@ class PedidoConsumidor {
         const { fornecedor_id } = pedidoH;
 
         delete pedidoH.fornecedor.senha;
+        delete pedidoH.consumidor.senha;
 
         const avaliacaoRepo = getRepository(AvaliacaoFornecedor);
 
@@ -430,6 +431,8 @@ class PedidoConsumidor {
 
       const arqFornecedor = arquivos[0];
 
+      delete pedidoConsumidor.fornecedor.senha;
+
       response
         .status(200)
         .json({ pedidoConsumidor, fornecedorAvaliado, arqFornecedor });
@@ -479,6 +482,8 @@ class PedidoConsumidor {
           user_id: pedido.fornecedor_id,
           additional_data: { pedido_id: pedido.id, status_pedido },
         });
+
+        delete pedidoAtualizado.fornecedor.senha;
 
         response.status(201).json(pedidoAtualizado);
       } else {
