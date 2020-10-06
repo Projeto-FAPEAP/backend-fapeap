@@ -68,9 +68,12 @@ class FornecedorController {
       const coordenadasEndereco =
         respostaAxios.data.results[0].geometry.location;
 
+      const nome_sem_espaços = nome.trim();
+      const nome_sem_espaços_fantasia = nome_fantasia.trim();
+
       const fornecedorDTO = fornecedorRepository.create({
-        nome,
-        nome_fantasia,
+        nome: nome_sem_espaços,
+        nome_fantasia: nome_sem_espaços_fantasia,
         cpf_cnpj,
         email,
         senha: hashedSenha,

@@ -44,8 +44,10 @@ class ConsumidorController {
 
       const hashedSenha = await hash(senha, 8);
 
+      const nome_sem_espaços = nome.trim();
+
       const consumidorDTO = consumidorRepository.create({
-        nome,
+        nome: nome_sem_espaços,
         cpf,
         email,
         senha: hashedSenha,
